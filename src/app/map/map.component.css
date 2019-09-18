@@ -1,4 +1,4 @@
-.map-responsive {
+/* .map-responsive {
     overflow: hidden;
     padding-bottom: 91.75%;
     position: relative;
@@ -11,9 +11,11 @@
     height: 100%;
     width: 100%;
     position: absolute;
-}
+} */
 
 .map {
-    width: 100%;
-    float: left;
+width:100%;
+    height: 400px;
+
+    position: relative;
 }
