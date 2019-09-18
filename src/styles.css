@@ -1,1 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Merriweather:100,200,300,300i,400,400i,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:400,700');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400');
+body {
+    font-family: "Open Sans", serif;
+}
+
+.wrapper {
+    background: linear-gradient(to right, #c2e269, #449131);
+    height: 300vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    height: 290vh;
+    background: #fff;
+    box-shadow: 0px 13px 40px -13px rgba(0, 0, 0, 0.75);
+    width: 80%;
+    margin: 0 auto;
+}
+
+input[type="text"] {
+    background-color: transparent;
+    border: 0;
+    border-bottom: solid 1px #0069d9;
+    width: 30%;
+    padding-bottom: 4px;
+    color: #fff !important;
+    margin-right: 20px;
+    font-size: 20px;
+}
+
+input[type="text"] {
+    outline: none;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #2c3e50 inset;
+    -webkit-text-fill-color: #fff !important;
+}
+
+button {
+    border: 0;
+    padding: 8px 20px;
+    margin: 0 2px;
+    border-radius: 2px;
+    font-weight: lighter;
+    letter-spacing: 1px;
+    font-size: 15px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 100;
+}
+
+button:active {
+    outline: none;
+}
