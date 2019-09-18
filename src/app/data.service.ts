@@ -29,7 +29,7 @@ export class DataService {
 
   /*Get data from the azure endpoint*/
   getData(): Observable<any> {
-    return this.http.get<any>(this.apiURL + '/azure')
+    return this.http.get<any>(this.apiURL + '/test')
     .pipe(
       retry(1),
       catchError(this.handleError));
