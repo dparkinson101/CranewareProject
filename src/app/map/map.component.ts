@@ -20,15 +20,20 @@ export class MapComponent implements OnInit {
     this.mapAPI.createMap(15.31, 16.34, 5);
 
     //Add Marker Test
-    await this.mapAPI.getAddressGeolocation("USA").then(location => {
-      //console.log(location);
-      this.mapAPI.addMarker(location.lat(), location.lng(), true);
+    await this.mapAPI.getAddressGeolocation("USA").then((location: Location) => {
+      console.log(location);
+      this.mapAPI.addMarker(location.lat, location.lng, true);
     });
 
     //Get User location Test
-    await this.mapAPI.getUserLocation().then(location => {
-      //console.log(location);
+    await this.mapAPI.getUserLocation().then((location: Location) => {
+      console.log(location);
       this.mapAPI.addMarker(location.lat, location.lng, true);
     });
   }
+}
+
+interface Location {
+  lat: number,
+  lng: number
 }

@@ -49,7 +49,11 @@ export class MapAPIService {
         if(status === 'OK')
         {
           console.log(results);
-          resolve(results[0].geometry.location);
+          var pos = {
+            lat: results[0].geometry.location.lat(),
+            lng: results[0].geometry.location.lng()
+          };
+          resolve(pos);
         }
         else
         {
