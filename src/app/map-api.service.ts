@@ -40,20 +40,42 @@ export class MapAPIService {
     }
   }
 
-  public getAddressGeolocation(locationAddress: string){
+  public async getAddressGeolocation(locationAddress: string){
     var geocoder = new google.maps.Geocoder();
     var request = {address: locationAddress};
 
-    geocoder.geocode(request, function(results, status){
-      console.log(status);
-      if(status === "OK")
-      {
-        return results[0].geometry.location;
-      }
-      else
-      {
-        console.log("Geocode Not Successful: " + status);
-      }
+    return new Promise(resolve => {
+      geocoder.geocode(request, function(results, status){
+        if(status === 'OK')
+        {
+          console.log(results);
+          resolve(results[0].geometry.location);
+        }
+        else
+        {
+          console.log("Geocode Not Successful: " + status);
+          resolve(null);
+        }
+      });
+    });
+  }
+
+  public async getUserLocation(){
+    return new Promise(resolve => {
+        //HTML 5 Geolocation
+        if(navigator.geolocation){
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            resolve(pos);
+          }, function() {
+            console.log("This browser doesn't support HTML 5 Geolocation");
+            resolve(null);
+          });
+        }
     });
   }
 
