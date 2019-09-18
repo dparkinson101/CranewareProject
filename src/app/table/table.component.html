@@ -1,0 +1,15 @@
+<table mdbTable class="table table-striped">
+    <thead>
+        <tr>
+            <th *ngFor=" let head of headElements " scope="col ">{{head}} </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr mdbTableCol *ngFor="let item of tableData; let i=index ">
+            <th scope="row ">{{i + 1}}</th>
+            <td>{{item.providerName | titlecase}}</td>
+            <td>{{item.providerZipCode}}</td>
+            <td>${{item.averageTotalPayments }}</td>
+        </tr>
+    </tbody>
+</table>
