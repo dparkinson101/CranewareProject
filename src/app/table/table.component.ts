@@ -12,11 +12,12 @@ import { stringify } from '@angular/compiler/src/util';
 export class TableComponent implements OnInit, OnDestroy {
 
   public tableData: any;
+  public showTable:boolean = false;
   public procedure: string;
   public sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
   public headElements = [' ', 'Name', 'Distance', 'Cost'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService) {
-
+  
 
   }
 
@@ -39,6 +40,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.dataService.getDataWithCode().subscribe((data: {}) => {
 
       this.tableData = data;
+      this.showTable = true;
       this.getProcedureName();
       this.getAddresses();
 
