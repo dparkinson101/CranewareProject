@@ -38,7 +38,34 @@ export class MapAPIService {
     }
   }
 
- 
+  public removeMarkers(){
+    try{
+      this.markers.forEach(marker => {
+        marker.setMap(null);
+        //console.log("Removed Marker: " + marker);
+      });
+    }
+    catch(err){
+      console.log("Error Removing Markers From: " + this.markers);
+      console.log(err);
+    }
+  }
+
+  public averageFocus(){
+    var mapBounds = new google.maps.LatLngBounds();
+    this.markers.forEach(marker => {
+      mapBounds.extend(marker.getPosition());
+    });
+
+    this.map.fitBounds(mapBounds);
+    try{
+
+    }
+    catch(err){
+      console.log("Failed to average the focus of the map: " + this.map);
+      console.log(err);
+    }
+  }
 
   public async getAddressGeolocation(locationAddress: string) {
     const geocoder = new google.maps.Geocoder();
