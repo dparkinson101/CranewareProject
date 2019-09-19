@@ -57,7 +57,7 @@ export class TableComponent implements OnInit, OnDestroy {
     //House Number, Street Direction, Street Name, Street Suffix, City, State, Zip, Country
     let address: string;
     this.tableData.forEach(item => {
-      address = item.providerStreeetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode ;
+      address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode ;
       this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
         console.log(location);
         this.mapAPIService.addMarker(location.lat, location.lng, true);
