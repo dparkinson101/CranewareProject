@@ -3,6 +3,7 @@ import { DataService } from './../data.service';
 import { Component, OnInit, OnChanges, OnDestroy } from '@angular/core';
 import { toArray } from 'rxjs/operators';
 import { stringify } from '@angular/compiler/src/util';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-table',
@@ -12,12 +13,14 @@ import { stringify } from '@angular/compiler/src/util';
 export class TableComponent implements OnInit, OnDestroy {
 
   public tableData: any;
-  public showTable:boolean = false;
+  public showTable = false;
   public procedure: string;
   public sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
+  public states = ['Alabama','Alaska','American Samoa','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Federated States of Micronesia','Florida','Georgia','Guam','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Marshall Islands','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Northern Mariana Islands','Ohio','Oklahoma','Oregon','Palau','Pennsylvania','Puerto Rico','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virgin Island','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
+
   public headElements = [' ', 'Name', 'Distance', 'Cost'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService) {
-  
+
 
   }
 
@@ -32,17 +35,16 @@ export class TableComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    
+
   }
   getData() {
+    this.mapAPIService.removeMarkers();
     this.dataService.getDataWithCode().subscribe((data: {}) => {
 
       this.tableData = data;
       this.showTable = true;
       this.getProcedureName();
-      this.getAddresses();
+      this.placeOnMap();
 
 
     });
@@ -55,22 +57,22 @@ export class TableComponent implements OnInit, OnDestroy {
 
   }
 
-  getAddresses() {
+  placeOnMap() {
     //House Number, Street Direction, Street Name, Street Suffix, City, State, Zip, Country
     let address: string;
     this.tableData.forEach(item => {
-      address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode ;
+      address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
       this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
         console.log(location);
         this.mapAPIService.addMarker(location.lat, location.lng, true);
 
-
       });
     });
 
-
-
   }
+
+
+
 
 }
 

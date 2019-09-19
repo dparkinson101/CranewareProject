@@ -14,3 +14,14 @@ p {
     padding: 5px;
     float: left;
 }
+
+.dropdownstate .dropdown-menu {
+    padding: 5px;
+    float: left;
+    height: 400px;
+    overflow-y: scroll;
+}
+
+.buttonMenu {
+    width: 100%;
+}

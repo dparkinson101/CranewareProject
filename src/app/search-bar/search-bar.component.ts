@@ -22,12 +22,17 @@ export class SearchBarComponent implements OnInit {
 
   model = new item('');
   code: string;
+ 
   submitted = false;
 
   newSearch() {
 
-    this.dataService.getRequest(this.model.code)
+    this.dataService.getRequest(this.model.code);
+ 
     console.log(this.model.code);
+   
+
+  
     this.reset();
 
   }
@@ -42,11 +47,8 @@ export class SearchBarComponent implements OnInit {
 
   ngOnInit() {
 
-    this.dataService.currentCode.subscribe(code => this.code = code)
-
+    this.dataService.currentCode.subscribe(code => this.code = code);
+    
   }
-
-  
-
 
 }

@@ -17,12 +17,13 @@ export class DataService {
   }
 
   public code: any;
+ 
 
   private codeSource = new BehaviorSubject('default');
 
   // the current code that has been typed into the search bar
   currentCode = this.codeSource.asObservable();
-
+ 
 
 
   // location of Express Server
@@ -52,7 +53,7 @@ export class DataService {
   */
 
   getDataWithCode(): Observable<any> {
-    return this.http.get<any>(this.apiURL + '/silva?code=' + this.code)
+    return this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code )
       .pipe(
         retry(1),
         catchError(this.handleError));
@@ -63,6 +64,9 @@ export class DataService {
     this.code = code;
     this.codeSource.next(code);
   }
+
+ 
+
 
   /*handle both server side and client errors*/
   handleError(error) {
