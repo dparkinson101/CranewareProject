@@ -1,6 +1,10 @@
-import { DataService } from '../data.service';
+import { DataService } from './../data.service';
+
 import { Component, OnInit } from '@angular/core';
 import { ViewEncapsulation } from '@angular/compiler/src/core';
+import { item } from '../models/item';
+import { NgForm } from '@angular/forms';
+
 
 @Component({
   selector: 'app-search-bar',
@@ -9,12 +13,40 @@ import { ViewEncapsulation } from '@angular/compiler/src/core';
 })
 export class SearchBarComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dataService: DataService) {
+
+  }
+
+  sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
 
 
-  getData(){}
+  model = new item('');
+  code: string;
+  submitted = false;
+
+  newSearch() {
+
+    this.dataService.getRequest(this.model.code)
+    console.log(this.model.code);
+    this.reset();
+
+  }
+
+  reset() {
+    this.model = new item('');
+
+  }
+  onSubmit() {
+    this.submitted = true;
+  }
 
   ngOnInit() {
+
+    this.dataService.currentCode.subscribe(code => this.code = code)
+
   }
+
+  
+
 
 }

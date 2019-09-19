@@ -3,3 +3,14 @@ table {
     overflow-x: auto;
     float: left;
 }
+
+p {
+    padding: 10px;
+    margin: auto;
+    text-align: center;
+}
+
+.dropdown {
+    padding: 5px;
+    float: left;
+}
