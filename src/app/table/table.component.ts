@@ -33,7 +33,7 @@ export class TableComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
-    
+
   }
   getData() {
     this.dataService.getDataWithCode().subscribe((data: {}) => {
@@ -57,12 +57,18 @@ export class TableComponent implements OnInit, OnDestroy {
     //House Number, Street Direction, Street Name, Street Suffix, City, State, Zip, Country
     let address: string;
     this.tableData.forEach(item => {
-      address = item.providerStreeetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode ;
+      address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode ;
       this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
-        console.log(location);
-        this.mapAPIService.addMarker(location.lat, location.lng, true);
-
-
+        this.mapAPIService.getUserLocation().then((userLocation: Location) => {
+          this.mapAPIService.getDistance(userLocation, location).then((distance: string) => {
+            this.mapAPIService.addMarker(location.lat, location.lng, true, {
+              markerName: item.providerName,
+              markerPrice: item.averageTotalPayments,
+              markerDistance: distance,
+              markerAddress: item.providerStreetAddress
+            });
+          });
+        });
       });
     });
 
@@ -76,5 +82,3 @@ interface Location {
   lat: number,
   lng: number
 }
-
-

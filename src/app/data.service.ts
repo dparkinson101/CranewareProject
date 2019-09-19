@@ -26,8 +26,8 @@ export class DataService {
 
 
   // location of Express Server
-  apiURL = 'http://localhost:3000'; // THIS URL IS TO BE USED IF RUNNING SERVER LOCALLY
-  // apiURL = '134.36.36.224:3000'; // THIS URL IS TO BE USED IF ON LAB PC NETWORK
+  // apiURL = 'http://localhost:3000'; // THIS URL IS TO BE USED IF RUNNING SERVER LOCALLY
+   apiURL = 'http://134.36.36.224:3000'; // THIS URL IS TO BE USED IF ON LAB PC NETWORK
 
 
   httpOptions = {
@@ -74,7 +74,6 @@ export class DataService {
       // Get server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    console.log(errorMessage);
     return throwError(errorMessage);
   }
 
