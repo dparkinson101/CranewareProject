@@ -17,13 +17,14 @@ export class DataService {
   }
 
   public code: any;
+  public userLocation: any;
  
 
   private codeSource = new BehaviorSubject('default');
-
+  private locationSource = new BehaviorSubject('default');
   // the current code that has been typed into the search bar
   currentCode = this.codeSource.asObservable();
- 
+ currentLocation = this.locationSource.asObservable();
 
 
   // location of Express Server
@@ -53,16 +54,25 @@ export class DataService {
   */
 
   getDataWithCode(): Observable<any> {
-    return this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code )
+    // if(this.code !== undefined && this.userLocation !== undefined){
+    return this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code + '&location=' + this.userLocation)
       .pipe(
         retry(1),
         catchError(this.handleError));
+      
+    
   }
 
-  /*Get the code as the search parameters*/
-  getRequest(code: string) {
+  /*Get the code a the search parameter*/
+  getCode(code: string) {
     this.code = code;
     this.codeSource.next(code);
+  }
+
+  /*Get the location as a search parameter*/
+  getLocation(location: string) {
+    this.userLocation = location;
+    this.codeSource.next(location);
   }
 
  

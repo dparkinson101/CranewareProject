@@ -7,3 +7,9 @@
     padding: 20px;
     padding-bottom: 5px;
 }
+
+.form-group {
+    display: inline-table;
+    vertical-align: middle;
+    padding: 10px;
+}

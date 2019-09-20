@@ -1,24 +1,30 @@
 import { MapAPIService } from './../map-api.service';
 import { DataService } from './../data.service';
-import { Component, OnInit, OnChanges, OnDestroy } from '@angular/core';
-import { toArray } from 'rxjs/operators';
-import { stringify } from '@angular/compiler/src/util';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+
+
+import { MatPaginator, MatSort, MatTableDataSource, MatTableModule } from '@angular/material';
+
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements OnInit, OnDestroy {
+export class TableComponent implements OnInit, AfterViewInit {
 
   public tableData: any;
+  public dataSource: MatTableDataSource<TableData>;
   public showTable = false;
-  public procedure: string;
-  public sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
-  public states = ['Alabama','Alaska','American Samoa','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Federated States of Micronesia','Florida','Georgia','Guam','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Marshall Islands','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Northern Mariana Islands','Ohio','Oklahoma','Oregon','Palau','Pennsylvania','Puerto Rico','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virgin Island','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
 
-  public headElements = [' ', 'Name', 'Distance', 'Cost'];
+  public procedure: string;
+  public sortOptions = ['Price: Low to High', 'Price: High to Low'];
+
+
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+
+  public displayedColumns = ['Name', 'State', 'Zip', 'Cost'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService) {
 
 
@@ -27,27 +33,51 @@ export class TableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+
     // update when the search happens
     this.dataService.currentCode.subscribe(() => {
       this.getData();
+
     });
-  }
-
-
-  ngOnDestroy(): void {
 
   }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
+  }
+
   getData() {
     this.mapAPIService.removeMarkers();
+
+    const dataForTable: TableData[] = [];
     this.dataService.getDataWithCode().subscribe((data: {}) => {
 
       this.tableData = data;
       this.showTable = true;
       this.getProcedureName();
+
+
+      this.tableData.forEach(item => {
+
+        dataForTable.push(this.createNewDataItem(item));
+
+      });
+
+      this.dataSource = new MatTableDataSource();
+      this.dataSource.data = dataForTable;
+
+
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+
+
+
       this.placeOnMap();
 
-
     });
+
   }
 
   getProcedureName() {
@@ -73,12 +103,46 @@ export class TableComponent implements OnInit, OnDestroy {
 
 
 
+  createNewDataItem(item: any): TableData {
+    var name = this.toTitleCase(item.providerName)
+    return {
+      Name: name,
+      State: item.providerState,
+      Zip: item.providerZipCode,
+      Cost: Number(item.averageTotalPayments),
+    }
+
+  }
+
+
+  ngAfterViewInit() {
+
+
+  }
+
+  toTitleCase(str) {
+    return str.replace(
+      /\w\S*/g,
+      function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
+  }
 
 }
 
 interface Location {
-  lat: number,
-  lng: number
+  lat: number;
+  lng: number;
 }
+
+export interface TableData {
+
+  Name: string;
+  State: string;
+  Zip: string;
+  Cost: number;
+}
+
 
 
