@@ -11,13 +11,12 @@ import { MatPaginator, MatSort, MatTableDataSource, MatTableModule } from '@angu
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements OnInit, AfterViewInit {
+export class TableComponent implements OnInit {
 
   public initialData: any;
   public processedData: TableData[] = [];
   public dataSource: MatTableDataSource<TableData>;
   public showTable = false;
-
   public procedure: string;
   public sortOptions = ['Price: Low to High', 'Price: High to Low'];
 
@@ -27,7 +26,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   public displayedColumns = ['Name', 'State', 'Zip', 'Cost'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService) {
-
 
   }
 
@@ -43,43 +41,27 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   }
 
-  nextPage(){
+  nextPage() {
+    // remove markers 
     this.mapAPIService.removeMarkers();
 
-    var page = this.paginator.pageIndex;
-    var start;
-    var end;
-    if(page === 0)
-    {
-      start=0;
-      end=10;
-    }
-    else{
-       start = (page * 10) - 10;
-       end = (page * 10);
+    // get page index and set start and end points for the adding markers
+    const page = this.paginator.pageIndex;
+    let start;
+    let end;
+    if (page === 0) {
+      start = 0;
+      end = 10;
+    } else {
+      start = (page * 10) - 10;
+      end = (page * 10);
     }
 
 
-    for( let i = start; i < end; i++){
-      var item = this.initialData[i];
-      console.log();
-      var address = address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
-      this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
-        this.mapAPIService.getUserLocation().then((userLocation: Location) => {
-          this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
-            this.mapAPIService.addMarker(location.lat, location.lng, true, {
-              markerName: item.providerName,
-              markerPrice: item.averageTotalPayments,
-              markerDistance: distance,
-              markerAddress: address
-            }
-          ).then(() => {
-            this.mapAPIService.averageFocus();
-            this.mapAPIService.labelMarkers();
-          });
-          });
-        });
-      });
+    // for a  page add the markers to the map
+    for (let i = start; i < end; i++) {
+      const item = this.initialData[i];
+      this.placeOnMap(item);
     }
 
   }
@@ -91,8 +73,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   getData() {
-    //this.mapAPIService.removeMarkers();
-
+  
     this.dataService.getDataWithCode().subscribe(data => {
 
       this.initialData = data;
@@ -124,35 +105,32 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   }
 
-  placeOnMap() {
-    //House Number, Street Direction, Street Name, Street Suffix, City, State, Zip, Country
-    let address: string;
-    console.log(this.initialData);
-    this.initialData.forEach(item => {
-      // address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
-      // this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
-      //   this.mapAPIService.getUserLocation().then((userLocation: Location) => {
-      //     this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
-      //       this.mapAPIService.addMarker(location.lat, location.lng, true, {
-      //         markerName: item.providerName,
-      //         markerPrice: item.averageTotalPayments,
-      //         markerDistance: distance,
-      //         markerAddress: address
-      //       }
-      //     ).then(() => {
-      //       this.mapAPIService.averageFocus();
-      //       this.mapAPIService.labelMarkers();
-      //     });
-      //     });
-      //   });
-      // });
+  placeOnMap(item: any) {
+
+    const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
+    this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
+      this.mapAPIService.getUserLocation().then((userLocation: Location) => {
+        this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
+          this.mapAPIService.addMarker(location.lat, location.lng, true, {
+            markerName: item.providerName,
+            markerPrice: item.averageTotalPayments,
+            markerDistance: distance,
+            markerAddress: address
+          }
+          ).then(() => {
+            this.mapAPIService.averageFocus();
+            this.mapAPIService.labelMarkers();
+          });
+        });
+      });
     });
+
   }
 
 
 
   createNewDataItem(item: any): TableData {
-    var name = this.toTitleCase(item.providerName)
+    const name = this.toTitleCase(item.providerName)
     return {
       Name: name,
       State: item.providerState,
@@ -163,10 +141,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
 
-  ngAfterViewInit() {
-
-
-  }
 
   toTitleCase(str) {
     return str.replace(
