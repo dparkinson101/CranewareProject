@@ -46,6 +46,10 @@ export class TableComponent implements OnInit {
     this.mapAPIService.removeMarkers();
 
     // get page index and set start and end points for the adding markers
+    let start =0;
+    let end =0;
+    if (this.paginator !== undefined){
+    
     const page = this.paginator.pageIndex;
     let start;
     let end;
@@ -55,6 +59,7 @@ export class TableComponent implements OnInit {
     } else {
       start = (page * 10) - 10;
       end = (page * 10);
+    }
     }
 
 
@@ -76,6 +81,8 @@ export class TableComponent implements OnInit {
   
     this.dataService.getDataWithCode().subscribe(data => {
 
+      this.initialData = [];
+      this.processedData =[];
       this.initialData = data;
       this.showTable = true;
       this.getProcedureName();
@@ -92,7 +99,8 @@ export class TableComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
-      this.nextPage();
+      
+    this.nextPage();
 
 
     });
