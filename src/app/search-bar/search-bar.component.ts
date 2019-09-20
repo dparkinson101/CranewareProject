@@ -1,3 +1,4 @@
+import { MapAPIService } from './../map-api.service';
 import { DataService } from './../data.service';
 
 import { Component, OnInit } from '@angular/core';
@@ -13,27 +14,30 @@ import { NgForm } from '@angular/forms';
 })
 export class SearchBarComponent implements OnInit {
 
-  constructor(public dataService: DataService) {
+  constructor(public dataService: DataService, public mapAPIService: MapAPIService) {
 
   }
 
   sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
 
 
-  model = new item('');
+  model = new item('','');
   code: string;
+  userLocation: string;
+ 
   submitted = false;
 
   newSearch() {
 
-    this.dataService.getRequest(this.model.code)
-    console.log(this.model.code);
+    this.dataService.getCode(this.model.code);
+    this.dataService.getLocation(this.model.userLocation);
+   
     this.reset();
 
   }
 
   reset() {
-    this.model = new item('');
+    this.model = new item('','');
 
   }
   onSubmit() {
@@ -42,11 +46,8 @@ export class SearchBarComponent implements OnInit {
 
   ngOnInit() {
 
-    this.dataService.currentCode.subscribe(code => this.code = code)
-
+    this.dataService.currentCode.subscribe(code => this.code = code);
+    this.dataService.currentLocation.subscribe(location => this.userLocation = location);
   }
-
-  
-
 
 }

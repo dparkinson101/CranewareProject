@@ -1,18 +1,32 @@
 <div class="tableContainer" *ngIf="showTable == true;">
-    <hr>
+
     <p>
         <i>{{procedure | titlecase }}</i></p>
     <hr>
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Sort By
-    </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#" *ngFor=" let option of sortOptions ">{{option}} </a>
+    <div class="btn-toolbar">
+        <div class="text-center"><b>Sort by: &nbsp; &nbsp;</b>
+            <div class="btn-group mr-3" role="group">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <b> Cost</b> 
+             </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                    <a class="dropdown-item" href="#" *ngFor=" let option of sortOptions "><b>{{option}}</b> </a>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-secondary mr-3"><b>Distance</b></button>
+
+
+            <button type="button" class="btn btn-secondary"><b>Rating</b></button>
+
         </div>
+
     </div>
 
-    <table mdbTable class="table table-striped">
+
+</div>
+
+<!-- <table mdbTable class="table table-striped">
         <thead>
             <tr>
                 <th *ngFor=" let head of headElements " scope="col ">{{head}} </th>
@@ -22,10 +36,56 @@
             <tr mdbTableCol *ngFor="let item of tableData; let i=index ">
                 <th scope="row ">{{i + 1}}</th>
                 <td>{{item.providerName | titlecase}}</td>
+                <td>{{item.providerState}}</td>
                 <td>{{item.providerZipCode}}</td>
                 <td>${{item.averageTotalPayments }}</td>
             </tr>
         </tbody>
     </table>
 
+</div> -->
+
+<div class="example-header">
+    <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+</div>
+
+
+<div [ngClass]="['table-container mat-elevation-z8']" *ngIf="dataSource">
+
+    <mat-table [dataSource]="dataSource" matSort>
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="Name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+            <mat-cell *matCellDef="let item"> {{item.Name}} </mat-cell>
+        </ng-container>
+
+        <!-- Progress Column -->
+        <ng-container matColumnDef="State">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> State </mat-header-cell>
+            <mat-cell *matCellDef="let item"> {{item.State}}</mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+
+
+        <!-- Color Column -->
+        <ng-container matColumnDef="Cost">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Cost </mat-header-cell>
+            <mat-cell *matCellDef="let item"> {{item.Cost}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Zip">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Zip </mat-header-cell>
+            <mat-cell *matCellDef="let item"> {{item.Zip}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[ 10]"></mat-paginator>
 </div>
