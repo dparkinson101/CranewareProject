@@ -79,6 +79,8 @@ export class MapAPIService {
       this.markers.forEach(marker => {
         marker.marker.setMap(null);
       });
+      this.markers = [];
+      this.infoWindows = [];
     }
     catch(err){
       console.log("Error Removing Markers From: " + this.markers);

@@ -13,7 +13,8 @@ import { MatPaginator, MatSort, MatTableDataSource, MatTableModule } from '@angu
 })
 export class TableComponent implements OnInit, AfterViewInit {
 
-  public tableData: any;
+  public initialData: any;
+  public processedData: TableData[] = [];
   public dataSource: MatTableDataSource<TableData>;
   public showTable = false;
 
@@ -42,57 +43,27 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   }
 
-  applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); // Remove whitespace
-    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
-  }
-
-  getData() {
+  nextPage(){
     this.mapAPIService.removeMarkers();
 
-    const dataForTable: TableData[] = [];
-    this.dataService.getDataWithCode().subscribe((data: {}) => {
-
-      this.tableData = data;
-      this.showTable = true;
-      this.getProcedureName();
-
-
-      this.tableData.forEach(item => {
-
-        dataForTable.push(this.createNewDataItem(item));
-
-      });
-
-      this.dataSource = new MatTableDataSource();
-      this.dataSource.data = dataForTable;
+    var page = this.paginator.pageIndex;
+    var start;
+    var end;
+    if(page === 0)
+    {
+      start=0;
+      end=10;
+    }
+    else{
+       start = (page * 10) - 10;
+       end = (page * 10);
+    }
 
 
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-
-
-
-      this.placeOnMap();
-
-    });
-
-  }
-
-  getProcedureName() {
-
-    // choose first item from list to get name - without number at start
-    this.procedure = 'Displaying results for:' + (this.tableData[0].dRGDefinition).substring(5);
-
-  }
-
-  placeOnMap() {
-    //House Number, Street Direction, Street Name, Street Suffix, City, State, Zip, Country
-    let address: string;
-    console.log(this.tableData);
-    this.tableData.forEach(item => {
-      address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
+    for( let i = start; i < end; i++){
+      var item = this.initialData[i];
+      console.log();
+      var address = address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
       this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
         this.mapAPIService.getUserLocation().then((userLocation: Location) => {
           this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
@@ -109,6 +80,72 @@ export class TableComponent implements OnInit, AfterViewInit {
           });
         });
       });
+    }
+
+  }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
+  }
+
+  getData() {
+    //this.mapAPIService.removeMarkers();
+
+    this.dataService.getDataWithCode().subscribe(data => {
+
+      this.initialData = data;
+      this.showTable = true;
+      this.getProcedureName();
+
+
+      this.initialData.forEach(item => {
+
+        this.processedData.push(this.createNewDataItem(item));
+
+      });
+
+      this.dataSource = new MatTableDataSource();
+      this.dataSource.data = this.processedData;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+
+      this.nextPage();
+
+
+    });
+  }
+
+  getProcedureName() {
+
+    // choose first item from list to get name - without number at start
+    this.procedure = 'Displaying results for:' + (this.initialData[0].dRGDefinition).substring(5);
+
+  }
+
+  placeOnMap() {
+    //House Number, Street Direction, Street Name, Street Suffix, City, State, Zip, Country
+    let address: string;
+    console.log(this.initialData);
+    this.initialData.forEach(item => {
+      // address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
+      // this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
+      //   this.mapAPIService.getUserLocation().then((userLocation: Location) => {
+      //     this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
+      //       this.mapAPIService.addMarker(location.lat, location.lng, true, {
+      //         markerName: item.providerName,
+      //         markerPrice: item.averageTotalPayments,
+      //         markerDistance: distance,
+      //         markerAddress: address
+      //       }
+      //     ).then(() => {
+      //       this.mapAPIService.averageFocus();
+      //       this.mapAPIService.labelMarkers();
+      //     });
+      //     });
+      //   });
+      // });
     });
   }
 

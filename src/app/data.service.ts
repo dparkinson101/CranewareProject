@@ -18,7 +18,7 @@ export class DataService {
 
   public code: any;
   public userLocation: any;
- 
+
 
   private codeSource = new BehaviorSubject('default');
   private locationSource = new BehaviorSubject('default');
@@ -53,14 +53,16 @@ export class DataService {
 
   */
 
-  getDataWithCode(): Observable<any> {
+  getDataWithCode() {
     // if(this.code !== undefined && this.userLocation !== undefined){
-    return this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code + '&location=' + this.userLocation)
+
+      return this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code + '&location=' + this.userLocation)
       .pipe(
         retry(1),
         catchError(this.handleError));
-      
-    
+
+
+
   }
 
   /*Get the code a the search parameter*/
@@ -75,7 +77,7 @@ export class DataService {
     this.codeSource.next(location);
   }
 
- 
+
 
 
   /*handle both server side and client errors*/
