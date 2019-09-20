@@ -17,7 +17,7 @@ export class TableComponent implements OnInit, OnDestroy {
   public sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
   public headElements = [' ', 'Name', 'Distance', 'Cost'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService) {
-  
+
 
   }
 
@@ -58,24 +58,26 @@ export class TableComponent implements OnInit, OnDestroy {
   getAddresses() {
     //House Number, Street Direction, Street Name, Street Suffix, City, State, Zip, Country
     let address: string;
+    console.log(this.tableData);
     this.tableData.forEach(item => {
-      address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode ;
+      address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
       this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
         this.mapAPIService.getUserLocation().then((userLocation: Location) => {
-          this.mapAPIService.getDistance(userLocation, location).then((distance: string) => {
+          this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
             this.mapAPIService.addMarker(location.lat, location.lng, true, {
               markerName: item.providerName,
               markerPrice: item.averageTotalPayments,
               markerDistance: distance,
-              markerAddress: item.providerStreetAddress
-            });
+              markerAddress: address
+            }
+          ).then(() => {
+            this.mapAPIService.averageFocus();
+            this.mapAPIService.labelMarkers();
+          });
           });
         });
       });
     });
-
-
-
   }
 
 }

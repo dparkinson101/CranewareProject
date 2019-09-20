@@ -8,7 +8,7 @@ declare var google: any;
 export class MapAPIService {
 
   map: any;
-  markers: any[] = [];
+  markers: MarkerAndInfo[] = [];
   infoWindows: any[] = [];
 
   constructor() { }
@@ -26,12 +26,11 @@ export class MapAPIService {
     }
   }
 
-  public addMarker(latitude: number, longitude: number, focusOn: boolean, info: markerInformation) {
+  public async addMarker(latitude: number, longitude: number, focusOn: boolean, info: markerInformation) {
     try {
       const marker = new google.maps.Marker({
          position: { lat: latitude, lng: longitude },
-         map: this.map,
-         label: ""+(this.markers.length+1)
+         map: this.map
        });
 
       const infoWindow = new google.maps.InfoWindow({
@@ -43,7 +42,8 @@ export class MapAPIService {
       });
 
       this.infoWindows.push(infoWindow);
-      this.markers.push(marker);
+      this.markers.push({marker, info});
+
       if (focusOn) {
         this.map.setCenter({ lat: latitude, lng: longitude });
       }
@@ -53,10 +53,31 @@ export class MapAPIService {
     }
   }
 
+  public labelMarkers(){
+    this.markers.sort((a, b) => {
+      var distanceA = parseFloat(a.info.markerDistance);
+      var distanceB = parseFloat(b.info.markerDistance);
+
+      if(distanceA > distanceB){
+        return 1;
+      }
+      if(distanceB > distanceA) {
+        return -1;
+      }
+      if(distanceA == distanceB) {
+        return 0;
+      }
+    });
+
+    this.markers.forEach(m => {
+      m.marker.setLabel(""+(this.markers.indexOf(m)+1));
+    });
+  }
+
   public removeMarkers(){
     try{
       this.markers.forEach(marker => {
-        marker.setMap(null);
+        marker.marker.setMap(null);
       });
     }
     catch(err){
@@ -69,7 +90,7 @@ export class MapAPIService {
     try{
       var mapBounds = new google.maps.LatLngBounds();
       this.markers.forEach(marker => {
-        mapBounds.extend(marker.getPosition());
+        mapBounds.extend(marker.marker.getPosition());
       });
 
       this.map.fitBounds(mapBounds);
@@ -101,7 +122,7 @@ export class MapAPIService {
     });
   }
 
-  public async getDistance(userPosition: Position, locationPosition: Position){
+  public async getDistance(userPosition: Position, locationPosition: Position, destinationAddress: string){
     var distanceMatrixService = new google.maps.DistanceMatrixService();
     var request = {
       avoidFerries: false,
@@ -115,7 +136,7 @@ export class MapAPIService {
     return new Promise(resolve => {
       distanceMatrixService.getDistanceMatrix(request, function(results, status){
         if(status === 'OK'){
-          console.log(results);
+          //console.log(results);
           if(results.rows[0].elements[0].status === 'OK'){
             resolve(results.rows[0].elements[0].distance.text);
           }
@@ -123,7 +144,7 @@ export class MapAPIService {
             var userPos = new google.maps.LatLng(userPosition.lat, userPosition.lng);
             var locationPos = new google.maps.LatLng(locationPosition.lat, locationPosition.lng);
             var rawDistance = google.maps.geometry.spherical.computeDistanceBetween(userPos, locationPos);
-            console.log(rawDistance);
+            //console.log(rawDistance);
 
             var betterDistance = ""+(rawDistance / 1000).toFixed(2)+"km"
 
@@ -169,6 +190,11 @@ export class MapAPIService {
 interface Position{
   lat: number,
   lng: number
+}
+
+interface MarkerAndInfo{
+  marker: any,
+  info: markerInformation
 }
 
 interface markerInformation {
