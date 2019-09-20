@@ -1,5 +1,6 @@
 import { MapAPIService } from './../map-api.service';
 import { DataService } from './../data.service';
+import { LocationService } from './../location.service';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 
 
@@ -25,13 +26,14 @@ export class TableComponent implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   public displayedColumns = ['Name', 'State', 'Zip', 'Cost'];
-  constructor(private dataService: DataService, private mapAPIService: MapAPIService) {
+  constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService) {
 
   }
 
 
   ngOnInit() {
 
+    console.log("Table Inits");
 
     // update when the search happens
     this.dataService.currentCode.subscribe(() => {
@@ -41,8 +43,12 @@ export class TableComponent implements OnInit {
 
   }
 
-  nextPage() {
-    // remove markers 
+  async loadPage() {
+    if(this.paginator === undefined){
+      return;
+    }
+
+    // remove markers
     this.mapAPIService.removeMarkers();
 
     // get page index and set start and end points for the adding markers
@@ -53,6 +59,7 @@ export class TableComponent implements OnInit {
     const page = this.paginator.pageIndex;
     let start;
     let end;
+
     if (page === 0) {
       start = 0;
       end = 10;
@@ -62,10 +69,10 @@ export class TableComponent implements OnInit {
     }
     }
 
-
     // for a  page add the markers to the map
     for (let i = start; i < end; i++) {
       const item = this.initialData[i];
+      await this.sleep(750);
       this.placeOnMap(item);
     }
 
@@ -78,18 +85,19 @@ export class TableComponent implements OnInit {
   }
 
   getData() {
-  
-    this.dataService.getDataWithCode().subscribe(data => {
 
+    var observable = this.dataService.getDataWithCode();
+
+    if(observable === null){return;}
+
+    observable.subscribe(data => {
+      this.processedData = [];
       this.initialData = [];
-      this.processedData =[];
       this.initialData = data;
       this.showTable = true;
       this.getProcedureName();
 
-
       this.initialData.forEach(item => {
-
         this.processedData.push(this.createNewDataItem(item));
 
       });
@@ -98,11 +106,7 @@ export class TableComponent implements OnInit {
       this.dataSource.data = this.processedData;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-
-      
-    this.nextPage();
-
-
+      this.loadPage();
     });
   }
 
@@ -113,10 +117,11 @@ export class TableComponent implements OnInit {
 
   }
 
-  placeOnMap(item: any) {
+  async placeOnMap(item: any) {
 
     const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
     this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
+    
       this.mapAPIService.getUserLocation().then((userLocation: Location) => {
         this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
           this.mapAPIService.addMarker(location.lat, location.lng, true, {
@@ -132,6 +137,16 @@ export class TableComponent implements OnInit {
         });
       });
     });
+    // this.sleep(200).then(() => {
+    //   this.locationService.getLocation(address).subscribe((data: any) => {
+
+    //     console.log(data);
+    //     var location = data.results[0].geometry.location;
+        //INSERT CODE HERE
+    //   });
+    // });
+    
+
 
   }
 
@@ -140,7 +155,7 @@ export class TableComponent implements OnInit {
   createNewDataItem(item: any): TableData {
     const name = this.toTitleCase(item.providerName)
     return {
-      Name: name,
+      providerName: name,
       State: item.providerState,
       Zip: item.providerZipCode,
       Cost: Number(item.averageTotalPayments),
@@ -148,7 +163,9 @@ export class TableComponent implements OnInit {
 
   }
 
-
+async sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
   toTitleCase(str) {
     return str.replace(
@@ -168,7 +185,7 @@ interface Location {
 
 export interface TableData {
 
-  Name: string;
+  providerName: string;
   State: string;
   Zip: string;
   Cost: number;

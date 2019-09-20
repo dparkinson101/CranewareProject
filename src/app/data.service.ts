@@ -56,10 +56,16 @@ export class DataService {
   getDataWithCode() {
     // if(this.code !== undefined && this.userLocation !== undefined){
 
-      return this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code + '&location=' + this.userLocation)
-      .pipe(
-        retry(1),
-        catchError(this.handleError));
+      if(this.code === undefined){return null;}
+
+      try{
+        var results = this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code + '&location=' + this.userLocation);
+        return results;
+      }
+      catch(err){
+        console.log(err);
+        return null;
+      }
 
 
 
