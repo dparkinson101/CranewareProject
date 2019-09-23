@@ -17,17 +17,19 @@ export class DataService {
   }
 
   public code: any;
+  public userLocation: any;
+
 
   private codeSource = new BehaviorSubject('default');
-
+  private locationSource = new BehaviorSubject('default');
   // the current code that has been typed into the search bar
   currentCode = this.codeSource.asObservable();
-
+ currentLocation = this.locationSource.asObservable();
 
 
   // location of Express Server
-  apiURL = 'http://localhost:3000'; // THIS URL IS TO BE USED IF RUNNING SERVER LOCALLY
-  // apiURL = '134.36.36.224:3000'; // THIS URL IS TO BE USED IF ON LAB PC NETWORK
+   apiURL = 'http://localhost:3000'; // THIS URL IS TO BE USED IF RUNNING SERVER LOCALLY
+  // apiURL = 'http://134.36.36.224:3000'; // THIS URL IS TO BE USED IF ON LAB PC NETWORK
 
 
   httpOptions = {
@@ -51,18 +53,38 @@ export class DataService {
 
   */
 
-  getDataWithCode(): Observable<any> {
-    return this.http.get<any>(this.apiURL + '/silva?code=' + this.code)
-      .pipe(
-        retry(1),
-        catchError(this.handleError));
+  getDataWithCode() {
+    // if(this.code !== undefined && this.userLocation !== undefined){
+
+      if(this.code === undefined){return null;}
+
+      try{
+        var results = this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code + '&location=' + this.userLocation);
+        return results;
+      }
+      catch(err){
+        console.log(err);
+        return null;
+      }
+
+
+
   }
 
-  /*Get the code as the search parameters*/
-  getRequest(code: string) {
+  /*Get the code a the search parameter*/
+  getCode(code: string) {
     this.code = code;
     this.codeSource.next(code);
   }
+
+  /*Get the location as a search parameter*/
+  getLocation(location: string) {
+    this.userLocation = location;
+    this.codeSource.next(location);
+  }
+
+
+
 
   /*handle both server side and client errors*/
   handleError(error) {
@@ -74,7 +96,6 @@ export class DataService {
       // Get server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    console.log(errorMessage);
     return throwError(errorMessage);
   }
 
