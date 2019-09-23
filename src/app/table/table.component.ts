@@ -54,11 +54,8 @@ export class TableComponent implements OnInit {
     // get page index and set start and end points for the adding markers
     let start =0;
     let end =0;
-    if (this.paginator !== undefined){
     
     const page = this.paginator.pageIndex;
-    let start;
-    let end;
 
     if (page === 0) {
       start = 0;
@@ -66,7 +63,6 @@ export class TableComponent implements OnInit {
     } else {
       start = (page * 10) - 10;
       end = (page * 10);
-    }
     }
 
     // for a  page add the markers to the map
