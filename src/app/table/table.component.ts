@@ -58,28 +58,19 @@ export class TableComponent implements OnInit {
     this.mapAPIService.removeMarkers();
 
     // get page index and set start and end points for the adding markers
-    let start = 0;
-    let end = 0;
-
-    if (this.paginator === undefined) {
-      return;
-    }
-
-    // select the set of items from the data for the page
-
+    let start =0;
+    let end =0;
+    
     const page = this.paginator.pageIndex;
-
 
     if (page === 0) {
       start = 0;
       end=10
 
     } else {
-     start = (page * 10);
-     end = (page *10 ) -10;
-
+      start = (page * 10) - 10;
+      end = (page * 10);
     }
-  
 
     // for a  page add the markers to the map
     for (let i = start; i < end; i++) {
