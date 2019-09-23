@@ -1,5 +1,6 @@
+import { WavesModule, CarouselModule } from 'angular-bootstrap-md';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DataService } from './data.service';
+import { DataService } from './services/data.service';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -11,21 +12,31 @@ import { MapComponent } from './map/map.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MatTableModule, MatPaginatorModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatDialogModule, MatExpansionModule, MatGridListModule, MatIconModule, MatListModule, MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatRippleModule, MatSelectModule, MatSidenavModule, MatSliderModule, MatSlideToggleModule, MatSnackBarModule, MatSortModule, MatTabsModule, MatToolbarModule, MatTooltipModule, MatStepperModule } from '@angular/material';
 import { TitleCasePipe } from '@angular/common';
-
+import { HomeComponent } from './home/home.component';
+import { NavComponent } from './nav/nav.component';
+import { AboutComponent } from './about/about.component';
+import { SearchPageComponent } from './search-page/search-page.component';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
     AppComponent,
     SearchBarComponent,
     TableComponent,
-    MapComponent
+    MapComponent,
+    HomeComponent,
+    NavComponent,
+    AboutComponent,
+    SearchPageComponent
   ],
   imports: [
     BrowserModule,
+    FontAwesomeModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule,
- 
+
+    MDBBootstrapModule.forRoot(),
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -57,11 +68,17 @@ import { TitleCasePipe } from '@angular/common';
     MatToolbarModule,
     MatTooltipModule,
     MatStepperModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CarouselModule,
+    WavesModule,
+    AppRoutingModule,
   ],
   providers: [
-    DataService
+    DataService,
+    TitleCasePipe
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+
+}

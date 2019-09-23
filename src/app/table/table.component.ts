@@ -1,11 +1,14 @@
-import { MapAPIService } from './../map-api.service';
-import { DataService } from './../data.service';
-import { LocationService } from './../location.service';
+import { Location } from './../models/Location';
+import { MapAPIService } from '../services/map-api.service';
+import { DataService } from '../services/data.service';
+import { LocationService } from '../services/location.service';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-
-
-import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule } from '@angular/material';
+import { TitleCasePipe } from '@angular/common';
+import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable } from '@angular/material';
 import { Observable } from 'rxjs';
+import { TableData } from '../models/TableData';
+
+
 
 
 @Component({
@@ -28,8 +31,9 @@ export class TableComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  public displayedColumns = ['Name', 'State', 'Zip', 'Cost'];
-  constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService) {
+  public displayedColumns = ['providerName', 'providerState', 'providerZipCode', 'averageTotalPayments'];
+  constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
+              private titleCasePipe: TitleCasePipe) {
 
   }
 
@@ -39,123 +43,42 @@ export class TableComponent implements OnInit {
     this.isLoading = true;
 
     // update when the search happens
-    this.dataService.currentCode.subscribe(() => {
-      this.getData();
+    const observable = this.dataService.currentCode;
 
+
+    observable.subscribe(() => {
+      this.getData();
     });
 
 
+  }
+
+  // --------------------------------------------------------------------------
+  //               PAGING AND PLACING MARKERS FOR THOSE PAGES
+  // Get current pages that are in the table with the connect method. Use these
+  // values to place markers on the map, this means when a filter is typed in
+  // markers are placed on the map for them. QUERY_LIMIT is still often reached
+  // --------------------------------------------------------------------------
+
+  getCurrent() {
+
+    return this.dataSource.connect().value;
 
   }
 
-  async loadPage() {
+  loadCurrent() {
+    const page = this.getCurrent();
+    this.placeCurrentOnMap(page);
+  }
 
-    if (this.paginator === undefined) {
-      return;
-    }
-
-    // remove markers
+  placeCurrentOnMap(page: any) {
     this.mapAPIService.removeMarkers();
-
-    // get page index and set start and end points for the adding markers
-    let start =0;
-    let end =0;
-    
-    const page = this.paginator.pageIndex;
-
-    if (page === 0) {
-      start = 0;
-      end=10
-
-    } else {
-      start = (page * 10) - 10;
-      end = (page * 10);
-    }
-
-    // for a  page add the markers to the map
-    for (let i = start; i < end; i++) {
-
-      const item = this.initialData[i];
-      await this.sleep(750);
+    page.forEach(item => {
       this.placeOnMap(item);
-    }
-
+    });
+    console.log('Placed Markers' + page);
   }
 
-  applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); // Remove whitespace
-    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
-  }
-
-  getPosition(page: any, x: any, y: any ) {
-    let position;
-
-    if (page === 0) {
-      position = x;
-
-    } else {
-      position = (page * 10) - y;
-
-    }
-
-    return position;
-
-  }
-
-
-
-
-  getData() {
-
-    this.isLoading = true;
-
-    const observable = this.dataService.getDataWithCode();
-
-    if (observable === null) {
-      return; // no data has been fetched
-    }
-
-    observable.subscribe(data => {
-
-      this.processedData = [];
-      this.initialData = [];
-      this.initialData = data;
-      this.showTable = true;
-
-      this.getProcedureName();
-
-      this.initialData.forEach(item => {
-        this.processedData.push(this.createNewDataItem(item));
-
-      });
-      this.dataSource = new MatTableDataSource();
-      this.dataSource.data = [];
-      this.dataSource.data = this.processedData;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-
-      this.loadPage();
-
-      console.log('Table data is fetched');
-
-    }
-    );
-
-    // Convert from observable to promise, and use 'then' when the subscribe is complete too
-    observable.toPromise().then(() => this.isLoading = false); console.log('Table data is loaded');
-
-
-
-
-  }
-
-  getProcedureName() {
-
-    // choose first item from list to get name - without number at start
-    this.procedure = 'Displaying results for:' + (this.initialData[0].dRGDefinition).substring(5);
-
-  }
 
   async placeOnMap(item: any) {
 
@@ -177,56 +100,104 @@ export class TableComponent implements OnInit {
         });
       });
     });
-    // this.sleep(200).then(() => {
-    //   this.locationService.getLocation(address).subscribe((data: any) => {
-
-    //     console.log(data);
-    //     var location = data.results[0].geometry.location;
-    //INSERT CODE HERE
-    //   });
-    // });
-
-
-
-  }
-
-
-
-  createNewDataItem(item: any): TableData {
-    const name = this.toTitleCase(item.providerName)
-    return {
-      providerName: name,
-      State: item.providerState,
-      Zip: item.providerZipCode,
-      Cost: Number(item.averageTotalPayments),
-    }
-
   }
 
   async sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  toTitleCase(str) {
-    return str.replace(
-      /\w\S*/g,
-      function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      }
-    );
+
+  // --------------------------------------------------------------------------
+  //                        WORKING WITH THE TABLE DATA
+  // filters applied to the table are applied across all fields. 
+  // 
+  // 
+  // --------------------------------------------------------------------------
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
   }
 
+
+
+
+
+  async getData() {
+
+    this.isLoading = true;
+
+    const observable = this.dataService.getDataWithCode();
+
+    if (observable === null) {
+      return; // no data has been fetched
+    }
+
+    observable.subscribe(data => {
+
+      this.processedData = [];
+      this.initialData = [];
+      this.initialData = data;
+      this.showTable = true;
+
+      this.getProcedureName();
+
+      this.initialData.forEach(item => {
+        this.processedData.push(this.createNewDataItem(item));
+      });
+    },
+      null,
+      () => {
+
+        console.log('Table data is fetched');
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.data = this.processedData;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        //get the first page of results - make sure it is 10
+        const paged = this.dataSource.connect().value;
+        if (paged.length < 11) {
+          this.mapAPIService.removeMarkers();
+          paged.forEach(item => {
+            this.placeOnMap(item);
+          });
+          console.log(paged);
+        }
+      });
+
+  }
+
+  getProcedureName() {
+
+    // choose first item from list to get name - without number at start
+    this.procedure = 'Displaying results for:' + (this.initialData[0].dRGDefinition).substring(5);
+
+  }
+
+
+  createNewDataItem(item: any): TableData {
+    const name = this.titleCasePipe.transform( item.providerName);
+   
+    return {
+      providerName: name,
+      providerCity: item.providerCity,
+      providerState: item.providerState,
+      providerZipCode: item.providerZipCode,
+      providerStreetAddress: item.providerStreetAddress,
+      averageTotalPayments: Number(item.averageTotalPayments),
+    }
+
+  }
+
+
+
 }
 
-interface Location {
-  lat: number;
-  lng: number;
-}
 
-export interface TableData {
 
-  providerName: string;
-  State: string;
-  Zip: string;
-  Cost: number;
-}
+
+
+

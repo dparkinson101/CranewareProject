@@ -1,5 +1,7 @@
 <div class="searchBar">
 
+    <p>Type in the procedure name or code to get started, add your location to search for nearby providers
+    </p>
 
     <!-- Search Bar -->
     <form #searchBar="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
@@ -10,9 +12,8 @@
             <input type="text" class="form-control" placeholder="Procedure 🩺" id="procedure" [(ngModel)]="model.code" name="procedure">
         </div>
         <div class="form-group" id="SubmitBox">
-            <button type="submit " class="btn btn-primary " (click)="newSearch();">Search</button>
+            <button type="submit " class="btn btn-success " (click)="newSearch();">Search</button>
         </div>
     </form>
-
 
 </div>

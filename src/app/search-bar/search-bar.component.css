@@ -13,3 +13,8 @@
     vertical-align: middle;
     padding: 10px;
 }
+
+button {
+    background-color: #66bf48;
+    border-color: #66bf48;
+}
