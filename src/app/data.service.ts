@@ -19,6 +19,9 @@ export class DataService {
   public code: any;
   public userLocation: any;
 
+  public cache: any;
+  
+
 
   private codeSource = new BehaviorSubject('default');
   private locationSource = new BehaviorSubject('default');

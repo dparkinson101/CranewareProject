@@ -4,7 +4,8 @@ import { LocationService } from './../location.service';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 
 
-import { MatPaginator, MatSort, MatTableDataSource, MatTableModule } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule } from '@angular/material';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -17,6 +18,8 @@ export class TableComponent implements OnInit {
   public initialData: any;
   public processedData: TableData[] = [];
   public dataSource: MatTableDataSource<TableData>;
+  public isLoading = true;
+  public showSpinner = true;
   public showTable = false;
   public procedure: string;
   public sortOptions = ['Price: Low to High', 'Price: High to Low'];
@@ -33,7 +36,7 @@ export class TableComponent implements OnInit {
 
   ngOnInit() {
 
-    console.log("Table Inits");
+    this.isLoading = true;
 
     // update when the search happens
     this.dataService.currentCode.subscribe(() => {
@@ -41,10 +44,13 @@ export class TableComponent implements OnInit {
 
     });
 
+
+
   }
 
   async loadPage() {
-    if(this.paginator === undefined){
+
+    if (this.paginator === undefined) {
       return;
     }
 
@@ -52,25 +58,32 @@ export class TableComponent implements OnInit {
     this.mapAPIService.removeMarkers();
 
     // get page index and set start and end points for the adding markers
-    let start =0;
-    let end =0;
-    if (this.paginator !== undefined){
-    
+    let start = 0;
+    let end = 0;
+
+    if (this.paginator === undefined) {
+      return;
+    }
+
+    // select the set of items from the data for the page
+
     const page = this.paginator.pageIndex;
-    let start;
-    let end;
+
 
     if (page === 0) {
       start = 0;
-      end = 10;
+      end=10
+
     } else {
-      start = (page * 10) - 10;
-      end = (page * 10);
+     start = (page * 10);
+     end = (page *10 ) -10;
+
     }
-    }
+  
 
     // for a  page add the markers to the map
     for (let i = start; i < end; i++) {
+
       const item = this.initialData[i];
       await this.sleep(750);
       this.placeOnMap(item);
@@ -84,30 +97,66 @@ export class TableComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
+  getPosition(page: any, x: any, y: any ) {
+    let position;
+
+    if (page === 0) {
+      position = x;
+
+    } else {
+      position = (page * 10) - y;
+
+    }
+
+    return position;
+
+  }
+
+
+
+
   getData() {
 
-    var observable = this.dataService.getDataWithCode();
+    this.isLoading = true;
 
-    if(observable === null){return;}
+    const observable = this.dataService.getDataWithCode();
+
+    if (observable === null) {
+      return; // no data has been fetched
+    }
 
     observable.subscribe(data => {
+
       this.processedData = [];
       this.initialData = [];
       this.initialData = data;
       this.showTable = true;
+
       this.getProcedureName();
 
       this.initialData.forEach(item => {
         this.processedData.push(this.createNewDataItem(item));
 
       });
-
       this.dataSource = new MatTableDataSource();
+      this.dataSource.data = [];
       this.dataSource.data = this.processedData;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
       this.loadPage();
-    });
+
+      console.log('Table data is fetched');
+
+    }
+    );
+
+    // Convert from observable to promise, and use 'then' when the subscribe is complete too
+    observable.toPromise().then(() => this.isLoading = false); console.log('Table data is loaded');
+
+
+
+
   }
 
   getProcedureName() {
@@ -121,7 +170,7 @@ export class TableComponent implements OnInit {
 
     const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
     this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
-    
+
       this.mapAPIService.getUserLocation().then((userLocation: Location) => {
         this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
           this.mapAPIService.addMarker(location.lat, location.lng, true, {
@@ -142,10 +191,10 @@ export class TableComponent implements OnInit {
 
     //     console.log(data);
     //     var location = data.results[0].geometry.location;
-        //INSERT CODE HERE
+    //INSERT CODE HERE
     //   });
     // });
-    
+
 
 
   }
@@ -163,9 +212,9 @@ export class TableComponent implements OnInit {
 
   }
 
-async sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+  async sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   toTitleCase(str) {
     return str.replace(
