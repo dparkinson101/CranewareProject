@@ -84,18 +84,37 @@ export class TableComponent implements OnInit {
     page.forEach(item => {
       this.placeOnMap(item);
     });
-    console.log('Placed Markers on map');
   }
 
 
   async placeOnMap(item: any) {
 
-    const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
-    this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
-
+    if( item.providerLongitude === undefined || item.providerLatitude === undefined ){
+      const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
+      this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
+        this.mapAPIService.getUserLocation().then((userLocation: Location) => {
+          this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
+            this.mapAPIService.addMarker(location.lat, location.lng, true, {
+              markerName: item.providerName,
+              markerPrice: item.averageTotalPayments,
+              markerDistance: distance,
+              markerAddress: address
+            }
+            ).then(() => {
+              this.mapAPIService.averageFocus();
+              this.mapAPIService.labelMarkers();
+            });
+          });
+        });
+      });
+    }
+    else{
+      var location = { lat: item.providerLatitude, lng: item.providerLongitude };
+      const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
       this.mapAPIService.getUserLocation().then((userLocation: Location) => {
         this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
-          this.mapAPIService.addMarker(location.lat, location.lng, true, {
+          console.log("location lat: " + location.lat + "\nlocation lng: " +location.lng );
+          this.mapAPIService.addMarker(location.lat, location.lng, false, {
             markerName: item.providerName,
             markerPrice: item.averageTotalPayments,
             markerDistance: distance,
@@ -107,7 +126,7 @@ export class TableComponent implements OnInit {
           });
         });
       });
-    });
+    }
   }
 
   async sleep(ms) {
@@ -188,14 +207,10 @@ export class TableComponent implements OnInit {
       providerZipCode: item.providerZipCode,
       providerStreetAddress: item.providerStreetAddress,
       averageTotalPayments: Number(item.averageTotalPayments),
+      providerLatitude: item.latitude,
+      providerLongitude: item.longitude
     }
 
   }
 
 }
-
-
-
-
-
-
