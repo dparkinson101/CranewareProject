@@ -1,11 +1,13 @@
+import { MatFormFieldModule,MatAutocomplete, MatAutocompleteTrigger, MatAutocompleteModule } from '@angular/material';
 import { MapAPIService } from '../services/map-api.service';
 import { DataService } from '../services/data.service';
 import { Router } from '@angular/router';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import { Component, OnInit } from '@angular/core';
 import { ViewEncapsulation } from '@angular/compiler/src/core';
 import { item } from '../models/item';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormControl } from '@angular/forms';
 
 
 @Component({
@@ -14,13 +16,30 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./search-bar.component.css'],
   
 })
+
+
+
 export class SearchBarComponent implements OnInit {
 
   constructor(public dataService: DataService, public mapAPIService: MapAPIService, public router: Router) {
 
   }
+   myControl = new FormControl();
+  options: string[] = ['One', 'Two', 'Three'];
+
+  objectOptions = 
+  [
+    { name: 'angular'},
+    {name:'angular matetial'},
+
+{name: 'react'
+    },
+
+
+  ];
 
   sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
+
 
 
   model = new item('', '');
