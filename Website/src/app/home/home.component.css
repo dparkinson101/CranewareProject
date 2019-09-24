@@ -1,0 +1,82 @@
+html,
+body,
+.view {
+    height: 70vh;
+    width: 80%;
+    font-family: 'Gibson', 'canada-type-gibson', sans-serif;
+}
+
+h2 {
+    text-align: center;
+    font-weight: 400;
+    color: #007cc2;
+}
+
+h4 {
+    font-weight: 300;
+}
+
+p {
+    font-weight: 200;
+}
+
+button {
+    background-color: #66bf48;
+    border-color: #66bf48;
+}
+
+
+/* Full Page Carousel itself*/
+
+.carousel {
+    height: 70vh;
+}
+
+.carousel .carousel-inner {
+    height: 70vh;
+}
+
+.carousel .carousel-inner .carousel-item,
+.carousel .carousel-inner .active {
+    height: 70vh;
+}
+
+.carousel-caption {}
+
+ul {
+    list-style: none;
+    /* Remove default bullets */
+}
+
+.text ul li::before {
+    content: "\2022";
+    /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: rgb(102, 190, 72);
+    /* Change the color */
+    font-weight: 1000;
+    /* If you want it to be bold */
+    display: inline-block;
+    /* Needed to add space between the bullet and the text */
+    width: 1em;
+    /* Also needed for space (tweak if needed) */
+    margin-left: -1em;
+    /* Also needed for space (tweak if needed) */
+}
+
+.text {
+    padding: 20px;
+    font-weight: 200;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-bottom: 0px;
+}
+
+.link {
+    padding: 20px;
+    margin: auto;
+    padding-top: 0px;
+}
+
+.container {
+    width: 90%;
+}

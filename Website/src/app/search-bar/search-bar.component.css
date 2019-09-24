@@ -1,0 +1,20 @@
+.searchBar {
+    background-color: white;
+    width: 100%;
+    list-style-type: none;
+    margin: auto;
+    text-align: center;
+    padding: 20px;
+    padding-bottom: 5px;
+}
+
+.form-group {
+    display: inline-table;
+    vertical-align: middle;
+    padding: 10px;
+}
+
+button {
+    background-color: #66bf48;
+    border-color: #66bf48;
+}
