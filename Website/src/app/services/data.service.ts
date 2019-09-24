@@ -76,7 +76,7 @@ export class DataService {
         console.log(`results for code ${this.code} are in the cache`);
 
       } else {
-        results = this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code + '&location=' + this.userLocation);
+        results = this.http.get<any>(this.apiURL + '/providerinfo?code=' + this.code + '&location=' + this.userLocation);
         this.addToCache(this.code, results);
       }
       return results;

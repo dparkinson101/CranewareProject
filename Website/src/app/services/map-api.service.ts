@@ -49,7 +49,7 @@ export class MapAPIService {
         this.map.setCenter({ lat: latitude, lng: longitude });
       }
     } catch (err) {
-      console.log('Could add marker on map: ' + this.map);
+      console.log('Could not add marker on map: ' + this.map);
       console.log(err);
     }
   }

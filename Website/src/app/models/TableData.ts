@@ -6,4 +6,6 @@ export interface TableData {
     providerZipCode: string;
     providerStreetAddress: string;
     averageTotalPayments: number;
+    providerLatitude: number;
+    providerLongitude: number;
   }
