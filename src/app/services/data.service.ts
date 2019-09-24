@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, Subject, BehaviorSubject } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';
+import { retry, catchError, map } from 'rxjs/operators';
 
 /*
 This the data service - this is where data for the website is obtained via API (Express server - this connects to the database)
@@ -11,27 +11,30 @@ This the data service - this is where data for the website is obtained via API (
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataService {
+
+  public cache;
   constructor(private http: HttpClient) {
 
+    this.cache = new Map();
   }
 
   public code: any;
   public userLocation: any;
 
-  public cache: any;
-  
+
 
 
   private codeSource = new BehaviorSubject('default');
   private locationSource = new BehaviorSubject('default');
   // the current code that has been typed into the search bar
   currentCode = this.codeSource.asObservable();
- currentLocation = this.locationSource.asObservable();
+  currentLocation = this.locationSource.asObservable();
 
 
   // location of Express Server
-   apiURL = 'http://localhost:3000'; // THIS URL IS TO BE USED IF RUNNING SERVER LOCALLY
+  apiURL = 'http://localhost:3000'; // THIS URL IS TO BE USED IF RUNNING SERVER LOCALLY
   // apiURL = 'http://134.36.36.224:3000'; // THIS URL IS TO BE USED IF ON LAB PC NETWORK
 
 
@@ -56,21 +59,31 @@ export class DataService {
 
   */
 
+  addToCache(code: any, results: any) {
+    this.cache.set(code, results);
+    console.log(`adding results to cache for code ${this.code}`);
+  }
+
+
   getDataWithCode() {
-    // if(this.code !== undefined && this.userLocation !== undefined){
 
-      if(this.code === undefined){return null;}
+    let results;
+    if (this.code === undefined) { return null; }
 
-      try{
-        var results = this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code + '&location=' + this.userLocation);
-        return results;
+    try {
+      if (this.cache.has(this.code)) {
+        results = this.cache.get(this.code);
+        console.log(`results for code ${this.code} are in the cache`);
+
+      } else {
+        results = this.http.get<any>(this.apiURL + '/sortpriceasc?code=' + this.code + '&location=' + this.userLocation);
+        this.addToCache(this.code, results);
       }
-      catch(err){
-        console.log(err);
-        return null;
-      }
-
-
+      return results;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
 
   }
 
@@ -85,8 +98,6 @@ export class DataService {
     this.userLocation = location;
     this.codeSource.next(location);
   }
-
-
 
 
   /*handle both server side and client errors*/

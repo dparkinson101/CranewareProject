@@ -5,8 +5,8 @@ import { LocationService } from '../services/location.service';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
 import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable } from '@angular/material';
-import { Observable } from 'rxjs';
 import { TableData } from '../models/TableData';
+import { item } from '../models/item';
 
 
 
@@ -76,7 +76,7 @@ export class TableComponent implements OnInit {
     page.forEach(item => {
       this.placeOnMap(item);
     });
-    console.log('Placed Markers' + page);
+    console.log('Placed Markers on map');
   }
 
 
@@ -109,9 +109,9 @@ export class TableComponent implements OnInit {
 
   // --------------------------------------------------------------------------
   //                        WORKING WITH THE TABLE DATA
-  // filters applied to the table are applied across all fields. 
-  // 
-  // 
+  // filters applied to the table are applied across all fields. In the get
+  // data function this is where the data is taken from the data service, the
+  // pages are set and the map markers are placed on the first page
   // --------------------------------------------------------------------------
 
   applyFilter(filterValue: string) {
@@ -119,9 +119,6 @@ export class TableComponent implements OnInit {
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     this.dataSource.filter = filterValue;
   }
-
-
-
 
 
   async getData() {
@@ -157,14 +154,11 @@ export class TableComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
-        //get the first page of results - make sure it is 10
-        const paged = this.dataSource.connect().value;
-        if (paged.length < 11) {
-          this.mapAPIService.removeMarkers();
-          paged.forEach(item => {
-            this.placeOnMap(item);
-          });
-          console.log(paged);
+        // get the first page of results - make sure it is 10
+        const page = this.getCurrent();
+        if (page.length < 11) {
+          this.placeCurrentOnMap(page);
+          console.log(page);
         }
       });
 
@@ -177,10 +171,8 @@ export class TableComponent implements OnInit {
 
   }
 
-
   createNewDataItem(item: any): TableData {
-    const name = this.titleCasePipe.transform( item.providerName);
-   
+    const name = this.titleCasePipe.transform(item.providerName);
     return {
       providerName: name,
       providerCity: item.providerCity,
@@ -191,8 +183,6 @@ export class TableComponent implements OnInit {
     }
 
   }
-
-
 
 }
 
