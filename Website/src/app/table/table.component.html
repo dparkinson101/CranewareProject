@@ -19,16 +19,16 @@
 
 
 <div class="tableContainer" *ngIf="showTable == true;">
-
     <p><i>{{procedure | titlecase }}</i></p>
 
+
+      <!-- Loading Circle -->
     <mat-card *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
         <mat-progress-spinner color="primary" mode="indeterminate">
         </mat-progress-spinner>
     </mat-card>
 
-    <div class="tableContainer" *ngIf="isLoading == false;">
-
+        <div class="tableContainer" *ngIf="isLoading == false;">
         <div class="example-header">
             <mat-form-field>
                 <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="Filter">

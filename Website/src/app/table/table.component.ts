@@ -156,6 +156,9 @@ export class TableComponent implements OnInit {
       this.initialData = [];
       this.initialData = data;
       this.showTable = true;
+      
+
+
 
       this.getProcedureName();
 

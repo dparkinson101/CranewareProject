@@ -64,7 +64,7 @@ ul {
     /* Also needed for space (tweak if needed) */
 }
 
-.text {
+.text-center {
     padding: 20px;
     font-weight: 200;
     padding-bottom: 0px;
@@ -80,5 +80,5 @@ ul {
 }
 
 .container {
-    width: 90%;
+    width: 100%;
 }
