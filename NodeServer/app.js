@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/indexUpdated');
 var usersRouter = require('./routes/users');
 var bodyParser = require('body-parser');
 
