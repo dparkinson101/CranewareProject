@@ -74,12 +74,17 @@ export class SearchBarComponent implements OnInit {
   }
 
   initAutocomplete(){
-    this.autocomplete = new google.maps.places.Autocomplete(document.getElementById('location'), {types: ['geocode']});
-    this.autocomplete.addListener('place_changed', function(){
-      this.userLocation = this.getPlace();
-      console.log(this.userLocation);
-
+    this.autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"), {types: ['geocode']});
+    var self = this;
+    this.autocomplete.addListener('place_changed', function (mapAPI = self.mapAPIService){
+      mapAPI.setUserPlace(this.getPlace());
     });
+  }
+
+  autoCallBack(){
+    this.userPlace = this.autocomplete.getPlace();
+    this.mapAPIService.setUserPlace(this.userPlace);
+    console.log();
   }
 
   ngOnInit() {
