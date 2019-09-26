@@ -17,7 +17,7 @@ export class MapComponent implements OnInit {
   }
 
   async handleMapSetUp(){
-    this.mapAPI.createMap(15.31, 16.34, 5);
+    this.mapAPI.createMap(39.8283, -95.7129, 4);
   }
 }
 

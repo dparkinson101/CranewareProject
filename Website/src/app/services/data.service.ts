@@ -96,7 +96,7 @@ export class DataService {
   /*Get the location as a search parameter*/
   getLocation(location: string) {
     this.userLocation = location;
-    this.codeSource.next(location);
+    this.locationSource.next(location);
   }
 
 

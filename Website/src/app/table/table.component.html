@@ -69,7 +69,7 @@
                 <!-- Distance Column -->
                 <ng-container matColumnDef="providerDistance">
                     <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance </mat-header-cell>
-                    <mat-cell *matCellDef="let item"> {{item.providerDistance}} </mat-cell>
+                    <mat-cell *matCellDef="let item"> {{item.providerDistance}}km</mat-cell>
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
