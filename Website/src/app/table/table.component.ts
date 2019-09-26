@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Location } from './../models/Location';
 import { MapAPIService } from '../services/map-api.service';
 import { DataService } from '../services/data.service';
@@ -25,7 +26,7 @@ export class TableComponent implements OnInit {
   public showSpinner = true;
   public showTable = false;
   public procedure: string;
-  public sortOptions = ['Price: Low to High', 'Price: High to Low'];
+ 
 
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -48,6 +49,13 @@ export class TableComponent implements OnInit {
     observable.subscribe(() => {
       this.getData();
     });
+
+    this.dataService.currentLocation.subscribe(()=> 
+      {
+        this.getData();
+      });
+
+
 
 
   }

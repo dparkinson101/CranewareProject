@@ -33,10 +33,6 @@ export class SearchBarComponent implements OnInit {
     { name: 'angular'},
     {name:'angular matetial'},
 
-{name: 'react'
-    },
-
-
   ];
 
 
