@@ -51,10 +51,10 @@ export class TableComponent implements OnInit {
       this.getData();
     });
 
-    this.dataService.currentLocation.subscribe(()=> 
-      {
-        this.getData();
-      });
+    // this.dataService.currentLocation.subscribe(()=> 
+    //   {
+    //     this.getData();
+    //   });
 
 
 

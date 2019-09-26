@@ -84,7 +84,7 @@ export class DataService {
   getLocation(location: string) {
     console.log(location);
     this.userLocation = location;
-    this.codeSource.next(location);
+    this.locationSource.next(location);
   }
 
 

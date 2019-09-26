@@ -33,11 +33,11 @@ router.get('/azure', function(req, res, next) {
 });
 
 
+
 /*POST Request*/
 router.post('/', function(req, res) {
     res.send('Got a POST request')
 })
-
 
 /*PUT Request*/
 router.put('/user', function(req, res) {
