@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Location } from './../models/Location';
 import { MapAPIService } from '../services/map-api.service';
 import { DataService } from '../services/data.service';
@@ -25,13 +26,13 @@ export class TableComponent implements OnInit {
   public showSpinner = true;
   public showTable = false;
   public procedure: string;
-  public sortOptions = ['Price: Low to High', 'Price: High to Low'];
+ 
 
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  public displayedColumns = ['providerName', 'providerState', 'providerZipCode', 'averageTotalPayments'];
+  public displayedColumns = ['providerName', 'providerState', 'providerZipCode', 'averageTotalPayments', 'providerDistance'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
               private titleCasePipe: TitleCasePipe) {
 
@@ -45,10 +46,16 @@ export class TableComponent implements OnInit {
     // update when the search happens
     const observable = this.dataService.currentCode;
 
-
     observable.subscribe(() => {
       this.getData();
     });
+
+    // this.dataService.currentLocation.subscribe(()=> 
+    //   {
+    //     this.getData();
+    //   });
+
+
 
 
   }
@@ -105,7 +112,7 @@ export class TableComponent implements OnInit {
       const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
       this.mapAPIService.getUserLocation().then((userLocation: Location) => {
         this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
-          console.log("location lat: " + location.lat + "\nlocation lng: " +location.lng );
+          //console.log("location lat: " + location.lat + "\nlocation lng: " +location.lng );
           this.mapAPIService.addMarker(location.lat, location.lng, false, {
             markerName: item.providerName,
             markerPrice: item.averageTotalPayments,
@@ -150,36 +157,42 @@ export class TableComponent implements OnInit {
       return; // no data has been fetched
     }
 
-    observable.subscribe(data => {
-
+    observable.toPromise().then(async (data) => {
       this.processedData = [];
       this.initialData = [];
       this.initialData = data;
       this.showTable = true;
+      
+
+
 
       this.getProcedureName();
 
-      this.initialData.forEach(item => {
-        this.processedData.push(this.createNewDataItem(item));
+      await this.initialData.forEach(async (item) => {
+        await this.createNewDataItem(item).then((data: TableData) => {
+          this.processedData.push(data);
+        });
       });
-    },
-      null,
-      () => {
 
-        console.log('Table data is fetched');
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource();
-        this.dataSource.data = this.processedData;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+      console.log(this.processedData);
 
-        // get the first page of results - make sure it is 10
-        const page = this.getCurrent();
-        if (page.length < 11) {
-          this.placeCurrentOnMap(page);
-          console.log(page);
-        }
-      });
+      console.log('Table data is fetched');
+      this.isLoading = false;
+      this.dataSource = new MatTableDataSource();
+      this.dataSource.data = this.processedData;
+     
+      await this.sleep(1);
+
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+
+      // get the first page of results - make sure it is 10
+      const page = this.getCurrent();
+      if (page.length < 11) {
+        this.placeCurrentOnMap(page);
+        console.log(page);
+      }
+    });
 
   }
 
@@ -190,19 +203,29 @@ export class TableComponent implements OnInit {
 
   }
 
-  createNewDataItem(item: any): TableData {
+  async createNewDataItem(item: any) {
     const name = this.titleCasePipe.transform(item.providerName);
-    return {
-      providerName: name,
-      providerCity: item.providerCity,
-      providerState: item.providerState,
-      providerZipCode: item.providerZipCode,
-      providerStreetAddress: item.providerStreetAddress,
-      averageTotalPayments: Number(item.averageTotalPayments),
-      providerLatitude: item.latitude,
-      providerLongitude: item.longitude
-    }
+    const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
 
+    return new Promise(resolve => {
+      this.mapAPIService.getUserLocation().then((userPosition: Location) => {
+        var pos = { lat: item.latitude, lng: item.longitude };
+        this.mapAPIService.getDistance(userPosition, pos, address ).then((distance: string) => {
+          var data = {
+            providerName: name,
+            providerState: item.providerState,
+            providerCity: item.providerCity,
+            providerZipCode: item.providerZipCode,
+            providerStreetAddress: item.providerStreetAddress,
+            averageTotalPayments: item.averageTotalPayments,
+            providerLatitude: item.latitude,
+            providerLongitude: item.longitude,
+            providerDistance: Number(distance)
+          };
+          resolve(data);
+        });
+      });
+    });
   }
 
 }

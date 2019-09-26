@@ -1,5 +1,4 @@
 export interface TableData {
-
     providerName: string;
     providerState: string;
     providerCity: string;
@@ -8,4 +7,5 @@ export interface TableData {
     averageTotalPayments: number;
     providerLatitude: number;
     providerLongitude: number;
+    providerDistance: string;
   }
