@@ -24,8 +24,6 @@ export class DataService {
   public userLocation: any;
 
 
-
-
   private codeSource = new BehaviorSubject('default');
   private locationSource = new BehaviorSubject('default');
   // the current code that has been typed into the search bar
@@ -45,19 +43,6 @@ export class DataService {
     })
   };
 
-  /*Get data from the test endpoint*/
-  getData(): Observable<any> {
-    return this.http.get<any>(this.apiURL + '/azure')
-      .pipe(
-        retry(1),
-        catchError(this.handleError));
-  }
-
-  /*Request data for a specific code i.e send parameters
-
-  CHANGE ENDPOINT FOR DIFFERENT DATABASES --> auzre or silva
-
-  */
 
   addToCache(code: any, results: any) {
     this.cache.set(code, results);
@@ -66,6 +51,7 @@ export class DataService {
 
 
   getDataWithCode() {
+
 
     let results;
     if (this.code === undefined) { return null; }
@@ -91,12 +77,14 @@ export class DataService {
   getCode(code: string) {
     this.code = code;
     this.codeSource.next(code);
+  
   }
 
   /*Get the location as a search parameter*/
   getLocation(location: string) {
+    console.log(location);
     this.userLocation = location;
-    this.codeSource.next(location);
+    this.locationSource.next(location);
   }
 
 
