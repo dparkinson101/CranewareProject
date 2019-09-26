@@ -8,6 +8,9 @@ import { Component, OnInit } from '@angular/core';
 import { ViewEncapsulation } from '@angular/compiler/src/core';
 import { item } from '../models/item';
 import { NgForm, FormControl } from '@angular/forms';
+import { TitleCasePipe } from '@angular/common';
+import { Observable } from 'rxjs';
+import { filter, startWith, map } from 'rxjs/operators';
 
 declare var google: any;
 
@@ -22,24 +25,21 @@ declare var google: any;
 
 export class SearchBarComponent implements OnInit {
 
-  constructor(public dataService: DataService, public mapAPIService: MapAPIService, public router: Router) {
+  constructor(public dataService: DataService, public mapAPIService: MapAPIService, public router: Router, private titlePipe: TitleCasePipe) {
 
   }
-   myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three'];
+
+  myControl = new FormControl();
 
   objectOptions =
   [
     { name: 'angular'},
     {name:'angular matetial'},
-
   ];
 
-
+  filteredOptions: Observable<Procedure[]>;
 
   sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
-
-
 
   model = new item('', '');
   code: string;
@@ -47,8 +47,12 @@ export class SearchBarComponent implements OnInit {
 
   submitted = false;
 
-  autocomplete: any;
+  autocompleteLocation: any;
+  autocompleteProcedure: any;
   userPlace: any;
+
+  procedureList: Procedure[] = [];
+  procedureAutocomplete: any;
 
   newSearch() {
 
@@ -67,6 +71,8 @@ export class SearchBarComponent implements OnInit {
 
   reset() {
     this.model = new item('', '');
+    console.log(this.autocompleteProcedure);
+    this.autocompleteProcedure.value = "";
 
   }
   onSubmit() {
@@ -74,23 +80,87 @@ export class SearchBarComponent implements OnInit {
   }
 
   initAutocomplete(){
-    this.autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"), {types: ['geocode']});
+    //Address Auto Complete
+    this.autocompleteLocation = new google.maps.places.Autocomplete(document.getElementById("location"), {types: ['geocode']});
     var self = this;
-    this.autocomplete.addListener('place_changed', function (mapAPI = self.mapAPIService){
+    this.autocompleteLocation.addListener('place_changed', function (mapAPI = self.mapAPIService){
       mapAPI.setUserPlace(this.getPlace());
     });
+
+    //Procedure Auto Complete
+    this.autocompleteProcedure = document.getElementById("procedure");
+
+    console.log(this.autocompleteLocation);
+    console.log(this.autocompleteProcedure);
   }
 
   autoCallBack(){
-    this.userPlace = this.autocomplete.getPlace();
+    this.userPlace = this.autocompleteLocation.getPlace();
     this.mapAPIService.setUserPlace(this.userPlace);
-    console.log();
   }
 
   ngOnInit() {
 
     this.dataService.currentCode.subscribe(code => this.code = code);
     this.dataService.currentLocation.subscribe(userLocation => this.userLocation = userLocation);
+    this.dataService.getProcedures().subscribe( async procedureResults => {
+      procedureResults.forEach( item => {
+        var procedureCode = <string>(item.dRGDefinition).substring(0, 3);
+        var procedureName = <string>(item.dRGDefinition).substring(6, <string>(item.dRGDefinition).length);
+
+        var procedure = {
+          code: procedureCode,
+          name: this.titlePipe.transform(procedureName)
+        };
+
+        this.procedureList.push(procedure);
+      });
+
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+    });
   }
 
+  private _filter(value: any): Procedure[] {
+    var filterValue = "";
+    if(value.name === undefined){
+      filterValue = value.toLowerCase();
+    }
+    else{
+      filterValue = value.name;
+    }
+    
+
+    var filteredList = this.procedureList.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+    if(filteredList.length === 0){
+      filteredList = this.procedureList.filter(option => option.code.toLowerCase().indexOf(filterValue) === 0);
+    }
+
+    return filteredList;
+  }
+
+  assignCode(procedure: Procedure){
+    console.log(procedure);
+    this.model.code = procedure.code;
+  }
+
+  displayFn(val: any)
+  {
+      return val? val.name : val;
+
+  }
+  
+
+  async sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  
+}
+
+interface Procedure {
+    code: string,
+    name: string
 }

@@ -1,4 +1,4 @@
-var express = require('express');
+ var express = require('express');
 var router = express.Router();
 var connection = require('../lib/db');
 
@@ -33,11 +33,11 @@ router.get('/azure', function(req, res, next) {
 });
 
 
-
 /*POST Request*/
 router.post('/', function(req, res) {
     res.send('Got a POST request')
 })
+
 
 /*PUT Request*/
 router.put('/user', function(req, res) {
@@ -81,7 +81,7 @@ router.get('/silva', function(req, res, next) {
 
     var code = req.query.code;
 
-    connection.query(('SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' LIMIT 20000'), function(err, results) {
+    connection.query(('select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ';'), function(err, results) {
 
         if (err) {
             console.log(err);
@@ -99,7 +99,7 @@ router.get('/sortpriceasc', function(req, res, next) {
 
     var code = req.query.code;
 
-    connection.query(('SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' ORDER BY averageTotalPayments ASC LIMIT 200'), function(err, results) {
+    connection.query(('select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' ORDER BY financial2017.averageTotalPayments ASC;'), function(err, results) {
 
         if (err) {
             console.log(err);
@@ -119,7 +119,7 @@ router.get('/filterzipcode', function(req, res, next) {
     var code = req.query.code
     var zipcode = req.query.zipcode
 
-    connection.query(('SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND providerZipCode=' + zipcode + ' LIMIT 200'), function(err, results) {
+    connection.query(('select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerZipCode = ' + zipcode + ';'), function(err, results) {
 
         if (err) {
             console.log(err);
@@ -137,7 +137,7 @@ router.get('/filterstate', function(req, res, next) {
     var code = req.query.code;
     var state = req.query.state;
 
-    connection.query(('SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND providerState=' + state + ' LIMIT 200'), function(err, results) {
+    connection.query(('select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerState = "' + state +'";'), function(err, results) {
 
         if (err) {
             console.log(err);
@@ -155,7 +155,8 @@ router.get('/providerinfo', function(req, res, next) {
 
     var code = req.query.code;
 
-    connection.query(('SELECT alldata.dRGDefinition, alldata.providerId, alldata.providerName,alldata.averageTotalPayments, alldata.providerStreetAddress, alldata.providerCity, alldata.providerState, alldata.providerZipCode, output2017.latitude, output2017.longitude from alldata inner join output2017 on alldata.providerId = output2017.providerId WHERE substr(alldata.dRGDefinition, 1, 3) =' + code + ' LIMIT 200'), function(err, results) {
+    //connection.query(('SELECT alldata.dRGDefinition, alldata.providerId, alldata.providerName, alldata.providerStreetAddress, alldata.providerCity, alldata.providerState, alldata.providerZipCode, output2017.latitude, output2017.longitude from alldata inner join output2017 on alldata.providerId = output2017.providerId WHERE substr(alldata.dRGDefinition, 1, 3) =' + code + ' LIMIT 200'), function(err, results) {
+	connection.query(('select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code +';'), function(err, results) {
 
         if (err) {
             console.log(err);
@@ -169,7 +170,7 @@ router.get('/providerinfo', function(req, res, next) {
 });
 
 router.get('/procedurelist', function(req, res, next){
-    var query = 'SELECT DISTINCT alldata.dRGDefinition from alldata';
+    var query = 'SELECT DISTINCT codes.dRGDefinition from codes';
     connection.query(query, function(err, results){
         if(err){
             console.log(err);
@@ -188,7 +189,7 @@ router.get('/pricerange', function(req, res, next) {
     var max = req.query.max;
     var min = req.query.min;
 
-    connection.query(('SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND averageTotalPaymetns BETWEEN ' + min + ' AND ' + max + ' LIMIT 200'), function(err, results) {
+    connection.query(('select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND averageTotalPayments between ' + min + ' AND ' + max + ';'), function(err, results) {
 
         if (err) {
             console.log(err);

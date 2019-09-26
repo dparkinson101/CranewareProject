@@ -14,6 +14,7 @@ export class MapAPIService {
   infoWindows: any[] = [];
 
   userPlace: any;
+  userGeolocation: any;
   userMarker: any;
 
   constructor() { }
@@ -39,7 +40,7 @@ export class MapAPIService {
        });
 
       const infoWindow = new google.maps.InfoWindow({
-        content: "<b>"+ this.titleCase(info.markerName) +"</b>" + "<br><b>Price:</b> $" + info.markerPrice + "<br><b>Distance:</b> " + info.markerDistance + "<br><b>Address:</b> " + this.titleCase(info.markerAddress)
+        content: "<div style='text-align: center'><b>"+ this.titleCase(info.markerName) +"</b>" + "<br><b>Price:</b> $" + info.markerPrice + "<br><b>Distance:</b> " + info.markerDistance + "km <br><b>Address:</b> " + this.titleCase(info.markerAddress) + "</div>"
       });
 
       marker.addListener("click", ()=>{
@@ -114,13 +115,15 @@ export class MapAPIService {
     }
   }
 
-  public focusProvider(){
-
-  }
-
   public setUserPlace(place: any){
-    this.userPlace = place;
-    console.log(place);
+
+    if(this.userPlace === undefined){
+      this.userPlace = place;
+      console.log(place);
+    }
+    else{
+      this.userPlace = undefined;
+    }
   }
 
   public async getAddressGeolocation(locationAddress: string) {
@@ -146,15 +149,6 @@ export class MapAPIService {
   }
 
   public async getDistance(userPosition: Position, locationPosition: Position, destinationAddress: string){
-    // var distanceMatrixService = new google.maps.DistanceMatrixService();
-    // var request = {
-    //   avoidFerries: false,
-    //   avoidHighways: false,
-    //   avoidTolls: false,
-    //   destinations: [locationPosition],
-    //   origins: [userPosition],
-    //   travelMode: google.maps.TravelMode.DRIVING
-    // };
 
     return new Promise(resolve => {
 
@@ -164,77 +158,71 @@ export class MapAPIService {
 
       var betterDistance = ""+(rawDistance / 1000).toFixed(2)
 
-      resolve(betterDistance);
 
-      // distanceMatrixService.getDistanceMatrix(request, function(results, status){
-      //   if(status === 'OK'){
-      //     //console.log(results);
-      //     if(results.rows[0].elements[0].status === 'OK'){
-      //       resolve(results.rows[0].elements[0].distance.text);
-      //     }
-      //     else{
-            
-      //     }
-      //   }
-      //   else{
-      //     console.log("Distance Matrix request failed: " + status);
-      //     resolve(null);
-      //   }
-      // });
+      resolve(betterDistance);
     });
   }
 
   public async getUserLocation() {
-
-    if(this.userMarker){
-      this.userMarker.setMap(null);
-      this.userMarker = undefined;
-    }
-
-    return new Promise(function(resolve) {
+    
+    return new Promise(resolve => {
       if(this.userPlace === undefined){
+        
         //HTML 5 Geolocation
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position) => {
+
+        let _this = this;
+        
+        if (navigator.geolocation && _this.userGeolocation === undefined) 
+        {
+          navigator.geolocation.getCurrentPosition(position => {
             var pos = {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
-    
-            this.userMarker = new google.maps.Marker({
-              position: pos,
-              map: this.map,
-              label: "You"
-            });
-  
+
+            if(_this.userMarker){
+              _this.userMarker.setMap(null);
+              _this.userMarker = null;
+              console.log("Removed geolocation marker");
+            }else{
+              _this.userMarker = new google.maps.Marker({
+                position: pos,
+                map: _this.map,
+                label: "You"
+              });
+              console.log("Added geolocation marker");
+            }
+            
+            
+
+            _this.userGeolocation = pos;
+
             resolve(pos);
-          }, function () {
+          }, 
+          function () {
             console.log('This browser doesn\'t support HTML 5 Geolocation');
           });
         }
+        else
+        {
+          var pos = {
+            lat: this.userGeolocation.lat,
+            lng: this.userGeolocation.lng
+          };
+
+          resolve(pos);
+        }
       }
       else{
-  
-        const geocoder = new google.maps.Geocoder();
-        const request = { address: this.userPlace.formatted_address };
-  
-        console.log("Inside the else");
         console.log(this.userPlace);
-  
         const pos = {
           lat: this.userPlace.geometry.location.lat(),
           lng: this.userPlace.geometry.location.lng()
         };
   
-        this.userMarker = new google.maps.Marker({
-          position: pos,
-          map: this.map,
-          label: "You"
-        });
-  
         resolve(pos);
       }
-    }.bind(this));
+    });
   }
 
   titleCase(str) {

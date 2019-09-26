@@ -4,13 +4,24 @@
     </p>
 
     <!-- Search Bar -->
-    <form #searchBar="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
-        <div class="form-group" id="LocationBox">
-            <input type="text" class="form-control" placeholder="Location 📍" id="location" [(ngModel)]="model.userLocation" name="location" (focus)="initAutocomplete();" />
-        </div>
-        <div class="form-group" id="ProcedureBox">
-            <input type="text" class="form-control" placeholder="Procedure 🩺" id="procedure" [(ngModel)]="model.code" name="procedure">
-        </div>
+    <form #searchBar="ngForm" (ngSubmit)="onSubmit(f)" (click)="initAutocomplete();" novalidate>
+        <mat-form-field class="example-full-width" style="width: 300px; padding: 10px">
+            <input type="text" placeholder="Location 📍" id="location" name="location" [(ngModel)]="model.userLocation" name="location" aria-label="Number" matInput>
+        </mat-form-field>
+
+        <button type="button" class="btn btn-default btn-lg" (click)="onGeoSelect()">
+            <i class="fa fa-location-arrow"></i>
+        </button>
+
+        <mat-form-field class="example-full-width" style="width: 600px; padding: 10px">
+            <input type="text" placeholder="Procedure 🩺" id="procedure" name="procedure" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" >
+            <mat-autocomplete #auto="matAutocomplete" id="autoComplete" (optionSelected)="assignCode($event.option.value)" [displayWith]="displayFn">
+                <mat-option *ngFor="let procedure of filteredOptions | async" [value]="procedure">
+                    {{procedure.name}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
         <div class="form-group" id="SubmitBox">
             <button type="submit " class="btn btn-success " (click)="newSearch();">Search</button>
         </div>
@@ -36,16 +47,7 @@
     </div> -->
 
 
-    <form class="example-form">
-        <mat-form-field class="example-full-width">
-            <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let option of options" [value]="option">
-                    {{option}}
-                </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
-    </form>
+    
 
 
 

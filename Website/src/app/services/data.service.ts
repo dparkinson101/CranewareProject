@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, Subject, BehaviorSubject } from 'rxjs';
-import { retry, catchError, map } from 'rxjs/operators';
+import { retry, catchError, map, isEmpty } from 'rxjs/operators';
 
 /*
 This the data service - this is where data for the website is obtained via API (Express server - this connects to the database)
@@ -45,8 +45,11 @@ export class DataService {
 
 
   addToCache(code: any, results: any) {
-    this.cache.set(code, results);
-    console.log(`adding results to cache for code ${this.code}`);
+    if(Object.keys(results).length > 0){
+      console.log(Object.keys(results).length);
+      this.cache.set(code, results);
+      console.log(`adding results to cache for ${code}`);
+    }
   }
 
 
@@ -77,14 +80,31 @@ export class DataService {
   getCode(code: string) {
     this.code = code;
     this.codeSource.next(code);
-  
   }
 
   /*Get the location as a search parameter*/
   getLocation(location: string) {
-    console.log(location);
     this.userLocation = location;
     this.locationSource.next(location);
+  }
+
+  getProcedures(){
+    let results;
+    try{
+      if(this.cache.has("procedureList")){
+        results = this.cache.get("procedureList");
+      }
+      else{
+        results = this.http.get<any>(this.apiURL + '/procedurelist');
+        this.addToCache("procedureList", results);
+      }
+
+      return results;
+    }
+    catch(err){
+      console.log(err);
+      return null;
+    }
   }
 
 

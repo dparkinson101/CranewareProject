@@ -9,7 +9,7 @@ import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderMod
 import { TableData } from '../models/TableData';
 import { item } from '../models/item';
 
-
+declare var google: any;
 
 
 @Component({
@@ -32,7 +32,7 @@ export class TableComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  public displayedColumns = ['providerName', 'providerState', 'providerZipCode', 'averageTotalPayments', 'providerDistance'];
+  public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
               private titleCasePipe: TitleCasePipe) {
 
@@ -110,9 +110,29 @@ export class TableComponent implements OnInit {
     else{
       var location = { lat: item.providerLatitude, lng: item.providerLongitude };
       const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
-      this.mapAPIService.getUserLocation().then((userLocation: Location) => {
+
+      if(this.mapAPIService.userPlace === undefined){
+
+        this.mapAPIService.getUserLocation().then((userLocation: Location) => {
+          this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
+            this.mapAPIService.addMarker(location.lat, location.lng, false, {
+              markerName: item.providerName,
+              markerPrice: item.averageTotalPayments,
+              markerDistance: distance,
+              markerAddress: address
+            }
+            ).then(() => {
+              this.mapAPIService.averageFocus();
+              this.mapAPIService.labelMarkers();
+            });
+          });
+        });
+        return;
+        
+      }
+      else{
+        var userLocation = this.mapAPIService.userPlace.geometry.location;
         this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
-          //console.log("location lat: " + location.lat + "\nlocation lng: " +location.lng );
           this.mapAPIService.addMarker(location.lat, location.lng, false, {
             markerName: item.providerName,
             markerPrice: item.averageTotalPayments,
@@ -122,9 +142,31 @@ export class TableComponent implements OnInit {
           ).then(() => {
             this.mapAPIService.averageFocus();
             this.mapAPIService.labelMarkers();
+
+            if(this.mapAPIService.userMarker){
+              if(this.mapAPIService.userMarker.location !== userLocation){
+                this.mapAPIService.userMarker.setMap(null);
+                this.mapAPIService.userMarker = null;
+
+                this.mapAPIService.userMarker = new google.maps.Marker({
+                  position: userLocation,
+                  map: this.mapAPIService.map,
+                  label: "You"
+                });
+              }
+            }
+            else{
+              this.mapAPIService.userMarker = new google.maps.Marker({
+                position: userLocation,
+                map: this.mapAPIService.map,
+                label: "You"
+              });
+            }
           });
         });
-      });
+      }
+
+      
     }
   }
 
@@ -150,6 +192,7 @@ export class TableComponent implements OnInit {
   async getData() {
 
     this.isLoading = true;
+    this.procedure = "Searching";
 
     const observable = this.dataService.getDataWithCode();
 
@@ -163,18 +206,30 @@ export class TableComponent implements OnInit {
       this.initialData = data;
       this.showTable = true;
       
+      //Handles table if search yields no results
+      if(this.initialData.length < 1){
+        this.isLoading = false;
+        this.procedure = "No Results";
+        return;
+      }
+      else{
+        console.log(this.initialData);
+        this.procedure = "Searching";
+      }
 
 
+      // this.initialData.forEach((item) => {
+      //   this.createNewDataItem(item).then((data: TableData) => {
+      //     this.processedData.push(data);
+      //   });
+      // });
 
-      this.getProcedureName();
-
-      await this.initialData.forEach(async (item) => {
+      for (let index = 0; index < this.initialData.length; index++) {
+        const item = this.initialData[index];
         await this.createNewDataItem(item).then((data: TableData) => {
           this.processedData.push(data);
         });
-      });
-
-      console.log(this.processedData);
+      }
 
       console.log('Table data is fetched');
       this.isLoading = false;
@@ -182,6 +237,8 @@ export class TableComponent implements OnInit {
       this.dataSource.data = this.processedData;
      
       await this.sleep(1);
+
+      this.getProcedureName();
 
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -200,7 +257,6 @@ export class TableComponent implements OnInit {
 
     // choose first item from list to get name - without number at start
     this.procedure = 'Displaying results for:' + (this.initialData[0].dRGDefinition).substring(5);
-
   }
 
   async createNewDataItem(item: any) {
