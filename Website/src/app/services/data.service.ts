@@ -27,10 +27,12 @@ export class DataService {
   public userLocation: any;
   public minPrice: number;
   public maxPrice: number;
+  public zipcode: string;
+  public state: string;
 
 
 
-  private searchSource = new BehaviorSubject(new item('', '', null, null));
+  private searchSource = new BehaviorSubject(new item('', '', null, null, null, null));
 
   // the current code that has been typed into the search bar
   currentSearch = this.searchSource.asObservable();
@@ -52,14 +54,14 @@ export class DataService {
 
   addToCache(code: any, results: any) {
     if(Object.keys(results).length > 0){
-      this.cache.set(code, results);
+      var key = this.code + this.userLocation + this.minPrice + this.maxPrice + this.zipcode + this.state;
+      this.cache.set(key, results);
       console.log(`adding results to cache for ${code}`);
     }
   }
 
 
   getDataWithCode() {
-
     let results;
     if (this.code === undefined || this.code === "INVALID_PROCEDURE") { 
       return new Observable(observer => {
@@ -69,13 +71,15 @@ export class DataService {
     }
 
     try {
-      if (this.cache.has(this.code)) {
-        results = this.cache.get(this.code);
+      var key = this.code + this.userLocation + this.minPrice + this.maxPrice + this.zipcode + this.state;
+      
+      if (this.cache.has(key)) {
+        results = this.cache.get(key);
         console.log(`results for code ${this.code} are in the cache`);
       } 
       else {
-        results = this.http.get<any>(this.apiURL + '/comboQuery?code=' + this.code + '&max=' + this.maxPrice + '&min=' + this.minPrice);
-        this.addToCache(this.code, results);
+        results = this.http.get<any>(this.apiURL + '/comboQuery?code=' + this.code + '&max=' + this.maxPrice + '&min=' + this.minPrice + '&zipcode=' + this.zipcode + '&state=' + this.state);
+        this.addToCache(key, results);
       }
       return results;
     } 
@@ -92,6 +96,10 @@ export class DataService {
     this.userLocation = search.userLocation;
     this.minPrice = search.minPrice;
     this.maxPrice = search.maxPrice;
+    this.zipcode = search.zipcode;
+    this.state = search.state;
+
+    console.log(search);
 
     this.searchSource.next(search);
   }
