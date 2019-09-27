@@ -30,19 +30,21 @@ module.exports.silva  = function (code) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
 	
-	connection.end();
+	
   }, 300);
 });
 
-return promise1.then((value) =>	{
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;
 };
 
 //query to sort the search results by price in ascending order
@@ -63,21 +65,22 @@ module.exports.sortpriceasc  = function (code) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
 	
-	connection.end();
+	
   }, 300);
 });
 
-return promise1.then((value) =>	{
+var x = promise1.then((value) =>	{
   return value;
-});	
-};
+});
 
+return x;
+};
 //query to filter the results by providerZipCode
 module.exports.filterzipcode  = function (code, zipcode) {
 
@@ -96,19 +99,21 @@ module.exports.filterzipcode  = function (code, zipcode) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
 	
-	connection.end();
+	
   }, 300);
 });
 
-return promise1.then((value) =>	{
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;
 };
 
 //query to filter the results by providerState
@@ -129,19 +134,21 @@ module.exports.filterstate  = function (code, state) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
 	
-	connection.end();
+	
   }, 300);
 });
 
-return promise1.then((value) =>	{
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;
 };
 
 //query to get the provider info from procedure code
@@ -162,19 +169,21 @@ module.exports.providerinfo  = function (code	) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
 	
-	connection.end();
+	
   }, 300);
 });
 
-return promise1.then((value) =>	{
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;
 };
 
 /*SORT*/
@@ -195,18 +204,20 @@ module.exports.pricerange  = function (code, min, max) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
 	
-	connection.end();
+	
   }, 300);
 });
 
-return promise1.then((value) =>	{
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;
 };
 

@@ -19,7 +19,7 @@ router.use(cors())
 
 /*FOR SILVA SQL DATABASE CONNECTION */
 //select all statement
-module.exports.silva  = function (code) {
+module.exports.silva  = async function (code) {
 
 	var string = 'SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' LIMIT 20000';
 
@@ -36,19 +36,19 @@ module.exports.silva  = function (code) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
-	
-	connection.end();
   }, 300);
 });
 
-return promise1.then((value) =>	{
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;	
 };
 
 //query to sort the search results by price in ascending order
@@ -69,18 +69,19 @@ module.exports.sortpriceasc  = function (code) {
 			} 
 			
 			else {
-				console.log(results[0]);
+			
 				resolve(results);
 			}
 			 
 		});
-	
-	connection.end();
   }, 300);
 });
-return promise1.then((value) =>	{
+
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;
 };
 
 //query to filter the results by providerZipCode
@@ -101,24 +102,26 @@ module.exports.filterzipcode  = function (code, zipcode) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
 	
-	connection.end();
   }, 300);
 });
-return promise1.then((value) =>	{
+
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;
 };
 
 //query to filter the results by state
 module.exports.filterstate  = function (code, state) {
 
-	var string = 'SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND providerState=' + state + ' LIMIT 200';
+	var string = 'SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND providerState="' + state + '" LIMIT 200';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -133,18 +136,21 @@ module.exports.filterstate  = function (code, state) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
 	
-	connection.end();
+	
   }, 300);
 });
-return promise1.then((value) =>	{
+
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;
 };
 
 //query to get the provider info from procedure code
@@ -165,24 +171,27 @@ module.exports.providerinfo  = function (code) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
 	
-	connection.end();
+
   }, 300);
 });
-return promise1.then((value) =>	{
+
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;
 };
 
 //query to sort by price range
 module.exports.pricerange  = function (code, min, max) {
 
-	var string = 'SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND averageTotalPaymetns BETWEEN ' + min + ' AND ' + max + ' LIMIT 200';
+	var string = 'SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND averageTotalPayments BETWEEN ' + min + ' AND ' + max + ' LIMIT 200';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -197,16 +206,18 @@ module.exports.pricerange  = function (code, min, max) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				
 				resolve(results);
 			}
 			 
 		});
 	
-	connection.end();
   }, 300);
 });
-return promise1.then((value) =>	{
+
+var x = promise1.then((value) =>	{
   return value;
-});	
+});
+
+return x;
 };

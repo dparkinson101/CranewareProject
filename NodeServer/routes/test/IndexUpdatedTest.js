@@ -21,16 +21,52 @@ describe('Testing IndexUpdated.js methods', function() {
 //
 	describe('Testing query is not null', function() {
 		it('Connection should not be null', function() {
-				//console.log(query.comboQuery());
-			assert(false);
+			//establish connection	
+		var connection = mysql.createConnection({
+			host: 'silva.computing.dundee.ac.uk',
+			user: '2019indteam5',
+			password: '9854.ind5.4589',
+			database: '2019indteam5db'
+			});	
+			assert(connection != null);
 		});	
 		
 	//Test 2: select all query
 	//We will run a select all query and check the start, end, size and a result in the middle, all being correct should return true, as these result are impossible to spoof
 	describe('Select all query', function() {
-		it('Silva should return all records', function() {
-		//code
-		assert(false)
+		it('Silva should return all records', async function() {
+		var x = await query.silva(039)
+			
+			console.log(x[87].providerId);
+			console.log(x.length);
+			
+			var one = false;
+			if(x[0].providerId == 100002 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				one = true;
+			}
+			
+			//Middle
+			var two = false;
+			if(x[87].providerId == 210029 && x[87].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				two = true;
+			}
+			
+			//End
+			var three = false;
+			if(x[807].providerId == 520193 && x[807].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				three = true;
+			}
+			//Length
+			var four = false;
+			if(x.length = 808)
+			{
+				four = 	true;
+			}
+			
+			assert(one == true && two == true && three == true && four == true);
 		});
 	});
 	
