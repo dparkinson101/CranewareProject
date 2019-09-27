@@ -27,25 +27,25 @@ module.exports.comboQuery  = function (code, min, max, zipcode, state) {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ';';
 		}
 		if(min != null && zipcode == null && state == null) {
-			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND averageTotalPayments between '+ min +' AND '+ max +';';
+			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND financial2017.averageTotalPayments between '+ min +' AND '+ max +';';
 		}
 		if(min == null && zipcode != null && state == null) {
-			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerZipCode = '+ zipcode +';';
+			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerinfo.providerZipCode = '+ zipcode +';';
 		}
 		if(min == null && zipcode == null && state != null) {
-			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerState = ' + state +';';
+			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerinfo.providerState = ' + state +';';
 		}
 		if(min != null && zipcode == null && state != null) {
-			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND averageTotalPayments between '+ min +' AND '+ max +' AND providerState = ' + state + ';';
+			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND financial2017.averageTotalPayments between '+ min +' AND '+ max +' AND providerinfo.providerState = ' + state + ';';
 		}
 		if(min != null && zipcode != null && state == null) {
-			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND averageTotalPayments between '+ min +' AND '+ max +' AND providerZipCode = ' + zipcode + ';';
+			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND financial2017.averageTotalPayments between '+ min +' AND '+ max +' AND providerinfo.providerZipCode = ' + zipcode + ';';
 		}
 		if(min == null && zipcode != null && state != null) {
-			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerState = ' + state + ' AND providerZipCode = ' + zipcode + ';';
+			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerinfo.providerState = ' + state + ' AND providerinfo.providerZipCode = ' + zipcode + ';';
 		}
 		if(min != null && zipcode != null && state != null) {
-			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND averageTotalPayments between '+ min +' AND '+ max +' AND providerState = ' + state + ' AND providerZipCode = ' + zipcode + ';';
+			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND financial2017.averageTotalPayments between '+ min +' AND '+ max +' AND providerinfo.providerState = ' + state + ' AND providerinfo.providerZipCode = ' + zipcode + ';';
 		}
 		
 		connection.query(string, function(error, results) {
@@ -58,7 +58,10 @@ module.exports.comboQuery  = function (code, min, max, zipcode, state) {
 			} 
 			
 			else {
-				console.log(results[0]);
+				console.log(results[0].providerId + ' ' + results[0].dRGDefinition);
+				console.log(results[87].providerId + ' ' + results[87].dRGDefinition);
+				console.log(results[results.length - 1].providerId + ' ' + results[results.length - 1].dRGDefinition);
+				console.log(results.length);
 				resolve(results);
 			}
 			 

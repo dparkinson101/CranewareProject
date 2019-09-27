@@ -31,6 +31,7 @@ describe('Testing ComboQuery.js methods', function() {
 	describe('Code query should return correct results', function() {
 		it('Possiblitly 1: no sorting ', function() {
 			
+			//create a promise of our query
 			var promise1 = new Promise(function(resolve, reject) 
 			{ 
 			setTimeout(function() {
@@ -38,21 +39,39 @@ describe('Testing ComboQuery.js methods', function() {
 			}, 300);
 			});
 			
+			//once query is returned check our results are correct
 			var x = promise1.then((value) =>	{
+			
+			//Start
+			var one = false;
+			if(x[0].providerId == 10002 && x[0].dRGDefinition == '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				one = true;
+			}
+			
+			//Middle
+			var two = false;
+			if(x[0].providerId == 11075 && x[0].dRGDefinition == '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				two = true;
+			}
+			
+			//End
+			var three = false;
+			if(x[807].providerId == 90011 && x[807].dRGDefinition == '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				three = true;
+			}
+			//Length
+			var four = false;
+			if(x.length = 808)
+			{
+				four == true;
+			}
+			
+			assert(one == true && two == true && three == true && four == true);
 			return value;
 			});
-			
-			console.log(x);
-			
-			var one = false;
-			
-			
-			var two = false;
-			var three = false;
-			var four = false;
-			assert(one);
-			
-			
 		});	
 	});
 	
@@ -60,8 +79,47 @@ describe('Testing ComboQuery.js methods', function() {
 //Possiblitly 2: just min max sorting 
 	describe('Code query should return correct results', function() {
 		it('Possiblitly 2: just min max sorting', function() {
-			//code
-			assert(false);
+						//create a promise of our query
+			var promise1 = new Promise(function(resolve, reject) 
+			{ 
+			setTimeout(function() {
+			query.comboQuery(039,0,10000,null,null); 
+			}, 300);
+			});
+			
+			//once query is returned check our results are correct
+			var x = promise1.then((value) =>	{
+			
+			//Start
+			var one = false;
+			if(x[0].providerId == 10002 && x[0].dRGDefinition == '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				one = true;
+			}
+			
+			//Middle
+			var two = false;
+			if(x[0].providerId == 11075 && x[87].dRGDefinition == '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				two = true;
+			}
+			
+			//End
+			var three = false;
+			if(x[807].providerId == 90011 && x[717].dRGDefinition == '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				three = true;
+			}
+			//Length
+			var four = false;
+			if(x.length = 717)
+			{
+				four == true;
+			}
+			
+			assert(one == true && two == true && three == true && four == true);
+			return value;
+			});
 		});	
 	});
 	
