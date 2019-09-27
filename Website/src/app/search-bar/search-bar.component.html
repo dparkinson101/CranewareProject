@@ -6,7 +6,7 @@
     <!-- Search Bar -->
     <form #searchBar="ngForm" (ngSubmit)="onSubmit(f)" (click)="initAutocomplete();" novalidate>
 
-        <mat-form-field class="example-full-width" style="width: 300px; padding: 10px">
+        <mat-form-field *ngIf="!(isGeolocating)" class="example-full-width" style="width: 300px; padding: 10px">
             <input type="text" placeholder="Location 📍" id="location" name="location" [(ngModel)]="model.userLocation" name="location" aria-label="Number" matInput>
         </mat-form-field>
         <div class="form-group">
@@ -40,12 +40,12 @@
             </li>
             <li>
                 <mat-form-field>
-                    <input matInput placeholder="Min ">
+                    <input placeholder="Min " [(ngModel)]="model.minPrice" name="minPrice" matInput>
                 </mat-form-field>
             </li>
             <li>
                 <mat-form-field>
-                    <input matInput placeholder="Max ">
+                    <input placeholder="Max " [(ngModel)]="model.maxPrice" name="maxPrice" matInput>
                 </mat-form-field>
             </li>
 

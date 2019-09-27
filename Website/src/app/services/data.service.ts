@@ -23,13 +23,20 @@ export class DataService {
 
   public code: any;
   public userLocation: any;
+  public minPrice: number;
+  public maxPrice: number;
+
 
 
   private codeSource = new BehaviorSubject('default');
   private locationSource = new BehaviorSubject('default');
+  private minPriceSource = new BehaviorSubject(0);
+  private maxPriceSource = new BehaviorSubject(0);
   // the current code that has been typed into the search bar
   currentCode = this.codeSource.asObservable();
   currentLocation = this.locationSource.asObservable();
+  currentMinPrice = this.minPriceSource.asObservable();
+  currentMaxPrice = this.maxPriceSource.asObservable();
 
 
   // location of Express Server
@@ -91,6 +98,20 @@ export class DataService {
     this.userLocation = location;
     this.locationSource.next(location);
   }
+
+  /*Get the min price as a search parameter*/
+  getMinPrice(minPrice: number) {
+    this.minPrice = minPrice;
+    this.minPriceSource.next(minPrice);
+  }
+
+  /*Get the max price as a search parameter*/
+  getMaxPrice(maxPrice: number) {
+    this.minPrice = maxPrice;
+    this.minPriceSource.next(maxPrice);
+  }
+
+
 
   getProcedures(){
     let results;

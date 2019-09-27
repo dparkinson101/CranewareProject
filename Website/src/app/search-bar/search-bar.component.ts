@@ -42,9 +42,11 @@ export class SearchBarComponent implements OnInit {
   distances = [0, 5, 10, 20, 50, 100, 200, 250, 500];
   sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
 
-  model = new item('', '');
+  model = new item('', '', null, null);
   code: string;
   userLocation: string;
+  minPrice: number;
+  maxPrice: number;
 
   submitted = false;
 
@@ -73,7 +75,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   reset() {
-    this.model = new item('', '');
+    this.model = new item('', '', null, null);
     //console.log(this.autocompleteProcedure);
     this.autocompleteProcedure.value = '';
 
