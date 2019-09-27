@@ -12,7 +12,7 @@ Open in consule in project file and run command "mocha" in conslole
 //Varible and file set up for db.js
 var assert = require('assert');
 var mysql = require('mysql'); 
-var query = require('../IndexUpdatedForTest.js');
+var query = require('../Files to be tested/IndexUpdatedForTest.js');
 //Test for all results from database queries
 
 //index.js
@@ -22,8 +22,63 @@ describe('Testing IndexUpdated.js methods', function() {
 	describe('Testing query is not null', function() {
 		it('Connection should not be null', function() {
 				//console.log(query.comboQuery());
-			assert(query.silva(039) != null);
+			assert(false);
 		});	
+		
+	//Test 2: select all query
+	//We will run a select all query and check the start, end, size and a result in the middle, all being correct should return true, as these result are impossible to spoof
+	describe('Select all query', function() {
+		it('Silva should return all records', function() {
+		//code
+		assert(false)
+		});
+	});
+	
+	//Test 3: select all with price ascending
+	//We will run a select all with price ascending query and check the start, end, size and a result in the middle, all being correct should return true, as these result are impossible to spoof
+	describe('Select all price asc query', function() {
+		it('sortpriceasc should return all records', function() {
+		//code
+		assert(false)
+		});
+	});
+	
+	//Test 4: select zipcode query
+	//We will run a select by zipcode and check the start, end, size and a result in the middle, all being correct should return true, as these result are impossible to spoof
+	describe('Select by zipcode query', function() {
+		it('filterzipcode should return all records', function() {
+		//code
+		assert(false)
+		});
+	});
+	
+	//Test 5: select state query
+	//We will run a select by state query and check the start, end, size and a result in the middle, all being correct should return true, as these result are impossible to spoof
+	describe('Select by state query', function() {
+		it('filterstate should return all records', function() {
+		//code
+		assert(false)
+		});
+	});
+	
+	//Test 6: select providerinfo query
+	//We will run a providerinfo query and check the start, end, size and a result in the middle, all being correct should return true, as these result are impossible to spoof
+	//This is a highly important query as it is used to check hospital data 
+	describe('Select all providerinfo query', function() {
+		it('filterstate should return all records', function() {
+		//code
+		assert(false)
+		});
+	});
+	
+	//Test 7: select by price range query
+	//We will run a all between two price points query and check the start, end, size and a result in the middle, all being correct should return true, as these result are impossible to spoof
+	describe('Select all in price range query', function() {
+		it('pricerange should return all records', function() {
+		//code
+		assert(false)
+		});
+	});
 	});
 	/*
 //Test 2: Test 'query' results are correct for each 

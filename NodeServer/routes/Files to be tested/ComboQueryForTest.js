@@ -15,14 +15,13 @@ var connection = mysql.createConnection({
 //CORS - cross orgin resource sharing this is enabled to allow requests to be made from another port on this machine
 router.use(cors())
 
-router.get('/comboQuery', function(req, res, next) {
+module.exports.comboQuery  = function (code, min, max, zipcode, state) {
 
-	var string; //= 'select * from financial2017'; //inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = 023 AND providerinfo.providerState = "AL" AND financial2017.averageCoveredCharges > 200000;';
-	var code = req.query.code;
-	var min = req.query.min;
-	var max = req.query.max;
-	var zipcode = req.query.zipcode;
-	var state = req.query.state;
+	var string;
+
+	var promise1 = new Promise(function(resolve, reject) {
+	  setTimeout(function() {
+		//connection.connect();
 		
 		if(min == null && zipcode == null && state == null) {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ';';
@@ -49,21 +48,30 @@ router.get('/comboQuery', function(req, res, next) {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND averageTotalPayments between '+ min +' AND '+ max +' AND providerState = ' + state + ' AND providerZipCode = ' + zipcode + ';';
 		}
 		
-		connection.query('' + string, function(error, results) {
+		connection.query(string, function(error, results) {
 
 			 if (error) {
+				 throw error;
 				console.log(error);
 				res.status(500).json({ "status_code": 500, "status_message": "internal server error" + error });
 			
 			} 
 			
 			else {
-				res.send(results); //returns the results as JSON
+				console.log(results[0]);
+				resolve(results);
 			}
 			 
 		});
+	
+	//connection.end();
+  }, 300);
 });
 
+return promise1.then((value) =>	{
+  return value;
+});	
+};
 
-module.exports = router;
+
 
