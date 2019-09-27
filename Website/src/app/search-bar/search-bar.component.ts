@@ -1,4 +1,4 @@
-import { MatFormFieldModule,MatAutocomplete, MatAutocompleteTrigger, MatAutocompleteModule } from '@angular/material';
+import { MatFormFieldModule, MatAutocomplete, MatAutocompleteTrigger, MatAutocompleteModule } from '@angular/material';
 import { MapAPIService } from '../services/map-api.service';
 import { DataService } from '../services/data.service';
 import { Router } from '@angular/router';
@@ -34,11 +34,12 @@ export class SearchBarComponent implements OnInit {
   objectOptions =
   [
     { name: 'angular'},
-    {name:'angular matetial'},
+    {name: 'angular matetial'},
   ];
 
   filteredOptions: Observable<Procedure[]>;
 
+  distances = [0, 5, 10, 20, 50, 100, 200, 250, 500];
   sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
 
   model = new item('', '');
@@ -105,8 +106,8 @@ export class SearchBarComponent implements OnInit {
     this.dataService.currentLocation.subscribe(userLocation => this.userLocation = userLocation);
     this.dataService.getProcedures().subscribe( async procedureResults => {
       procedureResults.forEach( item => {
-        var procedureCode = <string>(item.dRGDefinition).substring(0, 3);
-        var procedureName = <string>(item.dRGDefinition).substring(6, <string>(item.dRGDefinition).length);
+        var procedureCode = <string> (item.dRGDefinition).substring(0, 3);
+        var procedureName = <string> (item.dRGDefinition).substring(6, <string> (item.dRGDefinition).length);
 
         var procedure = {
           code: procedureCode,
@@ -125,7 +126,7 @@ export class SearchBarComponent implements OnInit {
 
   private _filter(value: any): Procedure[] {
     var filterValue = "";
-    if(value.name === undefined){
+    if (value.name === undefined){
       filterValue = value.toLowerCase();
     }
     else{
@@ -134,7 +135,7 @@ export class SearchBarComponent implements OnInit {
     
 
     var filteredList = this.procedureList.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
-    if(filteredList.length === 0){
+    if (filteredList.length === 0){
       filteredList = this.procedureList.filter(option => option.code.toLowerCase().indexOf(filterValue) === 0);
     }
 
@@ -148,7 +149,7 @@ export class SearchBarComponent implements OnInit {
 
   displayFn(val: any)
   {
-      return val? val.name : val;
+      return val ? val.name : val;
 
   }
   
