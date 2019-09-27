@@ -12,17 +12,17 @@ Open in consule in project file and run command "mocha" in conslole
 //Varible and file set up for db.js
 var assert = require('assert');
 var mysql = require('mysql'); 
-var query = require('../ComboQuery.js');
+var query = require('../IndexUpdatedForTest.js');
 //Test for all results from database queries
 
 //index.js
-describe('Testing indexAddition.js methods', function() {
+describe('Testing IndexUpdated.js methods', function() {
 //Test 1: Test 'query' is not null 
 //
 	describe('Testing query is not null', function() {
 		it('Connection should not be null', function() {
 				//console.log(query.comboQuery());
-			assert(query.comboQuery() != null);
+			assert(query.silva(039) != null);
 		});	
 	});
 	/*
