@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, throwError, Subject, BehaviorSubject, of } from 'rxjs';
 import { retry, catchError, map, isEmpty } from 'rxjs/operators';
+import { IOptions} from 'glob';
 
 /*
 This the data service - this is where data for the website is obtained via API (Express server - this connects to the database)
@@ -46,7 +47,6 @@ export class DataService {
 
   addToCache(code: any, results: any) {
     if(Object.keys(results).length > 0){
-      console.log(Object.keys(results).length);
       this.cache.set(code, results);
       console.log(`adding results to cache for ${code}`);
     }
@@ -55,9 +55,13 @@ export class DataService {
 
   getDataWithCode() {
 
-
     let results;
-    if (this.code === undefined) { return null; }
+    if (this.code === undefined || this.code === "INVALID_PROCEDURE") { 
+      return new Observable(observer => {
+        observer.next([]);
+        observer.complete();
+      });
+    }
 
     try {
       if (this.cache.has(this.code)) {

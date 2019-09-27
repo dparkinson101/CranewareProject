@@ -116,14 +116,7 @@ export class MapAPIService {
   }
 
   public setUserPlace(place: any){
-
-    if(this.userPlace === undefined){
       this.userPlace = place;
-      console.log(place);
-    }
-    else{
-      this.userPlace = undefined;
-    }
   }
 
   public async getAddressGeolocation(locationAddress: string) {
@@ -158,6 +151,7 @@ export class MapAPIService {
 
       var betterDistance = ""+(rawDistance / 1000).toFixed(2)
 
+      //console.log(userPosition);
 
       resolve(betterDistance);
     });
@@ -182,15 +176,29 @@ export class MapAPIService {
 
             if(_this.userMarker){
               _this.userMarker.setMap(null);
-              _this.userMarker = null;
-              console.log("Removed geolocation marker");
+              _this.userMarker = undefined;
+              //console.log("Removed geolocation marker");
+
+              _this.userMarker = new google.maps.Marker({
+                position: pos,
+                map: _this.map,
+                label: "You"
+              });
+
+              this.map.setCenter(pos);
+
+              //console.log("Added geolocation marker");
+
             }else{
               _this.userMarker = new google.maps.Marker({
                 position: pos,
                 map: _this.map,
                 label: "You"
               });
-              console.log("Added geolocation marker");
+
+              this.map.setCenter(pos);
+
+              //console.log("Added geolocation marker");
             }
             
             
@@ -214,7 +222,6 @@ export class MapAPIService {
         }
       }
       else{
-        console.log(this.userPlace);
         const pos = {
           lat: this.userPlace.geometry.location.lat(),
           lng: this.userPlace.geometry.location.lng()

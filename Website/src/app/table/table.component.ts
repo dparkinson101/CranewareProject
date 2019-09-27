@@ -127,11 +127,12 @@ export class TableComponent implements OnInit {
             });
           });
         });
-        return;
-        
       }
       else{
-        var userLocation = this.mapAPIService.userPlace.geometry.location;
+        var userLocation = {
+          lat: this.mapAPIService.userPlace.geometry.location.lat(),
+          lng: this.mapAPIService.userPlace.geometry.location.lng()
+        };
         this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
           this.mapAPIService.addMarker(location.lat, location.lng, false, {
             markerName: item.providerName,
@@ -146,7 +147,7 @@ export class TableComponent implements OnInit {
             if(this.mapAPIService.userMarker){
               if(this.mapAPIService.userMarker.location !== userLocation){
                 this.mapAPIService.userMarker.setMap(null);
-                this.mapAPIService.userMarker = null;
+                this.mapAPIService.userMarker = undefined;
 
                 this.mapAPIService.userMarker = new google.maps.Marker({
                   position: userLocation,
@@ -210,6 +211,10 @@ export class TableComponent implements OnInit {
       if(this.initialData.length < 1){
         this.isLoading = false;
         this.procedure = "No Results";
+        if(this.dataSource !== undefined){
+          this.dataSource.data = [];
+          this.dataSource = undefined;
+        }
         return;
       }
       else{
@@ -250,6 +255,31 @@ export class TableComponent implements OnInit {
         console.log(page);
       }
     });
+
+  }
+
+  async updateDistances(){
+
+    this.isLoading = true;
+    this.dataSource = undefined;
+    this.dataSource.data = [];
+    this.processedData = [];
+
+    for (let index = 0; index < this.initialData.length; index++) {
+      const item = this.initialData[index];
+      await this.createNewDataItem(item).then((data: TableData) => {
+        this.processedData.push(data);
+      });
+    }
+
+    this.dataSource = new MatTableDataSource();
+    this.dataSource.data = this.processedData;
+
+    await this.sleep(1);
+
+    this.isLoading = false;
+
+    this.getProcedureName();
 
   }
 

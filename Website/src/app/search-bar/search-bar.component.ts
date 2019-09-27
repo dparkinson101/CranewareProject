@@ -51,6 +51,8 @@ export class SearchBarComponent implements OnInit {
   autocompleteProcedure: any;
   userPlace: any;
 
+  isGeolocating = false;
+
   procedureList: Procedure[] = [];
   procedureAutocomplete: any;
 
@@ -71,8 +73,8 @@ export class SearchBarComponent implements OnInit {
 
   reset() {
     this.model = new item('', '');
-    console.log(this.autocompleteProcedure);
-    this.autocompleteProcedure.value = "";
+    //console.log(this.autocompleteProcedure);
+    this.autocompleteProcedure.value = '';
 
   }
   onSubmit() {
@@ -81,17 +83,47 @@ export class SearchBarComponent implements OnInit {
 
   initAutocomplete(){
     //Address Auto Complete
-    this.autocompleteLocation = new google.maps.places.Autocomplete(document.getElementById("location"), {types: ['geocode']});
-    var self = this;
-    this.autocompleteLocation.addListener('place_changed', function (mapAPI = self.mapAPIService){
-      mapAPI.setUserPlace(this.getPlace());
-    });
+    if(document.getElementById("location")){
+      this.autocompleteLocation = new google.maps.places.Autocomplete(document.getElementById("location"), {types: ['geocode']});
+      var self = this;
+      this.autocompleteLocation.addListener('place_changed', function (mapAPI = self.mapAPIService){
+        mapAPI.setUserPlace(this.getPlace());
+      });
+    }
 
     //Procedure Auto Complete
     this.autocompleteProcedure = document.getElementById("procedure");
+  }
 
-    console.log(this.autocompleteLocation);
-    console.log(this.autocompleteProcedure);
+  onGeoSelect(){
+    this.initAutocomplete();
+    if(this.mapAPIService.userGeolocation === undefined){
+
+      document.getElementById("geoButton").style.background = 'green';
+      document.getElementById("geoButton").style.borderColor = 'green';
+      this.isGeolocating = true;
+
+      if(this.mapAPIService.userPlace !== undefined){ 
+        this.mapAPIService.userPlace = undefined; 
+      }
+      this.mapAPIService.getUserLocation();
+    }
+    else{
+      this.isGeolocating = false;
+      this.mapAPIService.userGeolocation = undefined;
+
+      if(this.mapAPIService.userMarker !== undefined){
+        this.mapAPIService.userMarker.setMap(null);
+        this.mapAPIService.userMarker = undefined;
+
+        this.mapAPIService.map.setCenter({lat: 39.8283, lng: -95.7129});
+
+        //console.log("removed geolocation marker");
+      }
+
+      document.getElementById("geoButton").style.background = '#007bff';
+      document.getElementById("geoButton").style.borderColor = '#007bff';
+    }
   }
 
   autoCallBack(){
@@ -127,6 +159,25 @@ export class SearchBarComponent implements OnInit {
     var filterValue = "";
     if(value.name === undefined){
       filterValue = value.toLowerCase();
+
+      //This means we have a search term string not an object
+      if(value.length > 3){
+        var finds = false;
+        this.procedureList.forEach((item) => {
+          if(item.name === value){
+            this.model.code = item.code;
+            finds = true;
+            return;
+          }
+        });
+
+        if(!finds){
+          this.model.code = "INVALID_PROCEDURE";
+        }
+      }
+      else{
+        this.model.code = value;
+      }
     }
     else{
       filterValue = value.name;

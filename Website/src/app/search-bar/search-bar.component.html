@@ -5,11 +5,11 @@
 
     <!-- Search Bar -->
     <form #searchBar="ngForm" (ngSubmit)="onSubmit(f)" (click)="initAutocomplete();" novalidate>
-        <mat-form-field class="example-full-width" style="width: 300px; padding: 10px">
+        <mat-form-field *ngIf="!(isGeolocating)" class="example-full-width" style="width: 300px; padding: 10px">
             <input type="text" placeholder="Location 📍" id="location" name="location" [(ngModel)]="model.userLocation" name="location" aria-label="Number" matInput>
         </mat-form-field>
 
-        <button type="button" class="btn btn-default btn-lg" (click)="onGeoSelect()">
+        <button type="button" class="btn btn-primary geobutton" id="geoButton" (click)="onGeoSelect($event)">
             <i class="fa fa-location-arrow"></i>
         </button>
 
