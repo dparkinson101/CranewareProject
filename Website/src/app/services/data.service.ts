@@ -74,7 +74,7 @@ export class DataService {
         console.log(`results for code ${this.code} are in the cache`);
       } 
       else {
-        results = this.http.get<any>(this.apiURL + '/pricerange?code=' + this.code + '&max=' + this.maxPrice + '&min=' + this.minPrice);
+        results = this.http.get<any>(this.apiURL + '/comboQuery?code=' + this.code + '&max=' + this.maxPrice + '&min=' + this.minPrice);
         this.addToCache(this.code, results);
       }
       return results;

@@ -23,6 +23,8 @@ router.get('/comboQuery', function(req, res, next) {
 	var max = req.query.max;
 	var zipcode = req.query.zipcode;
 	var state = req.query.state;
+
+	console.log(code);
 		
 		if(min == null && zipcode == null && state == null) {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ';';
@@ -49,7 +51,7 @@ router.get('/comboQuery', function(req, res, next) {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND financial2017.averageTotalPayments between '+ min +' AND '+ max +' AND providerinfo.providerState = "' + state + '" AND providerinfo.providerZipCode = ' + zipcode + ';';
 		}
 		
-		connection.query('' + string, function(error, results) {
+		connection.query(string, function(error, results) {
 
 			 if (error) {
 				console.log(error);
