@@ -31,11 +31,6 @@ export class SearchBarComponent implements OnInit {
 
   myControl = new FormControl();
 
-  objectOptions =
-  [
-    { name: 'angular'},
-    {name: 'angular matetial'},
-  ];
 
   filteredOptions: Observable<Procedure[]>;
 
@@ -61,8 +56,8 @@ export class SearchBarComponent implements OnInit {
 
   newSearch() {
 
-    this.dataService.getCode(this.model.code);
-    this.dataService.getLocation(this.model.userLocation);
+    this.dataService.getCode(this.model);
+
 
     this.reset();
 
@@ -136,8 +131,8 @@ export class SearchBarComponent implements OnInit {
 
   ngOnInit() {
 
-    this.dataService.currentCode.subscribe(code => this.code = code);
-    this.dataService.currentLocation.subscribe(userLocation => this.userLocation = userLocation);
+    //this.dataService.currentSearch.subscribe(search => this.model = search);
+
     this.dataService.getProcedures().subscribe( async procedureResults => {
       procedureResults.forEach( item => {
         var procedureCode = <string> (item.dRGDefinition).substring(0, 3);

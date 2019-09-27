@@ -189,7 +189,7 @@ router.get('/pricerange', function(req, res, next) {
     var max = req.query.max;
     var min = req.query.min;
 
-    connection.query(('select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND averageTotalPayments between ' + min + ' AND ' + max + ';'), function(err, results) {
+    connection.query(('select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND averageTotalPayments between ' + min + ' AND ' + max + ' ORDER BY averageTotalPayments ASC;'), function(err, results) {
 
         if (err) {
             console.log(err);
