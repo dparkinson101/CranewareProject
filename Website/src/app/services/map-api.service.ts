@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { resolve } from 'url';
 
 declare var google: any;
 
@@ -12,12 +13,16 @@ export class MapAPIService {
   markers: MarkerAndInfo[] = [];
   infoWindows: any[] = [];
 
+  userPlace: any;
+  userGeolocation: any;
+  userMarker: any;
+
   constructor() { }
 
   public createMap(latitude: number, longitude: number, zoomIn: number) {
     try {
       this.map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: longitude, lng: latitude },
+        center: { lat: latitude, lng: longitude },
         zoom: zoomIn
       });
       console.log('Map created successfully');
@@ -35,21 +40,27 @@ export class MapAPIService {
        });
 
       const infoWindow = new google.maps.InfoWindow({
-        content: "<b>"+ this.titleCase(info.markerName) +"</b>" + "<br><b>Price:</b> $" + info.markerPrice + "<br><b>Distance:</b> " + info.markerDistance + "<br><b>Address:</b> " + this.titleCase(info.markerAddress)
+        content: "<div style='text-align: center'><b>"+ this.titleCase(info.markerName) +"</b>" + "<br><b>Price:</b> $" + info.markerPrice + "<br><b>Distance:</b> " + info.markerDistance + "km <br><b>Address:</b> " + this.titleCase(info.markerAddress) + "</div>"
       });
 
-      marker.addListener("click", function(){
+      marker.addListener("click", ()=>{
         infoWindow.open(this.map, marker);
+        this.map.setCenter(marker.position);
+        this.map.setZoom(15);
+      });
+
+      infoWindow.addListener("closeclick", ()=>{
+        this.averageFocus();
       });
 
       this.infoWindows.push(infoWindow);
-      this.markers.push({marker, info});
+      this.markers.push({marker, info, infoWindow});
 
       if (focusOn) {
         this.map.setCenter({ lat: latitude, lng: longitude });
       }
     } catch (err) {
-      console.log('Could add marker on map: ' + this.map);
+      console.log('Could not add marker on map: ' + this.map);
       console.log(err);
     }
   }
@@ -104,79 +115,119 @@ export class MapAPIService {
     }
   }
 
+  public setUserPlace(place: any){
+      this.userPlace = place;
+  }
+
   public async getAddressGeolocation(locationAddress: string) {
     const geocoder = new google.maps.Geocoder();
     const request = { address: locationAddress };
 
     return new Promise(resolve => {
-      geocoder.geocode(request, function (results, status) {
-        if (status === 'OK') {
-          //console.log(results);
-          const pos = {
-            lat: results[0].geometry.location.lat(),
-            lng: results[0].geometry.location.lng()
-          };
-          resolve(pos);
-        } else {
-          console.log('Geocode Not Successful: ' + status);
-          resolve(null);
-        }
-      });
+      console.log(this.userPlace);
+        geocoder.geocode(request, function (results, status) {
+          if (status === 'OK') {
+            const pos = {
+              lat: results[0].geometry.location.lat(),
+              lng: results[0].geometry.location.lng()
+            };
+
+            resolve(pos);
+          } else {
+            console.log('Geocode Not Successful: ' + status);
+            resolve({lat: 0, lng: 0});
+          }
+        });
     });
   }
 
   public async getDistance(userPosition: Position, locationPosition: Position, destinationAddress: string){
-    var distanceMatrixService = new google.maps.DistanceMatrixService();
-    var request = {
-      avoidFerries: false,
-      avoidHighways: false,
-      avoidTolls: false,
-      destinations: [locationPosition],
-      origins: [userPosition],
-      travelMode: google.maps.TravelMode.DRIVING
-    };
 
     return new Promise(resolve => {
-      distanceMatrixService.getDistanceMatrix(request, function(results, status){
-        if(status === 'OK'){
-          //console.log(results);
-          if(results.rows[0].elements[0].status === 'OK'){
-            resolve(results.rows[0].elements[0].distance.text);
-          }
-          else{
-            var userPos = new google.maps.LatLng(userPosition.lat, userPosition.lng);
-            var locationPos = new google.maps.LatLng(locationPosition.lat, locationPosition.lng);
-            var rawDistance = google.maps.geometry.spherical.computeDistanceBetween(userPos, locationPos);
-            //console.log(rawDistance);
 
-            var betterDistance = ""+(rawDistance / 1000).toFixed(2)+"km"
+      var userPos = new google.maps.LatLng(userPosition.lat, userPosition.lng);
+      var locationPos = new google.maps.LatLng(locationPosition.lat, locationPosition.lng);
+      var rawDistance = google.maps.geometry.spherical.computeDistanceBetween(userPos, locationPos);
 
-            resolve(betterDistance);
-          }
-        }
-        else{
-          console.log("Distance Matrix request failed: " + status);
-          resolve(null);
-        }
-      });
+      var betterDistance = ""+(rawDistance / 1000).toFixed(2)
+
+      //console.log(userPosition);
+
+      resolve(betterDistance);
     });
   }
 
   public async getUserLocation() {
+    
     return new Promise(resolve => {
-      //HTML 5 Geolocation
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
+      if(this.userPlace === undefined){
+        
+        //HTML 5 Geolocation
+
+        let _this = this;
+        
+        if (navigator.geolocation && _this.userGeolocation === undefined) 
+        {
+          navigator.geolocation.getCurrentPosition(position => {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            if(_this.userMarker){
+              _this.userMarker.setMap(null);
+              _this.userMarker = undefined;
+              //console.log("Removed geolocation marker");
+
+              _this.userMarker = new google.maps.Marker({
+                position: pos,
+                map: _this.map,
+                label: "You"
+              });
+
+              this.map.setCenter(pos);
+
+              //console.log("Added geolocation marker");
+
+            }else{
+              _this.userMarker = new google.maps.Marker({
+                position: pos,
+                map: _this.map,
+                label: "You"
+              });
+
+              this.map.setCenter(pos);
+
+              //console.log("Added geolocation marker");
+            }
+            
+            
+
+            _this.userGeolocation = pos;
+
+            resolve(pos);
+          }, 
+          function () {
+            console.log('This browser doesn\'t support HTML 5 Geolocation');
+          });
+        }
+        else
+        {
           var pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
+            lat: this.userGeolocation.lat,
+            lng: this.userGeolocation.lng
           };
 
           resolve(pos);
-        }, function () {
-          console.log('This browser doesn\'t support HTML 5 Geolocation');
-          resolve(null);
-        });
+        }
+      }
+      else{
+        const pos = {
+          lat: this.userPlace.geometry.location.lat(),
+          lng: this.userPlace.geometry.location.lng()
+        };
+  
+        resolve(pos);
       }
     });
   }
@@ -197,7 +248,8 @@ interface Position{
 
 interface MarkerAndInfo{
   marker: any,
-  info: markerInformation
+  info: markerInformation,
+  infoWindow: any
 }
 
 interface markerInformation {

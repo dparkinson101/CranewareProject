@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Location } from './../models/Location';
 import { MapAPIService } from '../services/map-api.service';
 import { DataService } from '../services/data.service';
@@ -8,8 +9,13 @@ import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderMod
 import { TableData } from '../models/TableData';
 import { item } from '../models/item';
 
+declare var google: any;
 
-
+export interface Element {
+  providerName: string;
+  averageTotalPayments: number;
+  providerDistance: string;
+}
 
 @Component({
   selector: 'app-table',
@@ -25,13 +31,13 @@ export class TableComponent implements OnInit {
   public showSpinner = true;
   public showTable = false;
   public procedure: string;
-  public sortOptions = ['Price: Low to High', 'Price: High to Low'];
+ 
 
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  public displayedColumns = ['providerName', 'providerState', 'providerZipCode', 'averageTotalPayments'];
+  public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
               private titleCasePipe: TitleCasePipe) {
 
@@ -43,12 +49,23 @@ export class TableComponent implements OnInit {
     this.isLoading = true;
 
     // update when the search happens
-    const observable = this.dataService.currentCode;
-
+    const observable = this.dataService.currentSearch;
 
     observable.subscribe(() => {
       this.getData();
+      
     });
+
+    
+
+    
+
+    // this.dataService.currentLocation.subscribe(()=> 
+    //   {
+    //     this.getData();
+    //   });
+
+
 
 
   }
@@ -76,18 +93,58 @@ export class TableComponent implements OnInit {
     page.forEach(item => {
       this.placeOnMap(item);
     });
-    console.log('Placed Markers on map');
   }
 
 
   async placeOnMap(item: any) {
 
-    const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
-    this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
+    if( item.providerLongitude === undefined || item.providerLatitude === undefined ){
+      const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
+      this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
+        this.mapAPIService.getUserLocation().then((userLocation: Location) => {
+          this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
+            this.mapAPIService.addMarker(location.lat, location.lng, true, {
+              markerName: item.providerName,
+              markerPrice: item.averageTotalPayments,
+              markerDistance: distance,
+              markerAddress: address
+            }
+            ).then(() => {
+              this.mapAPIService.averageFocus();
+              this.mapAPIService.labelMarkers();
+            });
+          });
+        });
+      });
+    }
+    else{
+      var location = { lat: item.providerLatitude, lng: item.providerLongitude };
+      const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
 
-      this.mapAPIService.getUserLocation().then((userLocation: Location) => {
+      if(this.mapAPIService.userPlace === undefined){
+
+        this.mapAPIService.getUserLocation().then((userLocation: Location) => {
+          this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
+            this.mapAPIService.addMarker(location.lat, location.lng, false, {
+              markerName: item.providerName,
+              markerPrice: item.averageTotalPayments,
+              markerDistance: distance,
+              markerAddress: address
+            }
+            ).then(() => {
+              this.mapAPIService.averageFocus();
+              this.mapAPIService.labelMarkers();
+            });
+          });
+        });
+      }
+      else{
+        var userLocation = {
+          lat: this.mapAPIService.userPlace.geometry.location.lat(),
+          lng: this.mapAPIService.userPlace.geometry.location.lng()
+        };
         this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
-          this.mapAPIService.addMarker(location.lat, location.lng, true, {
+          this.mapAPIService.addMarker(location.lat, location.lng, false, {
             markerName: item.providerName,
             markerPrice: item.averageTotalPayments,
             markerDistance: distance,
@@ -96,10 +153,32 @@ export class TableComponent implements OnInit {
           ).then(() => {
             this.mapAPIService.averageFocus();
             this.mapAPIService.labelMarkers();
+
+            if(this.mapAPIService.userMarker){
+              if(this.mapAPIService.userMarker.location !== userLocation){
+                this.mapAPIService.userMarker.setMap(null);
+                this.mapAPIService.userMarker = undefined;
+
+                this.mapAPIService.userMarker = new google.maps.Marker({
+                  position: userLocation,
+                  map: this.mapAPIService.map,
+                  label: "You"
+                });
+              }
+            }
+            else{
+              this.mapAPIService.userMarker = new google.maps.Marker({
+                position: userLocation,
+                map: this.mapAPIService.map,
+                label: "You"
+              });
+            }
           });
         });
-      });
-    });
+      }
+
+      
+    }
   }
 
   async sleep(ms) {
@@ -124,6 +203,7 @@ export class TableComponent implements OnInit {
   async getData() {
 
     this.isLoading = true;
+    this.procedure = "Searching";
 
     const observable = this.dataService.getDataWithCode();
 
@@ -131,36 +211,99 @@ export class TableComponent implements OnInit {
       return; // no data has been fetched
     }
 
-    observable.subscribe(data => {
-
+    observable.toPromise().then(async (data) => {
       this.processedData = [];
       this.initialData = [];
       this.initialData = data;
       this.showTable = true;
+      
+      console.log(data);
+
+
+      //Handles table if search yields no results
+      if(this.initialData.length < 1){
+        this.isLoading = false;
+        this.procedure = "No Results";
+        if(this.dataSource !== undefined){
+          this.dataSource.data = [];
+          this.dataSource = undefined;
+        }
+        return;
+      }
+      else{
+        console.log(this.initialData);
+        this.procedure = "Searching";
+      }
+
+
+      // this.initialData.forEach((item) => {
+      //   this.createNewDataItem(item).then((data: TableData) => {
+      //     this.processedData.push(data);
+      //   });
+      // });
+
+      for (let index = 0; index < this.initialData.length; index++) {
+        const item = this.initialData[index];
+        await this.createNewDataItem(item).then((data: TableData) => {
+          this.processedData.push(data);
+        });
+      }
+
+      console.log('Table data is fetched');
+      this.isLoading = false;
+      this.dataSource = new MatTableDataSource();
+      this.dataSource.data = this.processedData;
+
+    
+     
+      await this.sleep(1);
+
+      this.dataSource.filterPredicate = function(data: TableData, filter: string) {
+        if(data.providerName.toLowerCase().includes(filter)){
+          return true;
+        }
+        else{
+          return false;
+        }
+      };
 
       this.getProcedureName();
 
-      this.initialData.forEach(item => {
-        this.processedData.push(this.createNewDataItem(item));
-      });
-    },
-      null,
-      () => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
 
-        console.log('Table data is fetched');
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource();
-        this.dataSource.data = this.processedData;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+      // get the first page of results - make sure it is 10
+      const page = this.getCurrent();
+      if (page.length < 11) {
+        this.placeCurrentOnMap(page);
+        console.log(page);
+      }
+    });
 
-        // get the first page of results - make sure it is 10
-        const page = this.getCurrent();
-        if (page.length < 11) {
-          this.placeCurrentOnMap(page);
-          console.log(page);
-        }
+  }
+
+  async updateDistances(){
+
+    this.isLoading = true;
+    this.dataSource = undefined;
+    this.dataSource.data = [];
+    this.processedData = [];
+
+    for (let index = 0; index < this.initialData.length; index++) {
+      const item = this.initialData[index];
+      await this.createNewDataItem(item).then((data: TableData) => {
+        this.processedData.push(data);
       });
+    }
+
+    this.dataSource = new MatTableDataSource();
+    this.dataSource.data = this.processedData;
+
+    await this.sleep(1);
+
+    this.isLoading = false;
+
+    this.getProcedureName();
 
   }
 
@@ -168,26 +311,33 @@ export class TableComponent implements OnInit {
 
     // choose first item from list to get name - without number at start
     this.procedure = 'Displaying results for:' + (this.initialData[0].dRGDefinition).substring(5);
-
   }
 
-  createNewDataItem(item: any): TableData {
+  async createNewDataItem(item: any) {
     const name = this.titleCasePipe.transform(item.providerName);
-    return {
-      providerName: name,
-      providerCity: item.providerCity,
-      providerState: item.providerState,
-      providerZipCode: item.providerZipCode,
-      providerStreetAddress: item.providerStreetAddress,
-      averageTotalPayments: Number(item.averageTotalPayments),
-    }
+    const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
 
+    return new Promise(resolve => {
+      this.mapAPIService.getUserLocation().then((userPosition: Location) => {
+        var pos = { lat: item.latitude, lng: item.longitude };
+        this.mapAPIService.getDistance(userPosition, pos, address ).then((distance: string) => {
+          var data = {
+            providerName: name,
+            providerState: item.providerState,
+            providerCity: item.providerCity,
+            providerZipCode: item.providerZipCode,
+            providerStreetAddress: item.providerStreetAddress,
+            averageTotalPayments: item.averageTotalPayments,
+            providerLatitude: item.latitude,
+            providerLongitude: item.longitude,
+            providerDistance: Number(distance)
+          };
+          resolve(data);
+        });
+      });
+    });
   }
+
+  
 
 }
-
-
-
-
-
-

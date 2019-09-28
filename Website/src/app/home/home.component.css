@@ -10,6 +10,7 @@ h2 {
     text-align: center;
     font-weight: 400;
     color: #007cc2;
+    padding: 10px;
 }
 
 h4 {
@@ -63,12 +64,13 @@ ul {
     /* Also needed for space (tweak if needed) */
 }
 
-.text {
+.text-center {
     padding: 20px;
     font-weight: 200;
-    padding-left: 100px;
-    padding-right: 100px;
     padding-bottom: 0px;
+    padding-left: 20vh;
+    padding-right: 20vh;
+    text-align: left;
 }
 
 .link {
@@ -78,5 +80,5 @@ ul {
 }
 
 .container {
-    width: 90%;
+    width: 100%;
 }

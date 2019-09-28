@@ -4,16 +4,93 @@
     </p>
 
     <!-- Search Bar -->
-    <form #searchBar="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
-        <div class="form-group" id="LocationBox">
-            <input type="text" class="form-control" placeholder="Location 📍" id="location" [(ngModel)]="model.userLocation" name="location">
-        </div>
-        <div class="form-group" id="ProcedureBox">
-            <input type="text" class="form-control" placeholder="Procedure 🩺" id="procedure" [(ngModel)]="model.code" name="procedure">
-        </div>
-        <div class="form-group" id="SubmitBox">
-            <button type="submit " class="btn btn-success " (click)="newSearch();">Search</button>
-        </div>
+    <form #searchBar="ngForm" (ngSubmit)="onSubmit(f)" (click)="initAutocomplete();" novalidate>
+
+        <mat-form-field *ngIf="!(isGeolocating)" class="example-full-width" style="width: 300px; padding: 10px">
+            <input type="text" placeholder="Location 📍" id="location" name="location" [(ngModel)]="model.userLocation" name="location" aria-label="Number" matInput>
+        </mat-form-field>
+        <!-- <div class="form-group"> -->
+            <button type="button" class="btn btn-primary btn-lg" style="border-radius: 100%; line-height: inherit;" id="geoButton" (click)="onGeoSelect()">
+                <i class="fa fa-location-arrow" style="line-height: inherit;"></i>
+            </button>
+        <!-- </div> -->
+
+        <mat-form-field class="example-full-width" style="width: 600px; padding: 10px">
+            <input type="text" placeholder="Procedure 🩺" id="procedure" name="procedure" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" id="autoComplete" (optionSelected)="assignCode($event.option.value)" [displayWith]="displayFn">
+                <mat-option *ngFor="let procedure of filteredOptions | async" [value]="procedure">
+                    {{procedure.name}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <br>
+
+        <ul id="menu">
+            <li>
+
+                <mat-form-field>
+
+                    <mat-select placeholder="Distance">
+                        <mat-option *ngFor=" let distance of distances " [value]="distance ">
+                            {{distance}} miles
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field>
+                    <input placeholder="Min " [(ngModel)]="model.minPrice" name="minPrice" matInput>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field>
+                    <input placeholder="Max " [(ngModel)]="model.maxPrice" name="maxPrice" matInput>
+                </mat-form-field>
+            </li>
+
+
+
+
+
+            <li>
+                <div class="form-group " id="SubmitBox ">
+                    <button type="submit " class="btn btn-success " (click)="newSearch(); ">Search</button>
+                </div>
+            </li>
+        </ul>
+
     </form>
+
+
+
+
+
+    <!--
+    <div class="btn-toolbar ">
+        <div class="text-center ">More options: &nbsp; &nbsp;
+            <div class="btn-group mr-3 " role="group ">
+                <button type="button " class="btn btn-success dropdown-toggle " data-toggle="dropdown " aria-haspopup="true " aria-expanded="false ">
+                    State
+                </button>
+                <div class="dropdown-menu " aria-labelledby="btnGroupDrop1 ">
+                    <a class="dropdown-item " href="# " *ngFor=" let option of sortOptions "><b>{{option}}</b> </a>
+                </div>
+            </div>
+
+            <button type="button " class="btn btn-success mr-3 ">Distance</button>
+
+            <button type="button " class="btn btn-success ">Rating</button>
+
+        </div>
+
+    </div> -->
+
+
+
+
+
+
+
 
 </div>
