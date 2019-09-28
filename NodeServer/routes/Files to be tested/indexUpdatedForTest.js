@@ -19,7 +19,7 @@ module.exports.silva  = function (code) {
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
-		connection.connect();		
+				
 		connection.query(string, function(error, results) {
 
 			 if (error) {
@@ -54,7 +54,7 @@ module.exports.sortpriceasc  = function (code) {
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
-		connection.connect();		
+				
 		connection.query(string, function(error, results) {
 
 			 if (error) {
@@ -88,7 +88,7 @@ module.exports.filterzipcode  = function (code, zipcode) {
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
-		connection.connect();		
+				
 		connection.query(string, function(error, results) {
 
 			 if (error) {
@@ -123,7 +123,7 @@ module.exports.filterstate  = function (code, state) {
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
-		connection.connect();		
+				
 		connection.query(string, function(error, results) {
 
 			 if (error) {
@@ -158,7 +158,7 @@ module.exports.providerinfo  = function (code	) {
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
-		connection.connect();		
+				
 		connection.query(string, function(error, results) {
 
 			 if (error) {
@@ -193,7 +193,7 @@ module.exports.pricerange  = function (code, min, max) {
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
-		connection.connect();		
+				
 		connection.query(string, function(error, results) {
 
 			 if (error) {

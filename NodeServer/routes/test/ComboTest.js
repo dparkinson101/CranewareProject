@@ -12,16 +12,17 @@ Open in consule in project file and run command "mocha" in conslole
 //Varible and file set up for db.js
 var assert = require('assert');
 var mysql = require('mysql'); 
+var connection = require('../../lib/db.js');
 var query = require('../Files to be tested/ComboQueryForTest.js');
 //Test for all results from database queries
 
 //index.js
 describe('Testing ComboQuery.js methods', function() {
-//Test 1: Test 'query' is not null 
+//Test 1: Test connection is not null 
 //
-	describe('Testing query is not null', function() {
+	describe('Testing connection is not null', function() {
 		it('Connection should not be null', function() {
-			assert(query.comboQuery("039",null,null,null,null) != null);
+			assert(connection.state = "connected");
 		});	
 	});
 	
@@ -254,8 +255,8 @@ describe('Testing ComboQuery.js methods', function() {
 	
 //Test 9: Test the query results are correct for each of the 8 possbilites
 //Possiblitly 8: search by zipcode of state with sort 
-	describe('Code query should return correct results', function() {
-		it('Possiblitly 8: search by zipcode of state with sort ', async function() {
+	describe('Code query should return correct results when given nulls strings', function() {
+		it('Possiblitly 8: search by zipcode of state with sort', async function() {
 			//code
 				var x = await query.comboQuery("039",0,10000,36301,"AL")
 			
@@ -273,6 +274,42 @@ describe('Testing ComboQuery.js methods', function() {
 			}
 			
 			assert(one == true && four == true);
+			
+		});	
+	});
+	
+//Test 10: Due to angular passing, the program only send strings not null so we modified our code to fit this test by converting exact "null" to null
+//Possiblitly 8: orignal query with "null" strings
+	describe('Code query should return correct results', function() {
+		it('Given just code with null strings', async function() {
+			var x = await query.comboQuery("039","null","null","null","null")
+			var one = false;
+			if(x[0].providerId == 100002 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				one = true;
+			}
+			
+			//Middle
+			var two = false;
+			if(x[87].providerId == 110075 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				two = true;
+			}
+			
+			//End
+			var three = false;
+			if(x[807].providerId == 90011 && x[807].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			{
+				three = true;
+			}
+			//Length
+			var four = false;
+			if(x.length = 808)
+			{
+				four = 	true;
+			}
+			
+			assert(one == true && two == true && three == true && four == true);
 			
 		});	
 	});

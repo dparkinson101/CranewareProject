@@ -33,13 +33,7 @@ describe('Testing db.js varilbes', function() {
 var express = require('express');
 var router = express.Router();
 
-//pretested as above
-var connection = mysql.createConnection({
-			host: 'silva.computing.dundee.ac.uk',
-			user: '2019indteam5',
-			password: '9854.ind5.4589',
-			database: '2019indteam5db'
-			});	
+var connection = require('../../lib/db.js');
 			
 var sql = require('mssql');
 var cors = require('cors')
@@ -63,8 +57,8 @@ describe('Testing IndexForTest.js varibles', function() {
 	
 	
 	describe('Establish connection', function() {
-		it('connection should not be null', function() {		
-		assert(connection !== null);
+		it('connection should not be null', function() {			
+		assert(connection.state = "connected");
 		});
 	});
 	 
