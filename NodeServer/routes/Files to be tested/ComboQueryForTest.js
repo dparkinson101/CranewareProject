@@ -24,7 +24,7 @@ module.exports.comboQuery  = async function (code, min, max, zipcode, state) {
 	var zips = zipcode;
 	var states = state;
 	
-	if(min == "null")
+	if(mins == "null")
 	{
 		mins = null;
 		maxs = null;
