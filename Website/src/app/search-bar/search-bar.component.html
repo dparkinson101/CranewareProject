@@ -9,6 +9,9 @@
         <mat-form-field *ngIf="!(isGeolocating)" class="example-full-width" style="width: 300px; padding: 10px">
             <input type="text" placeholder="Location 📍" id="location" name="location" [(ngModel)]="model.userLocation" name="location" aria-label="Number" matInput>
         </mat-form-field>
+        <div class="container" *ngIf="isGeolocating">
+            <b>Now Using Your Geolocation</b>
+        </div>
         <!-- <div class="form-group"> -->
             <button type="button" class="btn btn-primary btn-lg" style="border-radius: 100%; line-height: inherit;" id="geoButton" (click)="onGeoSelect()">
                 <i class="fa fa-location-arrow" style="line-height: inherit;"></i>
@@ -31,8 +34,8 @@
 
                 <mat-form-field>
 
-                    <mat-select placeholder="Distance">
-                        <mat-option *ngFor=" let distance of distances " [value]="distance ">
+                    <mat-select placeholder="Distance" value="" [(ngModel)]="model.distanceRange" name="distanceRange">
+                        <mat-option *ngFor="let distance of distances" [value]="distance">
                             {{distance}} miles
                         </mat-option>
                     </mat-select>
@@ -48,7 +51,20 @@
                     <input placeholder="Max " [(ngModel)]="model.maxPrice" name="maxPrice" matInput>
                 </mat-form-field>
             </li>
-
+            <li>
+                <mat-form-field>
+                    <mat-select placeholder="State" name="state" [(ngModel)]="model.state">
+                        <mat-option *ngFor=" let state of states;" [value]="state">
+                            {{state}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field>
+                    <input placeholder="Zipcode " name="zipcode" [(ngModel)]="model.zipcode" matInput>
+                </mat-form-field>
+            </li>
 
 
 

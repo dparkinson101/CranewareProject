@@ -31,7 +31,7 @@ export class TableComponent implements OnInit {
   public showSpinner = true;
   public showTable = false;
   public procedure: string;
- 
+  public distanceRange = 0; 
 
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -52,8 +52,12 @@ export class TableComponent implements OnInit {
     const observable = this.dataService.currentSearch;
 
     observable.subscribe(() => {
-      this.getData();
+      if(this.dataService.distanceRange != null){
+        this.distanceRange = this.dataService.distanceRange;
+        console.log(this.distanceRange);
+      }
       
+      this.getData();
     });
 
     
@@ -245,7 +249,9 @@ export class TableComponent implements OnInit {
       for (let index = 0; index < this.initialData.length; index++) {
         const item = this.initialData[index];
         await this.createNewDataItem(item).then((data: TableData) => {
-          this.processedData.push(data);
+          if(this.distanceRange == 0 || Number(data.providerDistance) < this.distanceRange){
+            this.processedData.push(data);
+          }
         });
       }
 
@@ -258,7 +264,7 @@ export class TableComponent implements OnInit {
      
       await this.sleep(1);
 
-      this.dataSource.filterPredicate = function(data: TableData, filter: string) {
+      this.dataSource.filterPredicate = (data: TableData, filter: string) => {
         if(data.providerName.toLowerCase().includes(filter)){
           return true;
         }

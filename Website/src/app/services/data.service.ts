@@ -29,10 +29,10 @@ export class DataService {
   public maxPrice: number;
   public zipcode: string;
   public state: string;
+  public distanceRange: number;
 
 
-
-  private searchSource = new BehaviorSubject(new item('', '', null, null, null, null));
+  private searchSource = new BehaviorSubject(new item('', '', null, null, null, null, null));
 
   // the current code that has been typed into the search bar
   currentSearch = this.searchSource.asObservable();
@@ -63,7 +63,7 @@ export class DataService {
 
   getDataWithCode() {
     let results;
-    if (this.code === undefined || this.code === "INVALID_PROCEDURE") { 
+    if (this.code == '' || this.code == undefined || this.code == null || this.code === "INVALID_PROCEDURE" || this.userLocation == null) { 
       return new Observable(observer => {
         observer.next([]);
         observer.complete();
@@ -98,6 +98,7 @@ export class DataService {
     this.maxPrice = search.maxPrice;
     this.zipcode = search.zipcode;
     this.state = search.state;
+    this.distanceRange = search.distanceRange;
 
     console.log(search);
 
