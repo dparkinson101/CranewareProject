@@ -40,7 +40,7 @@ export class MapAPIService {
        });
 
       const infoWindow = new google.maps.InfoWindow({
-        content: "<div style='text-align: center'><b>"+ this.titleCase(info.markerName) +"</b>" + "<br><b>Price:</b> $" + info.markerPrice + "<br><b>Distance:</b> " + info.markerDistance + "km <br><b>Address:</b> " + this.titleCase(info.markerAddress) + "</div>"
+        content: "<div style='text-align: center'><b>"+ this.titleCase(info.markerName) +"</b>" + "<br><b>Price:</b> $" + info.markerPrice + "<br><b>Distance:</b> " + info.markerDistance + " miles <br><b>Address:</b> " + this.titleCase(info.markerAddress) + "</div>"
       });
 
       marker.addListener("click", ()=>{
@@ -149,9 +149,7 @@ export class MapAPIService {
       var locationPos = new google.maps.LatLng(locationPosition.lat, locationPosition.lng);
       var rawDistance = google.maps.geometry.spherical.computeDistanceBetween(userPos, locationPos);
 
-      var betterDistance = ""+(rawDistance / 1000).toFixed(2)
-
-      //console.log(userPosition);
+      var betterDistance = ""+((rawDistance / 1000) / 1.609).toFixed(2)
 
       resolve(betterDistance);
     });
