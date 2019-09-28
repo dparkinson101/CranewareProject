@@ -36,7 +36,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FontAwesomeModule,
     FormsModule,
     HttpClientModule,
-ReactiveFormsModule,
+    ReactiveFormsModule,
     MDBBootstrapModule.forRoot(),
     MatFormFieldModule,
     

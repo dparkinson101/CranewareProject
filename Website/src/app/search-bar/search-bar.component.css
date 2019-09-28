@@ -14,12 +14,28 @@
     padding: 10px;
 }
 
-button {
+/* button {
     background-color: #66bf48;
     border-color: #66bf48;
-}
+} */
 
 .btn-toolbar {
     padding: 10px;
     margin: auto;
+}
+
+.test {
+    display: inline;
+    padding: 100px;
+}
+
+ul#menu li {
+    display: inline;
+}
+
+li {
+    display: block;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
 }

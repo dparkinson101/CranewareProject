@@ -169,6 +169,19 @@ router.get('/providerinfo', function(req, res, next) {
     });
 });
 
+router.get('/procedurelist', function(req, res, next){
+    var query = 'SELECT DISTINCT codes.dRGDefinition from codes';
+    connection.query(query, function(err, results){
+        if(err){
+            console.log(err);
+            res.status(500).json({ "status_code": 500, "status_message": "internal server error" + err });
+        }
+        else{
+            res.send(results);
+        }
+    });
+});
+
 /*SORT*/
 router.get('/pricerange', function(req, res, next) {
 

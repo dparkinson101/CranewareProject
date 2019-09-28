@@ -23,47 +23,61 @@ router.get('/comboQuery', function(req, res, next) {
 	var max = req.query.max;
 	var zipcode = req.query.zipcode;
 	var state = req.query.state;
-		
-		if(min == null && zipcode == null && state == null) {
+
+	console.log(req.query);
+
+		if(min === "null" && zipcode === "null" && state === "null") {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ';';
 		}
-		if(min != null && zipcode == null && state == null) {
-			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND financial2017.averageTotalPayments between '+ min +' AND '+ max +';';
+		if(min !== "null" && zipcode === "null" && state === "null") {
+			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND financial2017.averageTotalPayments between '+ min +' AND '+ max +';';
 		}
-		if(min == null && zipcode != null && state == null) {
+		if(min === "null" && zipcode !== "null" && state === "null") {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerinfo.providerZipCode = '+ zipcode +';';
 		}
-		if(min == null && zipcode == null && state != null) {
+		if(min === "null" && zipcode === "null" && state !== "null") {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerinfo.providerState = "' + state +'";';
 		}
-		if(min != null && zipcode == null && state != null) {
+		if(min !== "null" && zipcode === "null" && state !== "null") {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND financial2017.averageTotalPayments between '+ min +' AND '+ max +' AND providerinfo.providerState = "' + state + '";';
 		}
-		if(min != null && zipcode != null && state == null) {
+		if(min !== "null" && zipcode !== "null" && state === "null") {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND financial2017.averageTotalPayments between '+ min +' AND '+ max +' AND providerinfo.providerZipCode = ' + zipcode + ';';
 		}
-		if(min == null && zipcode != null && state != null) {
+		if(min === "null" && zipcode !== "null" && state !== "null") {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerinfo.providerState = "' + state + '" AND providerinfo.providerZipCode = ' + zipcode + ';';
 		}
-		if(min != null && zipcode != null && state != null) {
+		if(min !== "null" && zipcode !== "null" && state !== "null") {
 			string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = '+ code + ' AND financial2017.dRGDefinition = ' + code + ' AND financial2017.averageTotalPayments between '+ min +' AND '+ max +' AND providerinfo.providerState = "' + state + '" AND providerinfo.providerZipCode = ' + zipcode + ';';
 		}
-		
-		connection.query('' + string, function(error, results) {
+
+		connection.query(string, function(error, results) {
 
 			 if (error) {
 				console.log(error);
 				res.status(500).json({ "status_code": 500, "status_message": "internal server error" + error });
-			
-			} 
-			
+
+			}
+
 			else {
 				res.send(results); //returns the results as JSON
 			}
-			 
+
 		});
+});
+
+router.get('/procedurelist', function(req, res, next){
+    var query = 'SELECT DISTINCT codes.dRGDefinition from codes';
+    connection.query(query, function(err, results){
+        if(err){
+            console.log(err);
+            res.status(500).json({ "status_code": 500, "status_message": "internal server error" + err });
+        }
+        else{
+            res.send(results);
+        }
+    });
 });
 
 
 module.exports = router;
-
