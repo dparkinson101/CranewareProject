@@ -54,15 +54,7 @@ describe('Testing IndexForTest.js varibles', function() {
 		assert(router !== null);
 		});
 	});
-	
-	
-	describe('Establish connection', function() {
-		it('connection should not be null', function() {			
-		assert(connection.state = "connected");
-		});
-	});
 	 
-	
 	describe('Establish sql', function() {
 		it('sql component should not be null', function() {		
 		assert(sql !== null);
@@ -101,7 +93,7 @@ describe('Testing IndexForTest.js methods', function() {
 			});	
 		
 		//assert connection is not null
-		assert(connection !== null);
+		assert(connection.state = "connected");
 		});
 	});
 	

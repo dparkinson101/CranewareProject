@@ -39,7 +39,7 @@ describe('Testing ComboQuery.js methods', function() {
 			
 			//Middle
 			var two = false;
-			if(x[87].providerId == 110075 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[87].providerId == 110075 && x[87].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				two = true;
 			}
@@ -76,7 +76,7 @@ describe('Testing ComboQuery.js methods', function() {
 			
 			//Middle
 			var two = false;
-			if(x[87].providerId == 110083 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[87].providerId == 110083 && x[87].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				two = true;
 			}
@@ -291,7 +291,7 @@ describe('Testing ComboQuery.js methods', function() {
 			
 			//Middle
 			var two = false;
-			if(x[87].providerId == 110075 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[87].providerId == 110075 && x[87].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				two = true;
 			}
