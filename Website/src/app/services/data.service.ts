@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, Subject, BehaviorSubject, of } from 'rxjs';
 import { retry, catchError, map, isEmpty } from 'rxjs/operators';
 import { IOptions} from 'glob';
+import { NgModel } from '@angular/forms';
+import { item } from '../models/item';
 
 /*
 This the data service - this is where data for the website is obtained via API (Express server - this connects to the database)
@@ -25,18 +27,16 @@ export class DataService {
   public userLocation: any;
   public minPrice: number;
   public maxPrice: number;
+  public zipcode: string;
+  public state: string;
+  public distanceRange: number;
 
 
+  private searchSource = new BehaviorSubject(new item('', '', null, null, null, null, null));
 
-  private codeSource = new BehaviorSubject('default');
-  private locationSource = new BehaviorSubject('default');
-  private minPriceSource = new BehaviorSubject(0);
-  private maxPriceSource = new BehaviorSubject(0);
   // the current code that has been typed into the search bar
-  currentCode = this.codeSource.asObservable();
-  currentLocation = this.locationSource.asObservable();
-  currentMinPrice = this.minPriceSource.asObservable();
-  currentMaxPrice = this.maxPriceSource.asObservable();
+  currentSearch = this.searchSource.asObservable();
+
 
 
   // location of Express Server
@@ -54,16 +54,16 @@ export class DataService {
 
   addToCache(code: any, results: any) {
     if(Object.keys(results).length > 0){
-      this.cache.set(code, results);
+      var key = this.code + this.userLocation + this.minPrice + this.maxPrice + this.zipcode + this.state;
+      this.cache.set(key, results);
       console.log(`adding results to cache for ${code}`);
     }
   }
 
 
   getDataWithCode() {
-
     let results;
-    if (this.code === undefined || this.code === "INVALID_PROCEDURE") { 
+    if (this.code == '' || this.code == undefined || this.code == null || this.code === "INVALID_PROCEDURE" || this.userLocation == null) { 
       return new Observable(observer => {
         observer.next([]);
         observer.complete();
@@ -71,16 +71,19 @@ export class DataService {
     }
 
     try {
-      if (this.cache.has(this.code)) {
-        results = this.cache.get(this.code);
+      var key = this.code + this.userLocation + this.minPrice + this.maxPrice + this.zipcode + this.state;
+      
+      if (this.cache.has(key)) {
+        results = this.cache.get(key);
         console.log(`results for code ${this.code} are in the cache`);
-
-      } else {
-        results = this.http.get<any>(this.apiURL + '/providerinfo?code=' + this.code + '&location=' + this.userLocation);
-        this.addToCache(this.code, results);
+      } 
+      else {
+        results = this.http.get<any>(this.apiURL + '/comboQuery?code=' + this.code + '&max=' + this.maxPrice + '&min=' + this.minPrice + '&zipcode=' + this.zipcode + '&state=' + this.state);
+        this.addToCache(key, results);
       }
       return results;
-    } catch (err) {
+    } 
+    catch (err) {
       console.log(err);
       return null;
     }
@@ -88,28 +91,20 @@ export class DataService {
   }
 
   /*Get the code a the search parameter*/
-  getCode(code: string) {
-    this.code = code;
-    this.codeSource.next(code);
+  getCode(search: item ) {
+    this.code = search.code;
+    this.userLocation = search.userLocation;
+    this.minPrice = search.minPrice;
+    this.maxPrice = search.maxPrice;
+    this.zipcode = search.zipcode;
+    this.state = search.state;
+    this.distanceRange = search.distanceRange;
+
+    console.log(search);
+
+    this.searchSource.next(search);
   }
 
-  /*Get the location as a search parameter*/
-  getLocation(location: string) {
-    this.userLocation = location;
-    this.locationSource.next(location);
-  }
-
-  /*Get the min price as a search parameter*/
-  getMinPrice(minPrice: number) {
-    this.minPrice = minPrice;
-    this.minPriceSource.next(minPrice);
-  }
-
-  /*Get the max price as a search parameter*/
-  getMaxPrice(maxPrice: number) {
-    this.minPrice = maxPrice;
-    this.minPriceSource.next(maxPrice);
-  }
 
 
 

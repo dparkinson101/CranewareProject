@@ -31,22 +31,19 @@ export class SearchBarComponent implements OnInit {
 
   myControl = new FormControl();
 
-  objectOptions =
-  [
-    { name: 'angular'},
-    {name: 'angular matetial'},
-  ];
 
   filteredOptions: Observable<Procedure[]>;
 
-  distances = [0, 5, 10, 20, 50, 100, 200, 250, 500];
+  distances = [5, 10, 20, 50, 100, 200, 250, 500];
+  states = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
   sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
 
-  model = new item('', '', null, null);
+  model = new item('', '', null, null, null, null, null);
   code: string;
   userLocation: string;
   minPrice: number;
   maxPrice: number;
+  distanceRange: number;
 
   submitted = false;
 
@@ -61,9 +58,8 @@ export class SearchBarComponent implements OnInit {
 
   newSearch() {
 
-    this.dataService.getCode(this.model.code);
-    this.dataService.getLocation(this.model.userLocation);
-
+    this.dataService.getCode(this.model);
+    this.initAutocomplete();
     this.reset();
 
   }
@@ -75,7 +71,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   reset() {
-    this.model = new item('', '', null, null);
+    this.model = new item('', '', null, null, null, null, null);
     //console.log(this.autocompleteProcedure);
     this.autocompleteProcedure.value = '';
 
@@ -136,8 +132,8 @@ export class SearchBarComponent implements OnInit {
 
   ngOnInit() {
 
-    this.dataService.currentCode.subscribe(code => this.code = code);
-    this.dataService.currentLocation.subscribe(userLocation => this.userLocation = userLocation);
+    //this.dataService.currentSearch.subscribe(search => this.model = search);
+
     this.dataService.getProcedures().subscribe( async procedureResults => {
       procedureResults.forEach( item => {
         var procedureCode = <string> (item.dRGDefinition).substring(0, 3);

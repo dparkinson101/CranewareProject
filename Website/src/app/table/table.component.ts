@@ -11,6 +11,11 @@ import { item } from '../models/item';
 
 declare var google: any;
 
+export interface Element {
+  providerName: string;
+  averageTotalPayments: number;
+  providerDistance: string;
+}
 
 @Component({
   selector: 'app-table',
@@ -26,7 +31,7 @@ export class TableComponent implements OnInit {
   public showSpinner = true;
   public showTable = false;
   public procedure: string;
- 
+  public distanceRange = 0; 
 
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -44,11 +49,20 @@ export class TableComponent implements OnInit {
     this.isLoading = true;
 
     // update when the search happens
-    const observable = this.dataService.currentCode;
+    const observable = this.dataService.currentSearch;
 
     observable.subscribe(() => {
+      if(this.dataService.distanceRange != null){
+        this.distanceRange = this.dataService.distanceRange;
+        console.log(this.distanceRange);
+      }
+      
       this.getData();
     });
+
+    
+
+    
 
     // this.dataService.currentLocation.subscribe(()=> 
     //   {
@@ -207,6 +221,9 @@ export class TableComponent implements OnInit {
       this.initialData = data;
       this.showTable = true;
       
+      console.log(data);
+
+
       //Handles table if search yields no results
       if(this.initialData.length < 1){
         this.isLoading = false;
@@ -232,7 +249,9 @@ export class TableComponent implements OnInit {
       for (let index = 0; index < this.initialData.length; index++) {
         const item = this.initialData[index];
         await this.createNewDataItem(item).then((data: TableData) => {
-          this.processedData.push(data);
+          if(this.distanceRange == 0 || Number(data.providerDistance) < this.distanceRange){
+            this.processedData.push(data);
+          }
         });
       }
 
@@ -240,8 +259,19 @@ export class TableComponent implements OnInit {
       this.isLoading = false;
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = this.processedData;
+
+    
      
       await this.sleep(1);
+
+      this.dataSource.filterPredicate = (data: TableData, filter: string) => {
+        if(data.providerName.toLowerCase().includes(filter)){
+          return true;
+        }
+        else{
+          return false;
+        }
+      };
 
       this.getProcedureName();
 
@@ -313,5 +343,7 @@ export class TableComponent implements OnInit {
       });
     });
   }
+
+  
 
 }

@@ -137,7 +137,7 @@ router.get('/filterstate', function(req, res, next) {
     var code = req.query.code;
     var state = req.query.state;
 
-    connection.query(('SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND providerState=' + state + ' LIMIT 200'), function(err, results) {
+    connection.query(('SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND providerState="' + state + '" LIMIT 200'), function(err, results) {
 
         if (err) {
             console.log(err);
@@ -188,7 +188,7 @@ router.get('/pricerange', function(req, res, next) {
     var max = req.query.max;
     var min = req.query.min;
 
-    connection.query(('SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND averageTotalPaymetns BETWEEN ' + min + ' AND ' + max + ' LIMIT 200'), function(err, results) {
+    connection.query(('SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND averageTotalPayments BETWEEN ' + min + ' AND ' + max + ' LIMIT 200'), function(err, results) {
 
         if (err) {
             console.log(err);
