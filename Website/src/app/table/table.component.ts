@@ -56,19 +56,8 @@ export class TableComponent implements OnInit {
         this.distanceRange = this.dataService.distanceRange;
         console.log(this.distanceRange);
       }
-      
       this.getData();
     });
-
-    
-
-    
-
-    // this.dataService.currentLocation.subscribe(()=> 
-    //   {
-    //     this.getData();
-    //   });
-
 
 
 
@@ -166,7 +155,7 @@ export class TableComponent implements OnInit {
                 this.mapAPIService.userMarker = new google.maps.Marker({
                   position: userLocation,
                   map: this.mapAPIService.map,
-                  label: "You"
+                  label: 'You'
                 });
               }
             }
@@ -174,7 +163,7 @@ export class TableComponent implements OnInit {
               this.mapAPIService.userMarker = new google.maps.Marker({
                 position: userLocation,
                 map: this.mapAPIService.map,
-                label: "You"
+                label: 'You'
               });
             }
           });
@@ -207,7 +196,7 @@ export class TableComponent implements OnInit {
   async getData() {
 
     this.isLoading = true;
-    this.procedure = "Searching";
+    this.procedure = 'Searching';
 
     const observable = this.dataService.getDataWithCode();
 
@@ -227,7 +216,7 @@ export class TableComponent implements OnInit {
       //Handles table if search yields no results
       if(this.initialData.length < 1){
         this.isLoading = false;
-        this.procedure = "No Results";
+        this.procedure = 'No Results';
         if(this.dataSource !== undefined){
           this.dataSource.data = [];
           this.dataSource = undefined;
@@ -236,7 +225,7 @@ export class TableComponent implements OnInit {
       }
       else{
         console.log(this.initialData);
-        this.procedure = "Searching";
+        this.procedure = 'Searching';
       }
 
 
@@ -333,10 +322,10 @@ export class TableComponent implements OnInit {
             providerCity: item.providerCity,
             providerZipCode: item.providerZipCode,
             providerStreetAddress: item.providerStreetAddress,
-            averageTotalPayments: item.averageTotalPayments,
+            averageTotalPayments: this.numberWithCommas(Number(item.averageTotalPayments).toFixed(0)),
             providerLatitude: item.latitude,
             providerLongitude: item.longitude,
-            providerDistance: Number(distance)
+            providerDistance: Number(distance).toFixed(1)
           };
           resolve(data);
         });
@@ -344,6 +333,8 @@ export class TableComponent implements OnInit {
     });
   }
 
-  
+   numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
 
 }

@@ -45,6 +45,8 @@ export class SearchBarComponent implements OnInit {
   maxPrice: number;
   distanceRange: number;
 
+  locationStatus:string='use current location';
+
   submitted = false;
 
   autocompleteLocation: any;
@@ -98,9 +100,10 @@ export class SearchBarComponent implements OnInit {
     this.initAutocomplete();
     if(this.mapAPIService.userGeolocation === undefined){
 
-      document.getElementById("geoButton").style.background = 'green';
-      document.getElementById("geoButton").style.borderColor = 'green';
+      document.getElementById("geoButton").style.background = '#66bf48';
+      document.getElementById("geoButton").style.borderColor = '#66bf48';
       this.isGeolocating = true;
+      this.locationStatus= "stop using current location";
 
       if(this.mapAPIService.userPlace !== undefined){ 
         this.mapAPIService.userPlace = undefined; 
@@ -122,6 +125,7 @@ export class SearchBarComponent implements OnInit {
 
       document.getElementById("geoButton").style.background = '#007bff';
       document.getElementById("geoButton").style.borderColor = '#007bff';
+      this.locationStatus= "use current location";
     }
   }
 

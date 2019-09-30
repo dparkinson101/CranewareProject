@@ -1,19 +1,37 @@
 <div class="tableContainer" *ngIf="showTable">
+
+    <!-- Name of current procedure -->
     <p><i>{{procedure | titlecase }}</i></p>
 
 
-      <!-- Loading Circle -->
+    <!-- Loading Circle -->
     <mat-card *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
         <mat-progress-spinner color="primary" mode="indeterminate">
         </mat-progress-spinner>
     </mat-card>
 
-        <div class="tableContainer" *ngIf="isLoading == false;">
+    <!-- filtering -->
+    <div class="tableContainer" *ngIf="isLoading == false;">
         <div class="example-header">
-            <mat-form-field>
-                <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="Filter">
-            </mat-form-field>
+
+            <div class="filter">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="Name">
+                </mat-form-field>
+            </div>
+            <div class="filter">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="State">
+                </mat-form-field>
+            </div>
+            <div class="filter">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="Zip">
+                </mat-form-field>
+            </div>
+
         </div>
+
 
 
         <div [ngClass]="['table-container mat-elevation-z8']" *ngIf="dataSource">
