@@ -16,10 +16,10 @@
 
             <div class="filter">
                 <mat-form-field>
-                    <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="Name">
+                    <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="Search By Name">
                 </mat-form-field>
             </div>
-            <div class="filter">
+            <!-- <div class="filter">
                 <mat-form-field>
                     <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="State">
                 </mat-form-field>
@@ -28,8 +28,7 @@
                 <mat-form-field>
                     <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="Zip">
                 </mat-form-field>
-            </div>
-
+            </div> -->
         </div>
 
 
@@ -70,6 +69,16 @@
                     <mat-cell *matCellDef="let item"> {{item.providerDistance}} miles</mat-cell>
                 </ng-container>
 
+                <ng-container matColumnDef="moreInfo">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header > Info </mat-header-cell>
+                    <mat-cell *matCellDef="let item">
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl"  >
+                        More Info
+                      </button>
+                     </mat-cell>
+                </ng-container>
+
+
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;">
                 </mat-row>
@@ -79,4 +88,25 @@
             <mat-paginator (click)="loadCurrent();" [pageSizeOptions]="[10]"></mat-paginator>
         </div>
     </div>
-</div>
+  </div>
+
+  <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+  </div>

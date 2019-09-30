@@ -31,7 +31,7 @@ p {
 .filter {
     position: relative;
     display: inline-block;
-    width: 150px;
+    width: 250px;
     padding: 10px;
 }
 
@@ -47,4 +47,8 @@ p {
 
 .mat-slider {
     padding: 10px;
+}
+
+.button{
+  width: 50px;
 }

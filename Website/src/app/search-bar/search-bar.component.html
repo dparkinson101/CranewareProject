@@ -25,7 +25,7 @@
         </mat-form-field>
         <button type="button" class="btn btn-primary" id="geoButton" style="line-height: inherit;" id="geoButton" (click)="onGeoSelect()" matTooltip="{{locationStatus}}" matTooltipPosition="above">
                 <i class="fa fa-location-arrow" style="line-height: inherit;"></i>
-                
+
             </button>
 
         <!-- <div class="form-group"> -->
@@ -67,12 +67,12 @@
 
             <li>
                 <mat-form-field style="width:100px;">
-                    <input placeholder="Min Price" [(ngModel)]="model.minPrice" name="minPrice" type="number" min="0" matInput>
+                    <input placeholder="Min Price" [(ngModel)]="model.minPrice" name="minPrice" type="number" step="100" min="0" matInput>
                 </mat-form-field>
             </li>
             <li>
                 <mat-form-field style="width:100px; ">
-                    <input placeholder="Max Price" [(ngModel)]="model.maxPrice" name="maxPrice" type="number" min="0" matInput>
+                    <input placeholder="Max Price" [(ngModel)]="model.maxPrice" name="maxPrice" type="number" step="100" min="0" matInput>
                 </mat-form-field>
             </li>
 
@@ -88,36 +88,5 @@
 
 
     </form>
-
-
-
-
-
-    <!--
-    <div class="btn-toolbar ">
-        <div class="text-center ">More options: &nbsp; &nbsp;
-            <div class="btn-group mr-3 " role="group ">
-                <button type="button " class="btn btn-success dropdown-toggle " data-toggle="dropdown " aria-haspopup="true " aria-expanded="false ">
-                    State
-                </button>
-                <div class="dropdown-menu " aria-labelledby="btnGroupDrop1 ">
-                    <a class="dropdown-item " href="# " *ngFor=" let option of sortOptions "><b>{{option}}</b> </a>
-                </div>
-            </div>
-
-            <button type="button " class="btn btn-success mr-3 ">Distance</button>
-
-            <button type="button " class="btn btn-success ">Rating</button>
-
-        </div>
-
-    </div> -->
-
-
-
-
-
-
-
 
 </div>
