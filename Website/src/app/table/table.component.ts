@@ -33,6 +33,9 @@ export class TableComponent implements OnInit {
   public procedure: string;
   public distanceRange = 0;
 
+  moreInfo = false;
+  public moreInfoItem: any = 4;
+
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -88,6 +91,18 @@ export class TableComponent implements OnInit {
     });
   }
 
+  loadMoreInfo(item: any){
+    this.moreInfoItem = item;
+    
+    if(this.moreInfo){
+      this.moreInfo = false;
+    }
+    else{
+      this.moreInfo = true;
+    }
+
+    console.log(this.moreInfoItem);
+  }
 
   async placeOnMap(item: any) {
 
