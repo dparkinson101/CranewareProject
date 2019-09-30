@@ -28,6 +28,14 @@ p {
     display: block;
 }
 
+.mat-header-cell
+{
+ color: #007bff;
+
+}
+
+
+
 .filter {
     position: relative;
     display: inline-block;
