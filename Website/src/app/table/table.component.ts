@@ -35,6 +35,7 @@ export class TableComponent implements OnInit {
 
   moreInfo = false;
   public moreInfoItem: any = 4;
+  public moreInfoHistoricData: any = 4;
 
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -94,12 +95,10 @@ export class TableComponent implements OnInit {
   loadMoreInfo(item: any){
     this.moreInfoItem = item;
     
-    if(this.moreInfo){
-      this.moreInfo = false;
-    }
-    else{
-      this.moreInfo = true;
-    }
+    this.data.getHistoricData(item.code, item.providerID).subscribe(data => {
+        this.moreInfoHistoricData = data;
+        console.log(this.moreInfoHistoricData);
+    });
 
     console.log(this.moreInfoItem);
   }
@@ -342,7 +341,8 @@ export class TableComponent implements OnInit {
             averageTotalPayments: this.numberWithCommas(Number(item.averageTotalPayments).toFixed(2)),
             providerLatitude: item.latitude,
             providerLongitude: item.longitude,
-            providerDistance: Number(distance).toFixed(2)
+            providerDistance: Number(distance).toFixed(2),
+            providerID: item.providerId
           };
           resolve(data);
         });
