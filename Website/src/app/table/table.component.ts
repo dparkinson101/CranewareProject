@@ -184,7 +184,7 @@ export class TableComponent implements OnInit {
             this.mapAPIService.averageFocus();
             this.mapAPIService.labelMarkers();
 
-            var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+            var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
             if (this.mapAPIService.userMarker) {
               if (this.mapAPIService.userMarker.location !== userLocation) {
