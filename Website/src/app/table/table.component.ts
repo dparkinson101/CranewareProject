@@ -111,7 +111,7 @@ export class TableComponent implements OnInit {
       console.log(this.moreInfoPlaceDetails);
       this.fillStars(Number(this.moreInfoPlaceDetails.rating));
       this.addReviews(this.moreInfoPlaceDetails);
-      
+
     });
 
     this.dataService.getHistoricData(item.providerID).subscribe(data => {
@@ -370,7 +370,7 @@ export class TableComponent implements OnInit {
             providerCity: item.providerCity,
             providerZipCode: item.providerZipCode,
             providerStreetAddress: item.providerStreetAddress,
-            averageTotalPayments: this.numberWithCommas(Number(item.averageTotalPayments).toFixed(2)),
+            averageTotalPayments: Number(item.averageTotalPayments).toFixed(2),
             providerLatitude: item.latitude,
             providerLongitude: item.longitude,
             providerDistance: Number(distance).toFixed(2),
@@ -422,7 +422,7 @@ addReviews(details: any)
   });
   console.log(this.photos);
 
-  
+
 }
 
 }
