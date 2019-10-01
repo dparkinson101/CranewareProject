@@ -95,6 +95,23 @@ router.get('/procedurelist', function(req, res, next){
     });
 });
 
+router.get('/historicdata', function(req, res, next){
+	
+	var code = req.query.code;
+	var providerId = req.query.providerId;
+	
+    var query = "select dRGDefinition, providerId, totalDischarges, averageCoveredCharges, averageTotalPayments, averageMedicarePayments, '2017' as years from financial2017 where financial2017.providerId = " + providerId + " AND financial2017.dRGDefinition = " + code + " union select dRGDefinition, providerId, totalDischarges, averageCoveredCharges, averageTotalPayments, averageMedicarePayments, '2016' as years from financial2016 where financial2016.providerId = " + providerId + " AND financial2016.dRGDefinition = " + code + "  union select dRGDefinition, providerId, totalDischarges, averageCoveredCharges, averageTotalPayments, averageMedicarePayments, '2015' as years from financial2015 where financial2015.providerId = " + providerId + " AND financial2015.dRGDefinition = " + code + " union select dRGDefinition, providerId, totalDischarges, averageCoveredCharges, averageTotalPayments, averageMedicarePayments, '2014' as years from financial2014 where financial2014.providerId = " + providerId + " AND financial2014.dRGDefinition = " + code + " unionselect dRGDefinition, providerId, totalDischarges, averageCoveredCharges, averageTotalPayments, averageMedicarePayments, '2013' as years from financial2013 where financial2013.providerId = " + providerId + " AND financial2013.dRGDefinition = " + code +" union select dRGDefinition, providerId, totalDischarges, averageCoveredCharges, averageTotalPayments, averageMedicarePayments, '2012' as years from financial2012 where financial2012.providerId = " + providerId + " AND financial2012.dRGDefinition = " + code + " union select dRGDefinition, providerId, totalDischarges, averageCoveredCharges, averageTotalPayments, averageMedicarePayments, '2011' as years from financial2011 where financial2011.providerId = " + providerId +" AND financial2011.dRGDefinition = " + code + "";
+    connection.query(query, function(err, results){
+        if(err){
+            console.log(err);
+            res.status(500).json({ "status_code": 500, "status_message": "internal server error" + err });
+        }
+        else{
+            res.send(results);
+        }
+    });
+});
+	
 
 module.exports = router;
 
