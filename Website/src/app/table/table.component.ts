@@ -8,6 +8,7 @@ import { TitleCasePipe } from '@angular/common';
 import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable } from '@angular/material';
 import { TableData } from '../models/TableData';
 import { item } from '../models/item';
+import { element } from 'protractor';
 
 declare var google: any;
 
@@ -30,18 +31,21 @@ export class TableComponent implements OnInit {
   public isLoading = true;
   public showSpinner = true;
   public showTable = false;
+
   public procedure: string;
   public distanceRange = 0;
+  public rating = 0;
+  public photos = [];
   public moreInfoHistoricData: any = 0;
 
   public moreInfoItem: any = 0;
   public moreInfoPlaceDetails:  any = 0;
   public stars: number[] = [0, 0, 0, 0, 0];
-  public reviews: string[] = [];
+  public reviews = [];
   public  iconClass = {
-    0: 'fa fa-star-o',
-    0.5: 'fa fa-star-half-o',
-    1: 'fa fa-star'
+    0: 'fa fa-star-o ',
+    0.5: 'fa fa-star-half-o ',
+    1: 'fa fa-star '
   }
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -104,9 +108,10 @@ export class TableComponent implements OnInit {
 
     this.mapAPIService.getPlaceDetails(item.providerPlaceID).then(placeDetails => {
       this.moreInfoPlaceDetails = placeDetails;
-      console.log(this.moreInfoPlaceDetails.rating);
+      console.log(this.moreInfoPlaceDetails);
       this.fillStars(Number(this.moreInfoPlaceDetails.rating));
-      this.addReviews(this.moreInfoPlaceDetails.reviews);
+      this.addReviews(this.moreInfoPlaceDetails);
+      
     });
 
     this.dataService.getHistoricData(item.providerID).subscribe(data => {
@@ -115,6 +120,13 @@ export class TableComponent implements OnInit {
     });
 
     console.log(this.moreInfoItem);
+  }
+
+  loadDefaultSort(){
+    var ele = document.querySelectorAll("[aria-label='Change sorting for providerDistance']")[0] as HTMLButtonElement;
+    ele.click();
+    console.log("Prints");
+    console.log(ele);
   }
 
   async placeOnMap(item: any) {
@@ -296,8 +308,6 @@ export class TableComponent implements OnInit {
 
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      this.sort.sort({ id: 'providerDistance', start: 'asc', disableClear: false });
-
 
       // get the first page of results - make sure it is 10
       const page = this.getCurrent();
@@ -305,6 +315,11 @@ export class TableComponent implements OnInit {
         this.placeCurrentOnMap(page);
         console.log(page);
       }
+
+      await this.sleep(100);
+
+      this.loadDefaultSort();
+
     });
 
   }
@@ -376,6 +391,7 @@ export class TableComponent implements OnInit {
 fillStars(rating: number){
   this.stars = [0,0,0,0,0];
   let starsToFill = Math.round(rating * 2)/2; //round to nearest 0.5
+  this.rating = Math.round(rating *2) /2;
   let i = 0;
   while(starsToFill > 0.5){
     this.stars[i] = 1;
@@ -390,11 +406,23 @@ fillStars(rating: number){
 }
 
 
-addReviews(reviews: any)
+addReviews(details: any)
 {
 
-  this.reviews.push(reviews);
+  this.reviews = [];
+  this.photos= [];
 
+  details.reviews.forEach(element => {
+    if(element.text !== ""){
+    this.reviews.push(element);
+    }
+  });
+  details.photos.forEach(element => {
+    this.photos.push(element.getUrl());
+  });
+  console.log(this.photos);
+
+  
 }
 
 }

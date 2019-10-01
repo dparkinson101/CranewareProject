@@ -74,7 +74,7 @@
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Info </mat-header-cell>
                     <mat-cell *matCellDef="let item">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
-                            More Info
+                            <i class="fa fa-info-circle"></i>
                         </button>
                     </mat-cell>
                 </ng-container>
@@ -95,16 +95,55 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{moreInfoItem.providerName}}</h5>
+
+                        <h1 class="modal-title" id="exampleModalLabel">{{moreInfoItem.providerName}}</h1>
+
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
 
-                        Rating<i *ngFor="let star of stars" [class]="iconClass[star]" id="stars"></i>
-                        <!-- <br> Reviews
-                        <p *ngfor ="let review of reviews">{{review}}</p> -->
+                        <div class="container">
+                            <mdb-carousel class="carousel slide carousel-fade" [animation]="'fade'">
+                                <div *ngFor="let photo of photos">
+                                    <mdb-carousel-item>
+                                        <div class="view w-100">
+                                            <img class="d-block w-100" src="{{photo}}" alt="First slide">
+                                            <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
+                                        </div>
+                                    </mdb-carousel-item>
+
+                                </div>
+
+                            </mdb-carousel>
+                            <br>
+                        </div>
+                        <div class="text-center">
+                            <div class="title">
+                                <h3>Rating</h3>
+                            </div>
+                            <div class="title" id="rating">
+                                <div id="rating">
+                                    <h3>{{rating}}</h3>
+                                </div>
+                            </div>
+                            <div class="title">
+                                <h2> <i *ngFor="let star of stars" [class]="iconClass[star]" id="stars"></i></h2>
+                            </div>
+                        </div>
+
+                        <HR>
+                        <h4>Reviews</h4>
+                        <div class="review" scrollbar-ripe-malinka>
+
+                            <div *ngFor="let review of reviews" id="reviews">
+                                <br>
+                                <h6>{{review.author_name}} {{review.relative_time_description}}</h6>
+                                {{review.text}}
+                            </div>
+                        </div>
+                        <HR>
 
                     </div>
                     <div class="modal-footer">
