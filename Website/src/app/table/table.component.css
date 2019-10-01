@@ -96,7 +96,7 @@
     
     .carousel .carousel-inner .carousel-item,
     .carousel .carousel-inner .active {
-        height: 70vh;
+        height: 80vh;
     }
     
     .text-center {
@@ -111,15 +111,14 @@
     }
     
     .container {
-        width: 80%;
+        width: 100%;
     }
     
-    .carousel-inner {
-        max-height: 450px;
-    }
-    
-    img {
-        max-height: 450px;
+    html,
+    body,
+    .view {
+        height: 80vh;
+        width: 100%;
     }
     
     .modal-tile {

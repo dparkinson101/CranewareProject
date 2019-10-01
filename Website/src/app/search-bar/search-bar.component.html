@@ -18,13 +18,13 @@
         </mat-form-field>
 
         <mat-form-field *ngIf="!(isGeolocating)" class="example-full-width" style="width: 280px;  ">
-            <input type="text" placeholder="Location 📍" id="location" name="location" [(ngModel)]="model.userLocation" name="location" aria-label="Number" matInput>
+            <input type="text" placeholder="Your Location 📍" id="location" name="location" [(ngModel)]="model.userLocation" name="location" aria-label="Number" matInput>
 
 
 
         </mat-form-field>
         <button type="button" class="btn btn-primary" id="geoButton" style="line-height: inherit;" id="geoButton" (click)="onGeoSelect()" matTooltip="{{locationStatus}}" matTooltipPosition="above">
-                <i class="fa fa-location-arrow" style="line-height: inherit;"></i>
+                <i class="fa fa-map-pin" style="line-height: inherit;"></i>
 
             </button>
 
