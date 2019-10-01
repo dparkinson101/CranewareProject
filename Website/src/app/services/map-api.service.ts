@@ -166,7 +166,7 @@ export class MapAPIService {
 
         let _this = this;
 
-        var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+        var image = 'http://maps.google.com/mapfiles/ms/icons/blue.dot.png';
 
 
 

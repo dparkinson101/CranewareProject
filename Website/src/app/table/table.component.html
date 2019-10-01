@@ -70,12 +70,12 @@
                 </ng-container>
 
                 <ng-container matColumnDef="moreInfo">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header > Info </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Info </mat-header-cell>
                     <mat-cell *matCellDef="let item">
-                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)" >
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
                         More Info
                       </button>
-                     </mat-cell>
+                    </mat-cell>
                 </ng-container>
 
 
@@ -84,14 +84,13 @@
                 </mat-row>
             </mat-table>
 
-            
+
 
             <!-- Page through table -->
             <mat-paginator (click)="loadCurrent();" [pageSizeOptions]="[10]"></mat-paginator>
         </div>
 
-        <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
-                        aria-hidden="true">
+        <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -101,7 +100,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                    <h1>   {{moreInfoItem.providerDistance}} miles </h1>
+                        <h1> {{moreInfoItem.providerDistance}} miles </h1>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -110,4 +109,4 @@
             </div>
         </div>
     </div>
-  </div>
+</div>
