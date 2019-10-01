@@ -21,7 +21,7 @@ router.use(cors())
 //select all statement
 module.exports.silva  = async function (code) {
 
-	var string = 'SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' LIMIT 20000';
+	var string = 'SELECT * FROM fulldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' LIMIT 200';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -54,7 +54,7 @@ return x;
 //query to sort the search results by price in ascending order
 module.exports.sortpriceasc  = async function (code) {
 
-	var string = 'SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' ORDER BY averageTotalPayments ASC LIMIT 200';
+	var string = 'SELECT * FROM fulldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' ORDER BY averageTotalPayments ASC LIMIT 200';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -87,7 +87,7 @@ return x;
 //query to filter the results by providerZipCode
 module.exports.filterzipcode  = async function (code, zipcode) {
 
-	var string = 'SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND providerZipCode=' + zipcode + ' LIMIT 200';
+	var string = 'SELECT * FROM fulldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND providerZipCode=' + zipcode + ' LIMIT 200';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -121,7 +121,7 @@ return x;
 //query to filter the results by state
 module.exports.filterstate  = async function (code, state) {
 
-	var string = 'SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND providerState="' + state + '" LIMIT 200';
+	var string = 'SELECT * FROM fulldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND providerState="' + state + '" LIMIT 200';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -156,7 +156,7 @@ return x;
 //query to get the provider info from procedure code
 module.exports.providerinfo  = async function (code) {
 
-	var string = 'SELECT alldata.dRGDefinition, alldata.providerId, alldata.providerName,alldata.averageTotalPayments, alldata.providerStreetAddress, alldata.providerCity, alldata.providerState, alldata.providerZipCode, output2017.latitude, output2017.longitude from alldata inner join output2017 on alldata.providerId = output2017.providerId WHERE substr(alldata.dRGDefinition, 1, 3) =' + code + ' LIMIT 200';
+	var string = 'SELECT fulldata.dRGDefinition, fulldata.providerId, fulldata.providerName,fulldata.averageTotalPayments, fulldata.providerStreetAddress, fulldata.providerCity, fulldata.providerState, fulldata.providerZipCode from fulldata WHERE substr(fulldata.dRGDefinition, 1, 3) =' + code + ' LIMIT 200';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -191,7 +191,7 @@ return x;
 //query to sort by price range
 module.exports.pricerange  = async function (code, min, max) {
 
-	var string = 'SELECT * FROM alldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND averageTotalPayments BETWEEN ' + min + ' AND ' + max + ' LIMIT 200';
+	var string = 'SELECT * FROM fulldata WHERE substring(dRGDefinition, 1, 3)=' + code + ' AND averageTotalPayments BETWEEN ' + min + ' AND ' + max + ' LIMIT 200';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {

@@ -32,7 +32,7 @@ describe('Testing ComboQuery.js methods', function() {
 		it('Possiblitly 1: no sorting ', async function() {
 			var x = await query.comboQuery("039",null,null,null,null)
 			var one = false;
-			//console.log(x[807].providerId);
+			
 			if(x[0].providerId == 100007 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				one = true;
@@ -47,13 +47,13 @@ describe('Testing ComboQuery.js methods', function() {
 			
 			//End
 			var three = false;
-			if(x[807].providerId == 80004 && x[807].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[838].providerId == 520037 && x[838].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}
 			//Length
 			var four = false;
-			if(x.length = 808)
+			if(x.length = 839)
 			{
 				four = 	true;
 			}
@@ -68,7 +68,6 @@ describe('Testing ComboQuery.js methods', function() {
 	describe('Code query should return correct results', function() {
 		it('Possiblitly 2: just min max sorting', async function() {
 			var x = await query.comboQuery("039",0,10000,null,null)
-			
 			var one = false;
 			if(x[0].providerId == 100007 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
@@ -84,13 +83,13 @@ describe('Testing ComboQuery.js methods', function() {
 			
 			//End
 			var three = false;
-			if(x[716].providerId == 60064 && x[716].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[744].providerId == 520037 && x[744].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}
 			//Length
 			var four = false;
-			if(x.length = 717)
+			if(x.length = 745)
 			{
 				four = 	true;
 			}
@@ -284,8 +283,9 @@ describe('Testing ComboQuery.js methods', function() {
 //Possiblitly 8: orignal query with "null" strings
 	describe('Code query should return correct results', function() {
 		it('Given just code with null strings', async function() {
-			var x = await query.comboQuery("039","null","null","null","null")
-			console.log(x[0].providerId);
+			var x = await query.comboQuery("039","null","null","null","null")		
+			//console.log(x[838].providerId);
+			//console.log(x.length);
 			var one = false;
 			if(x[0].providerId == 100007 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
@@ -301,13 +301,13 @@ describe('Testing ComboQuery.js methods', function() {
 			
 			//End
 			var three = false;
-			if(x[807].providerId == 80004 && x[807].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[838].providerId == 520037 && x[838].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}
 			//Length
 			var four = false;
-			if(x.length = 808)
+			if(x.length = 839)
 			{
 				four = 	true;
 			}

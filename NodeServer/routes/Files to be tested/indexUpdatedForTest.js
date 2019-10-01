@@ -15,7 +15,7 @@ var connection = mysql.createConnection({
 /*FOR SILVA SQL DATABASE CONNECTION */
 module.exports.silva  = function (code) {
 
-	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ';';
+	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinformationfinal on providerinformationfinal.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ';';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -50,7 +50,7 @@ return x;
 //query to sort the search results by price in ascending order
 module.exports.sortpriceasc  = function (code) {
 
-	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' ORDER BY financial2017.averageTotalPayments ASC;';
+	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinformationfinal on providerinformationfinal.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' ORDER BY financial2017.averageTotalPayments ASC;';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -84,7 +84,7 @@ return x;
 //query to filter the results by providerZipCode
 module.exports.filterzipcode  = function (code, zipcode) {
 
-	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerZipCode = ' + zipcode + ';';
+	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinformationfinal on providerinformationfinal.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerZipCode = ' + zipcode + ';';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -119,7 +119,7 @@ return x;
 //query to filter the results by providerState
 module.exports.filterstate  = function (code, state) {
 
-	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerState = "' + state +'";';
+	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinformationfinal on providerinformationfinal.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND providerState = "' + state +'";';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -152,9 +152,9 @@ return x;
 };
 
 //query to get the provider info from procedure code
-module.exports.providerinfo  = function (code	) {
+module.exports.providerinformationfinal  = function (code	) {
 
-	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code +';';
+	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinformationfinal on providerinformationfinal.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code +';';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
@@ -189,7 +189,7 @@ return x;
 /*SORT*/
 module.exports.pricerange  = function (code, min, max) {
 
-	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinfo on providerinfo.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND averageTotalPayments between ' + min + ' AND ' + max + ';';
+	var string = 'select * from financial2017 inner join codes on codes.dRGDefinition = financial2017.dRGDefinition inner join providerinformationfinal on providerinformationfinal.providerId = financial2017.providerId where codes.dRGDefinition = ' + code + ' AND financial2017.dRGDefinition = ' + code + ' AND averageTotalPayments between ' + min + ' AND ' + max + ';';
 
 	var promise1 = new Promise(function(resolve, reject) {
 	  setTimeout(function() {
