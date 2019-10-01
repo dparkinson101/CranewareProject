@@ -65,17 +65,18 @@
 
                 <!-- Distance Column -->
                 <ng-container matColumnDef="providerDistance">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance
+                    </mat-header-cell>
                     <mat-cell *matCellDef="let item"> {{item.providerDistance}} miles</mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="moreInfo">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header > Info </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Info </mat-header-cell>
                     <mat-cell *matCellDef="let item">
-                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)" >
-                        More Info
-                      </button>
-                     </mat-cell>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
+                            More Info
+                        </button>
+                    </mat-cell>
                 </ng-container>
 
 
@@ -84,24 +85,27 @@
                 </mat-row>
             </mat-table>
 
-            
+
 
             <!-- Page through table -->
             <mat-paginator (click)="loadCurrent();" [pageSizeOptions]="[10]"></mat-paginator>
         </div>
 
-        <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
-                        aria-hidden="true">
+        <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{moreInfoItem.providerName}}}</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">{{moreInfoItem.providerName}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                    <h1>   {{moreInfoItem.providerDistance}} miles </h1>
+
+                        Rating<i *ngFor="let star of stars" [class]="iconClass[star]" id="stars"></i>
+                        <!-- <br> Reviews
+                        <p *ngfor ="let review of reviews">{{review}}</p> -->
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -110,4 +114,4 @@
             </div>
         </div>
     </div>
-  </div>
+</div>

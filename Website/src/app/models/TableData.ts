@@ -9,4 +9,5 @@ export interface TableData {
     providerLongitude: number;
     providerDistance: string;
     providerID: string;
+    providerPlaceID: string;
   }

@@ -32,14 +32,21 @@ export class TableComponent implements OnInit {
   public showTable = false;
   public procedure: string;
   public distanceRange = 0;
+  public moreInfoHistoricData: any = 0;
 
-  moreInfo = false;
-  public moreInfoItem: any = 4;
-  public moreInfoHistoricData: any = 4;
-
+  public moreInfoItem: any = 0;
+  public moreInfoPlaceDetails:  any = 0;
+  public stars: number[] = [0, 0, 0, 0, 0];
+  public reviews: string[] = [];
+  public  iconClass = {
+    0: 'fa fa-star-o',
+    0.5: 'fa fa-star-half-o',
+    1: 'fa fa-star'
+  }
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
+
 
   public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance', 'moreInfo'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
@@ -94,7 +101,14 @@ export class TableComponent implements OnInit {
 
   loadMoreInfo(item: any){
     this.moreInfoItem = item;
-    
+
+    this.mapAPIService.getPlaceDetails(item.providerPlaceID).then(placeDetails => {
+      this.moreInfoPlaceDetails = placeDetails;
+      console.log(this.moreInfoPlaceDetails.rating);
+      this.fillStars(Number(this.moreInfoPlaceDetails.rating));
+      this.addReviews(this.moreInfoPlaceDetails.reviews);
+    });
+
     this.dataService.getHistoricData(item.providerID).subscribe(data => {
         this.moreInfoHistoricData = data;
         console.log(data);
@@ -282,6 +296,8 @@ export class TableComponent implements OnInit {
 
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.sort.sort({ id: 'providerDistance', start: 'asc', disableClear: false });
+
 
       // get the first page of results - make sure it is 10
       const page = this.getCurrent();
@@ -309,6 +325,7 @@ export class TableComponent implements OnInit {
 
     this.dataSource = new MatTableDataSource();
     this.dataSource.data = this.processedData;
+
 
     await this.sleep(1);
 
@@ -342,7 +359,8 @@ export class TableComponent implements OnInit {
             providerLatitude: item.latitude,
             providerLongitude: item.longitude,
             providerDistance: Number(distance).toFixed(2),
-            providerID: item.providerId
+            providerID: item.providerId,
+            providerPlaceID: item.google_place_id
           };
           resolve(data);
         });
@@ -352,6 +370,31 @@ export class TableComponent implements OnInit {
 
    numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+
+fillStars(rating: number){
+  this.stars = [0,0,0,0,0];
+  let starsToFill = Math.round(rating * 2)/2; //round to nearest 0.5
+  let i = 0;
+  while(starsToFill > 0.5){
+    this.stars[i] = 1;
+    i++;
+    starsToFill--;
+
+  }
+  if(starsToFill === 0.5){
+    this.stars[i] = 0.5;
+  }
+  this.stars.sort().reverse();
+}
+
+
+addReviews(reviews: any)
+{
+
+  this.reviews.push(reviews);
+
 }
 
 }

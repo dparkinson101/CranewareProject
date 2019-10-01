@@ -49,6 +49,15 @@ p {
     padding: 10px;
 }
 
-.button{
-  width: 50px;
+.button {
+    width: 50px;
+}
+
+th.mat-header-cell .mat-sort-header-container.mat-sort-header-sorted .mat-sort-header-arrow {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+#stars {
+    color: #ffae42;
 }
