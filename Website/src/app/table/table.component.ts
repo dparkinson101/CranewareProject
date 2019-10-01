@@ -111,7 +111,7 @@ export class TableComponent implements OnInit {
       console.log(this.moreInfoPlaceDetails);
       this.fillStars(Number(this.moreInfoPlaceDetails.rating));
       this.addReviews(this.moreInfoPlaceDetails);
-      
+
     });
 
     this.dataService.getHistoricData(item.providerID).subscribe(data => {
@@ -187,7 +187,7 @@ export class TableComponent implements OnInit {
             this.mapAPIService.averageFocus();
             this.mapAPIService.labelMarkers();
 
-            var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+            var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
             if(this.mapAPIService.userMarker){
               if(this.mapAPIService.userMarker.location !== userLocation){
@@ -422,7 +422,7 @@ addReviews(details: any)
   });
   console.log(this.photos);
 
-  
+
 }
 
 }

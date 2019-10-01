@@ -1,1 +1,39 @@
-<p>about works!</p>
+<div class="wrapper">
+    <div class="main">
+        <h2>
+          About Us
+        </h2>
+        <div class="text-container">
+
+            <div class="text">
+                <h5>
+                  About Us
+                </h5>
+                <p>Allowing you to refine your search by the following: </p>
+
+                <ul>
+                    <li>
+                        <B>Cost</B> - Find the hospitals with the cheapest prices, narrow down your search with the prices you want to pay.
+                    </li>
+                    <li>
+                        <B>Distance</B> - Find the location that is right for you, we can help by indentifying the closest healthcare providers for your procedure.
+                    </li>
+
+                </ul>
+                <p>
+                    We aim to provide you with the cheapest and closest options for your medical care.
+                </p>
+            </div>
+        </div>
+        <div class="text-center">
+            <a [routerLink]="['/search-page']"><button type="button" class="btn btn-success btn-lg ">Get Started</button></a>
+        </div>
+
+
+
+
+</div>
+
+<br>
+
+<router-outlet> </router-outlet>
