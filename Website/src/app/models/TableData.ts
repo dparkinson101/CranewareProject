@@ -8,5 +8,6 @@ export interface TableData {
     providerLatitude: number;
     providerLongitude: number;
     providerDistance: string;
+    providerID: string;
     providerPlaceID: string;
   }

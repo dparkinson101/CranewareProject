@@ -36,6 +36,8 @@ export class TableComponent implements OnInit {
   public distanceRange = 0;
   public rating = 0;
   public photos = [];
+  public moreInfoHistoricData: any = 0;
+
   public moreInfoItem: any = 0;
   public moreInfoPlaceDetails:  any = 0;
   public stars: number[] = [0, 0, 0, 0, 0];
@@ -48,7 +50,7 @@ export class TableComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  
+
 
   public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance', 'moreInfo'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
@@ -103,6 +105,7 @@ export class TableComponent implements OnInit {
 
   loadMoreInfo(item: any){
     this.moreInfoItem = item;
+
     this.mapAPIService.getPlaceDetails(item.providerPlaceID).then(placeDetails => {
       this.moreInfoPlaceDetails = placeDetails;
       console.log(this.moreInfoPlaceDetails);
@@ -110,6 +113,20 @@ export class TableComponent implements OnInit {
       this.addReviews(this.moreInfoPlaceDetails);
       
     });
+
+    this.dataService.getHistoricData(item.providerID).subscribe(data => {
+        this.moreInfoHistoricData = data;
+        console.log(data);
+    });
+
+    console.log(this.moreInfoItem);
+  }
+
+  loadDefaultSort(){
+    var ele = document.querySelectorAll("[aria-label='Change sorting for providerDistance']")[0] as HTMLButtonElement;
+    ele.click();
+    console.log("Prints");
+    console.log(ele);
   }
 
   async placeOnMap(item: any) {
@@ -291,8 +308,6 @@ export class TableComponent implements OnInit {
 
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      this.sort.sort({ id: 'providerDistance', start: 'asc', disableClear: false });
-
 
       // get the first page of results - make sure it is 10
       const page = this.getCurrent();
@@ -300,6 +315,11 @@ export class TableComponent implements OnInit {
         this.placeCurrentOnMap(page);
         console.log(page);
       }
+
+      await this.sleep(100);
+
+      this.loadDefaultSort();
+
     });
 
   }
@@ -320,7 +340,7 @@ export class TableComponent implements OnInit {
 
     this.dataSource = new MatTableDataSource();
     this.dataSource.data = this.processedData;
-   
+
 
     await this.sleep(1);
 
@@ -354,6 +374,7 @@ export class TableComponent implements OnInit {
             providerLatitude: item.latitude,
             providerLongitude: item.longitude,
             providerDistance: Number(distance).toFixed(2),
+            providerID: item.providerId,
             providerPlaceID: item.google_place_id
           };
           resolve(data);

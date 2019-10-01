@@ -66,23 +66,28 @@ export class MapAPIService {
   }
 
   public labelMarkers(){
-    this.markers.sort((a, b) => {
-      var distanceA = parseFloat(a.info.markerDistance);
-      var distanceB = parseFloat(b.info.markerDistance);
+    // this.markers.sort((a, b) => {
+    //   var distanceA = parseFloat(a.info.markerDistance);
+    //   var distanceB = parseFloat(b.info.markerDistance);
 
-      if(distanceA > distanceB){
-        return 1;
-      }
-      if(distanceB > distanceA) {
-        return -1;
-      }
-      if(distanceA == distanceB) {
-        return 0;
-      }
-    });
+    //   if(distanceA > distanceB){
+    //     return 1;
+    //   }
+    //   if(distanceB > distanceA) {
+    //     return -1;
+    //   }
+    //   if(distanceA == distanceB) {
+    //     return 0;
+    //   }
+    // });
 
     this.markers.forEach(m => {
-      m.marker.setLabel(""+(this.markers.indexOf(m)+1));
+      m.marker.setLabel({
+        text: ""+(this.markers.indexOf(m)+1),
+        color: "#000000",
+        fontSize: "16px",
+        fontWeight: "bold"
+      });
     });
   }
 
@@ -180,7 +185,7 @@ export class MapAPIService {
 
         let _this = this;
 
-        var image = 'http://maps.google.com/mapfiles/ms/icons/blue.dot.png';
+        var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
 
 
