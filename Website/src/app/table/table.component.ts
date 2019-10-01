@@ -73,11 +73,13 @@ export class TableComponent implements OnInit {
     const observable = this.dataService.currentSearch;
 
     observable.subscribe(() => {
-      if (this.dataService.distanceRange != null) {
-        this.distanceRange = this.dataService.distanceRange;
-        console.log(this.distanceRange);
+      if(this.dataService.code != undefined){
+        if (this.dataService.distanceRange != null) {
+          this.distanceRange = this.dataService.distanceRange;
+          console.log(this.distanceRange);
+        }
+        this.getData();
       }
-      this.getData();
     });
 
   }
@@ -368,7 +370,7 @@ export class TableComponent implements OnInit {
             providerCity: item.providerCity,
             providerZipCode: item.providerZipCode,
             providerStreetAddress: item.providerStreetAddress,
-            averageTotalPayments: this.numberWithCommas(Number(item.averageTotalPayments).toFixed(2)),
+            averageTotalPayments: Number(item.averageTotalPayments).toFixed(2),
             providerLatitude: item.latitude,
             providerLongitude: item.longitude,
             providerDistance: Number(distance).toFixed(2),

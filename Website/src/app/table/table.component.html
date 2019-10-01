@@ -1,4 +1,4 @@
-<div class="tableContainer" *ngIf="showTable">
+<div class="right tableContainer" *ngIf="showTable">
 
     <!-- Name of current procedure -->
     <p><i>{{procedure | titlecase }}</i></p>
@@ -40,7 +40,7 @@
                 <!-- name Column -->
                 <ng-container matColumnDef="providerName">
                     <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Name </mat-header-cell>
-                    <mat-cell *matCellDef="let item"> {{item.providerName}} </mat-cell>
+                    <mat-cell *matCellDef="let item;">{{item.providerName}} </mat-cell>
                 </ng-container>
 
                 <!-- state Column -->
@@ -71,9 +71,9 @@
                 </ng-container>
 
                 <ng-container matColumnDef="moreInfo">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Info </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                     <mat-cell *matCellDef="let item">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
+                        <button type="button" class="btn btn-primary btn-circle btn-circle-sm m-1" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
                             <i class="fa fa-info"></i>
                         </button>
                     </mat-cell>
@@ -145,9 +145,11 @@
                         </div>
                         <HR>
 
-                        <h4>Info</h4>
+                        <h4>Hospital Information</h4>
                         <div class="info">
-                            Address {{moreInfoItem.providerAddress}} Distance {{moreInfoItem.providerDistance}} Cost {{moreInfoItem.averageTotalPayments}}
+                            <b>Address</b> {{moreInfoItem.providerStreetAddress | titlecase}} <br>
+                            <b>Distance</b> {{moreInfoItem.providerDistance}} <br>
+                            <b>Cost</b> {{moreInfoItem.averageTotalPayments}}
 
 
                         </div>
