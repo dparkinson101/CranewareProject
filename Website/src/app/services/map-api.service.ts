@@ -156,15 +156,21 @@ export class MapAPIService {
   }
 
   public async getUserLocation() {
-    
+
+
+
     return new Promise(resolve => {
       if(this.userPlace === undefined){
-        
+
         //HTML 5 Geolocation
 
         let _this = this;
-        
-        if (navigator.geolocation && _this.userGeolocation === undefined) 
+
+        var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+
+
+
+        if (navigator.geolocation && _this.userGeolocation === undefined)
         {
           navigator.geolocation.getCurrentPosition(position => {
             var pos = {
@@ -180,7 +186,7 @@ export class MapAPIService {
               _this.userMarker = new google.maps.Marker({
                 position: pos,
                 map: _this.map,
-                label: "You"
+                icon: image
               });
 
               this.map.setCenter(pos);
@@ -191,20 +197,20 @@ export class MapAPIService {
               _this.userMarker = new google.maps.Marker({
                 position: pos,
                 map: _this.map,
-                label: "You"
+                icon: image
               });
 
               this.map.setCenter(pos);
 
               //console.log("Added geolocation marker");
             }
-            
-            
+
+
 
             _this.userGeolocation = pos;
 
             resolve(pos);
-          }, 
+          },
           function () {
             console.log('This browser doesn\'t support HTML 5 Geolocation');
           });
@@ -224,7 +230,7 @@ export class MapAPIService {
           lat: this.userPlace.geometry.location.lat(),
           lng: this.userPlace.geometry.location.lng()
         };
-  
+
         resolve(pos);
       }
     });

@@ -31,13 +31,16 @@ export class TableComponent implements OnInit {
   public showSpinner = true;
   public showTable = false;
   public procedure: string;
-  public distanceRange = 0; 
+  public distanceRange = 0;
+
+  moreInfo = false;
+  public moreInfoItem: any = 4;
 
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance'];
+  public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance', 'moreInfo'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
               private titleCasePipe: TitleCasePipe) {
 
@@ -56,19 +59,8 @@ export class TableComponent implements OnInit {
         this.distanceRange = this.dataService.distanceRange;
         console.log(this.distanceRange);
       }
-      
       this.getData();
     });
-
-    
-
-    
-
-    // this.dataService.currentLocation.subscribe(()=> 
-    //   {
-    //     this.getData();
-    //   });
-
 
 
 
@@ -99,6 +91,18 @@ export class TableComponent implements OnInit {
     });
   }
 
+  loadMoreInfo(item: any){
+    this.moreInfoItem = item;
+    
+    if(this.moreInfo){
+      this.moreInfo = false;
+    }
+    else{
+      this.moreInfo = true;
+    }
+
+    console.log(this.moreInfoItem);
+  }
 
   async placeOnMap(item: any) {
 
@@ -158,6 +162,8 @@ export class TableComponent implements OnInit {
             this.mapAPIService.averageFocus();
             this.mapAPIService.labelMarkers();
 
+            var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+
             if(this.mapAPIService.userMarker){
               if(this.mapAPIService.userMarker.location !== userLocation){
                 this.mapAPIService.userMarker.setMap(null);
@@ -166,7 +172,7 @@ export class TableComponent implements OnInit {
                 this.mapAPIService.userMarker = new google.maps.Marker({
                   position: userLocation,
                   map: this.mapAPIService.map,
-                  label: "You"
+                  icon: image
                 });
               }
             }
@@ -174,14 +180,14 @@ export class TableComponent implements OnInit {
               this.mapAPIService.userMarker = new google.maps.Marker({
                 position: userLocation,
                 map: this.mapAPIService.map,
-                label: "You"
+                icon: image
               });
             }
           });
         });
       }
 
-      
+
     }
   }
 
@@ -207,7 +213,7 @@ export class TableComponent implements OnInit {
   async getData() {
 
     this.isLoading = true;
-    this.procedure = "Searching";
+    this.procedure = 'Searching';
 
     const observable = this.dataService.getDataWithCode();
 
@@ -220,14 +226,14 @@ export class TableComponent implements OnInit {
       this.initialData = [];
       this.initialData = data;
       this.showTable = true;
-      
+
       console.log(data);
 
 
       //Handles table if search yields no results
       if(this.initialData.length < 1){
         this.isLoading = false;
-        this.procedure = "No Results";
+        this.procedure = 'No Results';
         if(this.dataSource !== undefined){
           this.dataSource.data = [];
           this.dataSource = undefined;
@@ -236,7 +242,7 @@ export class TableComponent implements OnInit {
       }
       else{
         console.log(this.initialData);
-        this.procedure = "Searching";
+        this.procedure = 'Searching';
       }
 
 
@@ -260,8 +266,8 @@ export class TableComponent implements OnInit {
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = this.processedData;
 
-    
-     
+
+
       await this.sleep(1);
 
       this.dataSource.filterPredicate = (data: TableData, filter: string) => {
@@ -333,10 +339,10 @@ export class TableComponent implements OnInit {
             providerCity: item.providerCity,
             providerZipCode: item.providerZipCode,
             providerStreetAddress: item.providerStreetAddress,
-            averageTotalPayments: item.averageTotalPayments,
+            averageTotalPayments: this.numberWithCommas(Number(item.averageTotalPayments).toFixed(2)),
             providerLatitude: item.latitude,
             providerLongitude: item.longitude,
-            providerDistance: Number(distance)
+            providerDistance: Number(distance).toFixed(2)
           };
           resolve(data);
         });
@@ -344,6 +350,8 @@ export class TableComponent implements OnInit {
     });
   }
 
-  
+   numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
 
 }

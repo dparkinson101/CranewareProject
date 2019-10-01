@@ -5,21 +5,11 @@
 
     <!-- Search Bar -->
     <form #searchBar="ngForm" (ngSubmit)="onSubmit(f)" (click)="initAutocomplete();" novalidate>
-
-        <mat-form-field *ngIf="!(isGeolocating)" class="example-full-width" style="width: 300px; padding: 10px">
-            <input type="text" placeholder="Location 📍" id="location" name="location" [(ngModel)]="model.userLocation" name="location" aria-label="Number" matInput>
-        </mat-form-field>
         <div class="container" *ngIf="isGeolocating">
             <b>Now Using Your Geolocation</b>
         </div>
-        <!-- <div class="form-group"> -->
-            <button type="button" class="btn btn-primary btn-lg" style="border-radius: 100%; line-height: inherit;" id="geoButton" (click)="onGeoSelect()">
-                <i class="fa fa-location-arrow" style="line-height: inherit;"></i>
-            </button>
-        <!-- </div> -->
-
-        <mat-form-field class="example-full-width" style="width: 600px; padding: 10px">
-            <input type="text" placeholder="Procedure 🩺" id="procedure" name="procedure" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-form-field class="example-full-width" style="width: 600px; padding: 20px">
+            <input type="text" required placeholder="Procedure 🩺" id="procedure" name="procedure" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" id="autoComplete" (optionSelected)="assignCode($event.option.value)" [displayWith]="displayFn">
                 <mat-option *ngFor="let procedure of filteredOptions | async" [value]="procedure">
                     {{procedure.name}}
@@ -27,10 +17,28 @@
             </mat-autocomplete>
         </mat-form-field>
 
+        <mat-form-field *ngIf="!(isGeolocating)" class="example-full-width" style="width: 280px;  ">
+            <input type="text" placeholder="Location 📍" id="location" name="location" [(ngModel)]="model.userLocation" name="location" aria-label="Number" matInput>
+
+
+
+        </mat-form-field>
+        <button type="button" class="btn btn-primary" id="geoButton" style="line-height: inherit;" id="geoButton" (click)="onGeoSelect()" matTooltip="{{locationStatus}}" matTooltipPosition="above">
+                <i class="fa fa-location-arrow" style="line-height: inherit;"></i>
+
+            </button>
+
+        <!-- <div class="form-group"> -->
+
+        <!-- </div> -->
+
+
+
         <br>
 
         <ul id="menu">
-            <li>
+            Filter by (optional):
+            <li style="margin-top: -10px;">
 
                 <mat-form-field>
 
@@ -42,71 +50,43 @@
                 </mat-form-field>
             </li>
             <li>
-                <mat-form-field>
-                    <input placeholder="Min " [(ngModel)]="model.minPrice" name="minPrice" matInput>
-                </mat-form-field>
-            </li>
-            <li>
-                <mat-form-field>
-                    <input placeholder="Max " [(ngModel)]="model.maxPrice" name="maxPrice" matInput>
-                </mat-form-field>
-            </li>
-            <li>
-                <mat-form-field>
-                    <mat-select placeholder="State" name="state" [(ngModel)]="model.state">
-                        <mat-option *ngFor=" let state of states;" [value]="state">
+                <mat-form-field style="width:60px; ">
+                    <mat-select placeholder=" State" name="state" [(ngModel)]="model.state">
+                        <mat-option *ngFor=" let state of states; " [value]="state">
                             {{state}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </li>
+
             <li>
-                <mat-form-field>
+                <mat-form-field style="width:100px; ">
                     <input placeholder="Zipcode " name="zipcode" [(ngModel)]="model.zipcode" matInput>
+                </mat-form-field>
+            </li>
+
+            <li>
+                <mat-form-field style="width:100px;">
+                    <input placeholder="Min Price" [(ngModel)]="model.minPrice" name="minPrice" type="number" step="100" min="0" matInput>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field style="width:100px; ">
+                    <input placeholder="Max Price" [(ngModel)]="model.maxPrice" name="maxPrice" type="number" step="100" min="0" matInput>
                 </mat-form-field>
             </li>
 
 
 
-
-            <li>
-                <div class="form-group " id="SubmitBox ">
-                    <button type="submit " class="btn btn-success " (click)="newSearch(); ">Search</button>
-                </div>
-            </li>
         </ul>
 
-    </form>
-
-
-
-
-
-    <!--
-    <div class="btn-toolbar ">
-        <div class="text-center ">More options: &nbsp; &nbsp;
-            <div class="btn-group mr-3 " role="group ">
-                <button type="button " class="btn btn-success dropdown-toggle " data-toggle="dropdown " aria-haspopup="true " aria-expanded="false ">
-                    State
-                </button>
-                <div class="dropdown-menu " aria-labelledby="btnGroupDrop1 ">
-                    <a class="dropdown-item " href="# " *ngFor=" let option of sortOptions "><b>{{option}}</b> </a>
-                </div>
+        <li>
+            <div class="form-group " id="SubmitBox ">
+                <button type="submit " class="btn btn-primary btn-lg " (click)="newSearch(); " id="submit ">Search</button>
             </div>
-
-            <button type="button " class="btn btn-success mr-3 ">Distance</button>
-
-            <button type="button " class="btn btn-success ">Rating</button>
-
-        </div>
-
-    </div> -->
+        </li>
 
 
-
-
-
-
-
+    </form>
 
 </div>
