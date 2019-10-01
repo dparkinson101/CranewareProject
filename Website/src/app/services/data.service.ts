@@ -60,18 +60,21 @@ export class DataService {
     }
   }
 
-  getHistoricData(code: string, id: string){
+  getHistoricData(id: string){
       let results;
-      if(code != undefined && id != undefined){
+      console.log(this.code);
+
+      if(this.code != undefined && id != undefined){
           try {
-            var key = code+id;
+            var key = this.code+id;
+
             
             if (this.cache.has(key)) {
               results = this.cache.get(key);
               console.log(`results for code ${this.code} are in the cache`);
             } 
             else {
-              results = this.http.get<any>(this.apiURL + '/historicdata?code=' + code + '&providerId=' + id;
+              results = this.http.get<any>(this.apiURL + '/historicdata?code=' + this.code + '&providerId=' + id);
               this.addToCache(key, results);
             }
             return results;

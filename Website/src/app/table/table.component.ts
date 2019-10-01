@@ -95,9 +95,9 @@ export class TableComponent implements OnInit {
   loadMoreInfo(item: any){
     this.moreInfoItem = item;
     
-    this.data.getHistoricData(item.code, item.providerID).subscribe(data => {
+    this.dataService.getHistoricData(item.providerID).subscribe(data => {
         this.moreInfoHistoricData = data;
-        console.log(this.moreInfoHistoricData);
+        console.log(data);
     });
 
     console.log(this.moreInfoItem);
