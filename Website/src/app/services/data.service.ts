@@ -53,6 +53,8 @@ export class DataService {
 
 
   addToCache(code: any, results: any) {
+    console.log(results);
+
     if(Object.keys(results).length > 0){
       var key = this.code + this.userLocation + this.minPrice + this.maxPrice + this.zipcode + this.state;
       this.cache.set(key, results);
@@ -67,15 +69,19 @@ export class DataService {
       if(this.code != undefined && id != undefined){
           try {
             var key = this.code+id;
-
             
             if (this.cache.has(key)) {
-              results = this.cache.get(key);
+              results = new Observable(observer => {
+                observer.next(this.cache.get(key));
+                observer.complete();
+              });
               console.log(`results for code ${this.code} are in the cache`);
             } 
             else {
               results = this.http.get<any>(this.apiURL + '/historicdata?code=' + this.code + '&providerId=' + id);
-              this.addToCache(key, results);
+              results.subscribe(res => {
+                this.addToCache(key, res);
+              });
             }
             return results;
           } 
@@ -105,12 +111,17 @@ export class DataService {
       var key = this.code + this.userLocation + this.minPrice + this.maxPrice + this.zipcode + this.state;
       
       if (this.cache.has(key)) {
-        results = this.cache.get(key);
+        results = new Observable(observer => {
+          observer.next(this.cache.get(key));
+          observer.complete();
+        });
         console.log(`results for code ${this.code} are in the cache`);
       } 
       else {
         results = this.http.get<any>(this.apiURL + '/comboQuery?code=' + this.code + '&max=' + this.maxPrice + '&min=' + this.minPrice + '&zipcode=' + this.zipcode + '&state=' + this.state);
-        this.addToCache(key, results);
+        results.subscribe(res => {
+          this.addToCache(key, res);
+        });
       }
       return results;
     } 
@@ -143,11 +154,16 @@ export class DataService {
     let results;
     try{
       if(this.cache.has("procedureList")){
-        results = this.cache.get("procedureList");
+        results = new Observable(observer => {
+          observer.next(this.cache.get("procedureList"));
+          observer.complete();
+        });
       }
       else{
         results = this.http.get<any>(this.apiURL + '/procedurelist');
-        this.addToCache("procedureList", results);
+        results.subscribe(res => {
+          this.addToCache("procedureList", res);
+        });
       }
 
       return results;

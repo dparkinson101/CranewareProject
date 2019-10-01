@@ -117,6 +117,13 @@ export class TableComponent implements OnInit {
     console.log(this.moreInfoItem);
   }
 
+  loadDefaultSort(){
+    var ele = document.querySelectorAll("[aria-label='Change sorting for providerDistance']")[0] as HTMLButtonElement;
+    ele.click();
+    console.log("Prints");
+    console.log(ele);
+  }
+
   async placeOnMap(item: any) {
 
     if( item.providerLongitude === undefined || item.providerLatitude === undefined ){
@@ -296,8 +303,6 @@ export class TableComponent implements OnInit {
 
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      this.sort.sort({ id: 'providerDistance', start: 'asc', disableClear: false });
-
 
       // get the first page of results - make sure it is 10
       const page = this.getCurrent();
@@ -305,6 +310,11 @@ export class TableComponent implements OnInit {
         this.placeCurrentOnMap(page);
         console.log(page);
       }
+
+      await this.sleep(100);
+
+      this.loadDefaultSort();
+
     });
 
   }

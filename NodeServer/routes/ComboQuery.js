@@ -5,12 +5,23 @@ var cors = require('cors')
 var app = express()
 var sql = require('mssql');
 
-var connection = mysql.createConnection({
-    host: 'silva.computing.dundee.ac.uk',
-    user: '2019indteam5',
-    password: '9854.ind5.4589',
-    database: '2019indteam5db'
-});
+// var connection = mysql.createConnection({
+//     host: 'silva.computing.dundee.ac.uk',
+//     user: '2019indteam5',
+//     password: '9854.ind5.4589',
+//     database: '2019indteam5db'
+// });
+
+// connection.connect(function(err) {
+// 	console.log(err);
+// 	connection = mysql.createConnection({
+// 		host: 'silva.computing.dundee.ac.uk',
+// 		user: '2019indteam5',
+// 		password: '9854.ind5.4589',
+// 		database: '2019indteam5db'
+// 	});
+// });
+var connection = require('../lib/db');
 
 //CORS - cross orgin resource sharing this is enabled to allow requests to be made from another port on this machine
 router.use(cors())
