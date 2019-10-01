@@ -180,7 +180,7 @@ export class MapAPIService {
 
         let _this = this;
 
-        var image = 'http://maps.google.com/mapfiles/ms/icons/blue.dot.png';
+        var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
 
 
