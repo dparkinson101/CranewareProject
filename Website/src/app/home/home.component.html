@@ -1,61 +1,65 @@
-<h2>
-    Compare the price of your medical procedure
-</h2>
-<div class="text-center">
+<div class="wrapper">
+    <div class="main">
+        <h2>
+            Compare the price of your medical procedure
+        </h2>
+        <div class="text-container">
 
-    <div class="text">
-        <h4>
-            We want to give everyone the ability and opportunity to find the most afforable care options in the USA.
-        </h4>
-        <p>Allowing you to refine your search by the following: </p>
+            <div class="text">
+                <h4>
+                    We want to give everyone the ability and opportunity to find the most afforable care options in the USA.
+                </h4>
+                <p>Allowing you to refine your search by the following: </p>
 
-        <ul>
-            <li>
-                <B>Cost</B> - Find the hospitals with the cheapest prices, narrow down your search with the prices you want to pay.
-            </li>
-            <li>
-                <B>Distance</B> - Find the location that is right for you, we can help by indentifying the closest healthcare providers for your procedure.
-            </li>
+                <ul>
+                    <li>
+                        <B>Cost</B> - Find the hospitals with the cheapest prices, narrow down your search with the prices you want to pay.
+                    </li>
+                    <li>
+                        <B>Distance</B> - Find the location that is right for you, we can help by indentifying the closest healthcare providers for your procedure.
+                    </li>
 
-        </ul>
-        <p>
-          We aim to provide you with the cheapest and closest options for your medical care.
-        </p>
-    </div>
-
-    <div class="link">
+                </ul>
+                <p>
+                    We aim to provide you with the cheapest and closest options for your medical care.
+                </p>
+            </div>
+        </div>
+        <div class="text-center">
             <a [routerLink]="['/search-page']"><button type="button" class="btn btn-success btn-lg ">Get Started</button></a>
+        </div>
+
+
+
+        <div class="container">
+            <mdb-carousel class="carousel slide carousel-fade" [animation]="'fade'">
+
+                <mdb-carousel-item>
+                    <div class="view w-100">
+                        <img class="d-block w-100" src="../../assets/hospital_1.jpg" alt="First slide">
+                        <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
+                    </div>
+                </mdb-carousel-item>
+
+                <mdb-carousel-item>
+                    <div class="view w-100">
+                        <img class="d-block w-100" src="../../assets/hospital_2.jpg" alt="Second slide">
+                        <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
+                    </div>
+                </mdb-carousel-item>
+
+                <mdb-carousel-item>
+                    <div class="view w-100">
+                        <img class="d-block w-100" src="../../assets/hospital_3.jpg" alt="Third slide">
+                        <div class="mask rgba-black-slight waves-light" mdbWavesEffect></div>
+                    </div>
+                </mdb-carousel-item>
+
+            </mdb-carousel>
+            <br>
+        </div>
     </div>
 </div>
-
-
-<div class="container">
-    <mdb-carousel class="carousel slide carousel-fade" [animation]="'fade'">
-
-        <mdb-carousel-item>
-            <div class="view w-100">
-                <img class="d-block w-100" src="../../assets/hospital_1.jpg" alt="First slide">
-                <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
-            </div>
-          </mdb-carousel-item>
-
-        <mdb-carousel-item>
-            <div class="view w-100">
-                <img class="d-block w-100" src="../../assets/hospital_2.jpg" alt="Second slide">
-                <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
-            </div>
-        </mdb-carousel-item>
-
-        <mdb-carousel-item>
-            <div class="view w-100">
-                <img class="d-block w-100" src="../../assets/hospital_3.jpg" alt="Third slide">
-                <div class="mask rgba-black-slight waves-light" mdbWavesEffect></div>
-            </div>
-        </mdb-carousel-item>
-
-    </mdb-carousel>
-</div>
-
 <br>
 <router-outlet>
 

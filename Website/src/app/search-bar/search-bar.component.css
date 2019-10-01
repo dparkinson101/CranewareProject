@@ -1,5 +1,4 @@
 .searchBar {
-    background-color: white;
     width: 100%;
     list-style-type: none;
     margin: auto;
@@ -9,24 +8,7 @@
 }
 
 .form-group {
-    display: inline-table;
-    vertical-align: middle;
     padding: 10px;
-}
-
-/* button {
-    background-color: #66bf48;
-    border-color: #66bf48;
-} */
-
-.btn-toolbar {
-    padding: 10px;
-    margin: auto;
-}
-
-.test {
-    display: inline;
-    padding: 100px;
 }
 
 ul#menu li {
@@ -34,8 +16,10 @@ ul#menu li {
 }
 
 li {
-    display: block;
-    text-align: center;
     padding: 16px;
     text-decoration: none;
+}
+
+#geobutton {
+    border-radius: 100%;
 }

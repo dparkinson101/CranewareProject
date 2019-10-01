@@ -2,6 +2,7 @@ table {
     width: 100%;
     overflow-x: auto;
     float: left;
+    border-radius: 10px;
 }
 
 p {
@@ -24,6 +25,14 @@ p {
 .example-header {
     min-height: 64px;
     padding: 8px 24px 0;
+    display: block;
+}
+
+.filter {
+    position: relative;
+    display: inline-block;
+    width: 250px;
+    padding: 10px;
 }
 
 .mat-form-field {
@@ -38,4 +47,8 @@ p {
 
 .mat-slider {
     padding: 10px;
+}
+
+.button{
+  width: 50px;
 }
