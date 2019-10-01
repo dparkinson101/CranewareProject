@@ -96,6 +96,33 @@ export class SearchBarComponent implements OnInit {
     this.autocompleteProcedure = document.getElementById('procedure');
   }
 
+  onOver()
+  {
+    if(this.mapAPIService.userGeolocation === undefined){
+
+      document.getElementById('geoButton').style.background = '#66bf48';
+      document.getElementById('geoButton').style.borderColor = '#66bf48';
+    }else
+    {
+      document.getElementById('geoButton').style.background = 'red';
+      document.getElementById('geoButton').style.borderColor = 'red';
+    }
+  }
+
+  onOut()
+  {
+    if(this.mapAPIService.userGeolocation === undefined){
+
+      document.getElementById('geoButton').style.background = '#007bff';
+      document.getElementById('geoButton').style.borderColor = '#007bff';
+    }else
+    {
+      document.getElementById('geoButton').style.background = '#66bf48';
+      document.getElementById('geoButton').style.borderColor = '#66bf48';
+    }
+
+  }
+
   onGeoSelect(){
     this.initAutocomplete();
     if(this.mapAPIService.userGeolocation === undefined){
@@ -123,8 +150,8 @@ export class SearchBarComponent implements OnInit {
         // console.log("removed geolocation marker");
       }
 
-      document.getElementById('geoButton').style.background = '#007bff';
-      document.getElementById('geoButton').style.borderColor = '#007bff';
+      document.getElementById('geoButton').style.background = '#66bf48';
+      document.getElementById('geoButton').style.borderColor = '#66bf48';
       this.locationStatus= 'use current location';
     }
   }
