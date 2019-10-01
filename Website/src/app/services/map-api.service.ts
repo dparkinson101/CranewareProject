@@ -82,7 +82,12 @@ export class MapAPIService {
     // });
 
     this.markers.forEach(m => {
-      m.marker.setLabel(""+(this.markers.indexOf(m)+1));
+      m.marker.setLabel({
+        text: ""+(this.markers.indexOf(m)+1),
+        color: "#000000",
+        fontSize: "16px",
+        fontWeight: "bold"
+      });
     });
   }
 
