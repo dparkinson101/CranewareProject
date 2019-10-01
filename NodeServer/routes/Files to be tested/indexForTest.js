@@ -41,7 +41,7 @@ module.exports.silva  = async function (code) {
 			}
 			 
 		});
-  }, 300);
+  }, 3000);
 });
 
 var x = promise1.then((value) =>	{
@@ -74,7 +74,7 @@ module.exports.sortpriceasc  = async function (code) {
 			}
 			 
 		});
-  }, 300);
+  }, 3000);
 });
 
 var x = promise1.then((value) =>	{
@@ -108,7 +108,7 @@ module.exports.filterzipcode  = async function (code, zipcode) {
 			 
 		});
 	
-  }, 300);
+  }, 3000);
 });
 
 var x = promise1.then((value) =>	{
@@ -143,7 +143,7 @@ module.exports.filterstate  = async function (code, state) {
 		});
 	
 	
-  }, 300);
+  }, 3000);
 });
 
 var x = promise1.then((value) =>	{
@@ -178,7 +178,7 @@ module.exports.providerinfo  = async function (code) {
 		});
 	
 
-  }, 300);
+  }, 3000);
 });
 
 var x = promise1.then((value) =>	{
@@ -212,7 +212,7 @@ module.exports.pricerange  = async function (code, min, max) {
 			 
 		});
 	
-  }, 300);
+  }, 3000);
 });
 
 var x = promise1.then((value) =>	{
