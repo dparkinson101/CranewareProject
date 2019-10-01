@@ -66,23 +66,28 @@ export class MapAPIService {
   }
 
   public labelMarkers(){
-    this.markers.sort((a, b) => {
-      var distanceA = parseFloat(a.info.markerDistance);
-      var distanceB = parseFloat(b.info.markerDistance);
+    // this.markers.sort((a, b) => {
+    //   var distanceA = parseFloat(a.info.markerDistance);
+    //   var distanceB = parseFloat(b.info.markerDistance);
 
-      if(distanceA > distanceB){
-        return 1;
-      }
-      if(distanceB > distanceA) {
-        return -1;
-      }
-      if(distanceA == distanceB) {
-        return 0;
-      }
-    });
+    //   if(distanceA > distanceB){
+    //     return 1;
+    //   }
+    //   if(distanceB > distanceA) {
+    //     return -1;
+    //   }
+    //   if(distanceA == distanceB) {
+    //     return 0;
+    //   }
+    // });
 
     this.markers.forEach(m => {
-      m.marker.setLabel(""+(this.markers.indexOf(m)+1));
+      m.marker.setLabel({
+        text: ""+(this.markers.indexOf(m)+1),
+        color: "#000000",
+        fontSize: "16px",
+        fontWeight: "bold"
+      });
     });
   }
 
@@ -149,22 +154,42 @@ export class MapAPIService {
       var locationPos = new google.maps.LatLng(locationPosition.lat, locationPosition.lng);
       var rawDistance = google.maps.geometry.spherical.computeDistanceBetween(userPos, locationPos);
 
-      var betterDistance = ""+((rawDistance / 1000) / 1.609).toFixed(2)
+      var betterDistance = ""+((rawDistance / 1000) / 1.609).toFixed(2);
 
       resolve(betterDistance);
     });
   }
 
-  public async getUserLocation() {
+  public async getPlaceDetails(placeID: string){
     
+    return new Promise(resolve=>{
+      console.log(placeID);
+      var placeService = new google.maps.places.PlacesService(this.map);
+      var req = {
+        placeId: placeID,
+        fields: ['rating', 'reviews','photos']
+      };
+
+      placeService.getDetails(req, placeDetails => {
+        resolve(placeDetails);
+      });
+    });
+  }
+
+  public async getUserLocation() {
+
     return new Promise(resolve => {
       if(this.userPlace === undefined){
-        
+
         //HTML 5 Geolocation
 
         let _this = this;
-        
-        if (navigator.geolocation && _this.userGeolocation === undefined) 
+
+        var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+
+
+
+        if (navigator.geolocation && _this.userGeolocation === undefined)
         {
           navigator.geolocation.getCurrentPosition(position => {
             var pos = {
@@ -180,7 +205,7 @@ export class MapAPIService {
               _this.userMarker = new google.maps.Marker({
                 position: pos,
                 map: _this.map,
-                label: "You"
+                icon: image
               });
 
               this.map.setCenter(pos);
@@ -191,20 +216,20 @@ export class MapAPIService {
               _this.userMarker = new google.maps.Marker({
                 position: pos,
                 map: _this.map,
-                label: "You"
+                icon: image
               });
 
               this.map.setCenter(pos);
 
               //console.log("Added geolocation marker");
             }
-            
-            
+
+
 
             _this.userGeolocation = pos;
 
             resolve(pos);
-          }, 
+          },
           function () {
             console.log('This browser doesn\'t support HTML 5 Geolocation');
           });
@@ -224,7 +249,7 @@ export class MapAPIService {
           lat: this.userPlace.geometry.location.lat(),
           lng: this.userPlace.geometry.location.lng()
         };
-  
+
         resolve(pos);
       }
     });

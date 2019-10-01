@@ -101,32 +101,31 @@ describe('Testing IndexForTest.js methods', function() {
 	//We will run a select all query and check the start, end, size and a result in the middle, all being correct should return true, as these result are impossible to spoof
 	describe('Select all query', function() {
 		it('Silva should return all records', async function() {
-			var x = await query.silva(039)
 			
-		
+			var x = await query.silva(039);
 			
 			var one = false;
-			if(x[0].providerId == 10016 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[0].providerId == 10001 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				one = true;
 			}
 			
 			//Middle
 			var two = false;
-			if(x[87].providerId == 210029 && x[87].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[87].providerId == 50180 && x[87].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				two = true;
 			}
 			
 			//End
 			var three = false;
-			if(x[807].providerId == 520193 && x[807].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[199].providerId == 100105 && x[199].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}
 			//Length
 			var four = false;
-			if(x.length = 808)
+			if(x.length = 199)
 			{
 				four = 	true;
 			}
@@ -141,22 +140,23 @@ describe('Testing IndexForTest.js methods', function() {
 		it('sortpriceasc should return all records', async function() {
 			var x = await query.sortpriceasc(039)
 			
+			
 			var one = false;
-			if(x[0].providerId == 10006 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[0].providerId == 050380 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				one = true;
 			}
 			
 			//Middle
 			var two = false;
-			if(x[50].providerId == 100026 && x[50].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[50].providerId == 250001 && x[50].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				two = true;
 			}
 			
 			//End
 			var three = false;
-			if(x[199].providerId == 100127 && x[199].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[199].providerId == 410007 && x[199].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}
@@ -200,29 +200,28 @@ describe('Testing IndexForTest.js methods', function() {
 		it('filterstate should return all records', async function() {
 		var x = await query.filterstate(039, "AL")
 			
-			
 			var one = false;
-			if(x[0].providerId == 10016 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[0].providerId == 10001 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				one = true;
 			}
 			
 			//Middle
 			var two = false;
-			if(x[10].providerId == 10001 && x[10].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[10].providerId == 10046 && x[10].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				two = true;
 			}
 			
 			//End
 			var three = false;
-			if(x[21].providerId == 10139 && x[21].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[154].providerId == '010113' && x[154].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}
 			//Length
 			var four = false;
-			if(x.length = 22)
+			if(x.length = 155)
 			{
 				four = 	true;
 			}
@@ -235,26 +234,26 @@ describe('Testing IndexForTest.js methods', function() {
 	//We will run a providerinfo query and check the start, end, size and a result in the middle, all being correct should return true, as these result are impossible to spoof
 	//This is a highly important query as it is used to check hospital data 
 	describe('Select all providerinfo query', function() {
-		it('filterstate should return all records', async function() {
+		it('providerinfo should return all records', async function() {
 		var x = await query.providerinfo(039)
 			
 	
 			var one = false;
-			if(x[0].providerName == 'SHELBY BAPTIST MEDICAL CENTER' && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[0].providerName == 'SOUTHEAST ALABAMA MEDICAL CENTER' && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				one = true;
 			}
 			
 			//Middle
 			var two = false;
-			if(x[100].providerName == 'GENESYS REGIONAL MEDICAL CENTER - HEALTH PARK' && x[100].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[100].providerName == 'MERCY HOSPITAL' && x[100].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				two = true;
 			}
 			
 			//End
 			var three = false;
-			if(x[199].providerName == 'MCKAY DEE HOSPITAL' && x[199].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[199].providerName == 'INDIAN RIVER MEDICAL CENTER' && x[199].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}
@@ -275,25 +274,22 @@ describe('Testing IndexForTest.js methods', function() {
 		it('pricerange should return all records', async function() {
 			var x = await query.pricerange(039, 0, 100000)
 			
-			
-			
-			
 			var one = false;
-			if(x[0].providerId == 10016 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[0].providerId == 10001 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				one = true;
 			}
 			
 			//Middle
 			var two = false;
-			if(x[78].providerId == 180009 && x[78].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[78].providerId == 50093 && x[78].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				two = true;
 			}
 			
 			//End
 			var three = false;
-			if(x[199].providerId == 460004 && x[199].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[199].providerId == 100105 && x[199].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}

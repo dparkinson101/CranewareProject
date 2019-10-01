@@ -8,6 +8,7 @@ import { TitleCasePipe } from '@angular/common';
 import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable } from '@angular/material';
 import { TableData } from '../models/TableData';
 import { item } from '../models/item';
+import { element } from 'protractor';
 
 declare var google: any;
 
@@ -30,14 +31,28 @@ export class TableComponent implements OnInit {
   public isLoading = true;
   public showSpinner = true;
   public showTable = false;
-  public procedure: string;
-  public distanceRange = 0; 
 
+  public procedure: string;
+  public distanceRange = 0;
+  public rating = 0;
+  public photos = [];
+  public moreInfoHistoricData: any = 0;
+
+  public moreInfoItem: any = 0;
+  public moreInfoPlaceDetails:  any = 0;
+  public stars: number[] = [0, 0, 0, 0, 0];
+  public reviews = [];
+  public  iconClass = {
+    0: 'fa fa-star-o ',
+    0.5: 'fa fa-star-half-o ',
+    1: 'fa fa-star '
+  }
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance'];
+
+  public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance', 'moreInfo'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
               private titleCasePipe: TitleCasePipe) {
 
@@ -56,19 +71,8 @@ export class TableComponent implements OnInit {
         this.distanceRange = this.dataService.distanceRange;
         console.log(this.distanceRange);
       }
-      
       this.getData();
     });
-
-    
-
-    
-
-    // this.dataService.currentLocation.subscribe(()=> 
-    //   {
-    //     this.getData();
-    //   });
-
 
 
 
@@ -99,6 +103,31 @@ export class TableComponent implements OnInit {
     });
   }
 
+  loadMoreInfo(item: any){
+    this.moreInfoItem = item;
+
+    this.mapAPIService.getPlaceDetails(item.providerPlaceID).then(placeDetails => {
+      this.moreInfoPlaceDetails = placeDetails;
+      console.log(this.moreInfoPlaceDetails);
+      this.fillStars(Number(this.moreInfoPlaceDetails.rating));
+      this.addReviews(this.moreInfoPlaceDetails);
+
+    });
+
+    this.dataService.getHistoricData(item.providerID).subscribe(data => {
+        this.moreInfoHistoricData = data;
+        console.log(data);
+    });
+
+    console.log(this.moreInfoItem);
+  }
+
+  loadDefaultSort(){
+    var ele = document.querySelectorAll("[aria-label='Change sorting for providerDistance']")[0] as HTMLButtonElement;
+    ele.click();
+    console.log("Prints");
+    console.log(ele);
+  }
 
   async placeOnMap(item: any) {
 
@@ -158,6 +187,8 @@ export class TableComponent implements OnInit {
             this.mapAPIService.averageFocus();
             this.mapAPIService.labelMarkers();
 
+            var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+
             if(this.mapAPIService.userMarker){
               if(this.mapAPIService.userMarker.location !== userLocation){
                 this.mapAPIService.userMarker.setMap(null);
@@ -166,7 +197,7 @@ export class TableComponent implements OnInit {
                 this.mapAPIService.userMarker = new google.maps.Marker({
                   position: userLocation,
                   map: this.mapAPIService.map,
-                  label: "You"
+                  icon: image
                 });
               }
             }
@@ -174,14 +205,14 @@ export class TableComponent implements OnInit {
               this.mapAPIService.userMarker = new google.maps.Marker({
                 position: userLocation,
                 map: this.mapAPIService.map,
-                label: "You"
+                icon: image
               });
             }
           });
         });
       }
 
-      
+
     }
   }
 
@@ -207,7 +238,7 @@ export class TableComponent implements OnInit {
   async getData() {
 
     this.isLoading = true;
-    this.procedure = "Searching";
+    this.procedure = 'Searching';
 
     const observable = this.dataService.getDataWithCode();
 
@@ -220,14 +251,14 @@ export class TableComponent implements OnInit {
       this.initialData = [];
       this.initialData = data;
       this.showTable = true;
-      
+
       console.log(data);
 
 
       //Handles table if search yields no results
       if(this.initialData.length < 1){
         this.isLoading = false;
-        this.procedure = "No Results";
+        this.procedure = 'No Results';
         if(this.dataSource !== undefined){
           this.dataSource.data = [];
           this.dataSource = undefined;
@@ -236,7 +267,7 @@ export class TableComponent implements OnInit {
       }
       else{
         console.log(this.initialData);
-        this.procedure = "Searching";
+        this.procedure = 'Searching';
       }
 
 
@@ -260,8 +291,8 @@ export class TableComponent implements OnInit {
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = this.processedData;
 
-    
-     
+
+
       await this.sleep(1);
 
       this.dataSource.filterPredicate = (data: TableData, filter: string) => {
@@ -284,6 +315,11 @@ export class TableComponent implements OnInit {
         this.placeCurrentOnMap(page);
         console.log(page);
       }
+
+      await this.sleep(100);
+
+      this.loadDefaultSort();
+
     });
 
   }
@@ -304,6 +340,7 @@ export class TableComponent implements OnInit {
 
     this.dataSource = new MatTableDataSource();
     this.dataSource.data = this.processedData;
+
 
     await this.sleep(1);
 
@@ -333,10 +370,12 @@ export class TableComponent implements OnInit {
             providerCity: item.providerCity,
             providerZipCode: item.providerZipCode,
             providerStreetAddress: item.providerStreetAddress,
-            averageTotalPayments: item.averageTotalPayments,
+            averageTotalPayments: Number(item.averageTotalPayments).toFixed(2),
             providerLatitude: item.latitude,
             providerLongitude: item.longitude,
-            providerDistance: Number(distance)
+            providerDistance: Number(distance).toFixed(2),
+            providerID: item.providerId,
+            providerPlaceID: item.google_place_id
           };
           resolve(data);
         });
@@ -344,6 +383,46 @@ export class TableComponent implements OnInit {
     });
   }
 
-  
+   numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+
+fillStars(rating: number){
+  this.stars = [0,0,0,0,0];
+  let starsToFill = Math.round(rating * 2)/2; //round to nearest 0.5
+  this.rating = Math.round(rating *2) /2;
+  let i = 0;
+  while(starsToFill > 0.5){
+    this.stars[i] = 1;
+    i++;
+    starsToFill--;
+
+  }
+  if(starsToFill === 0.5){
+    this.stars[i] = 0.5;
+  }
+  this.stars.sort().reverse();
+}
+
+
+addReviews(details: any)
+{
+
+  this.reviews = [];
+  this.photos= [];
+
+  details.reviews.forEach(element => {
+    if(element.text !== ""){
+    this.reviews.push(element);
+    }
+  });
+  details.photos.forEach(element => {
+    this.photos.push(element.getUrl());
+  });
+  console.log(this.photos);
+
+
+}
 
 }

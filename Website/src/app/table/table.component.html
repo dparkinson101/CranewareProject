@@ -1,19 +1,36 @@
 <div class="tableContainer" *ngIf="showTable">
+
+    <!-- Name of current procedure -->
     <p><i>{{procedure | titlecase }}</i></p>
 
 
-      <!-- Loading Circle -->
+    <!-- Loading Circle -->
     <mat-card *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
         <mat-progress-spinner color="primary" mode="indeterminate">
         </mat-progress-spinner>
     </mat-card>
 
-        <div class="tableContainer" *ngIf="isLoading == false;">
+    <!-- filtering -->
+    <div class="tableContainer" *ngIf="isLoading == false;">
         <div class="example-header">
-            <mat-form-field>
-                <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="Filter">
-            </mat-form-field>
+
+            <div class="filter">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="Search By Name">
+                </mat-form-field>
+            </div>
+            <!-- <div class="filter">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="State">
+                </mat-form-field>
+            </div>
+            <div class="filter">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value); loadCurrent();" placeholder="Zip">
+                </mat-form-field>
+            </div> -->
         </div>
+
 
 
         <div [ngClass]="['table-container mat-elevation-z8']" *ngIf="dataSource">
@@ -48,17 +65,92 @@
 
                 <!-- Distance Column -->
                 <ng-container matColumnDef="providerDistance">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance
+                    </mat-header-cell>
                     <mat-cell *matCellDef="let item"> {{item.providerDistance}} miles</mat-cell>
                 </ng-container>
+
+                <ng-container matColumnDef="moreInfo">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Info </mat-header-cell>
+                    <mat-cell *matCellDef="let item">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
+                            <i class="fa fa-info-circle"></i>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;">
                 </mat-row>
             </mat-table>
 
+
+
             <!-- Page through table -->
             <mat-paginator (click)="loadCurrent();" [pageSizeOptions]="[10]"></mat-paginator>
+        </div>
+
+        <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h1 class="modal-title" id="exampleModalLabel">{{moreInfoItem.providerName}}</h1>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="container">
+                            <mdb-carousel class="carousel slide carousel-fade" [animation]="'fade'">
+                                <div *ngFor="let photo of photos">
+                                    <mdb-carousel-item>
+                                        <div class="view w-100">
+                                            <img class="d-block w-100" src="{{photo}}" alt="First slide">
+                                            <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
+                                        </div>
+                                    </mdb-carousel-item>
+
+                                </div>
+
+                            </mdb-carousel>
+                            <br>
+                        </div>
+                        <div class="text-center">
+                            <div class="title">
+                                <h3>Rating</h3>
+                            </div>
+                            <div class="title" id="rating">
+                                <div id="rating">
+                                    <h3>{{rating}}</h3>
+                                </div>
+                            </div>
+                            <div class="title">
+                                <h2> <i *ngFor="let star of stars" [class]="iconClass[star]" id="stars"></i></h2>
+                            </div>
+                        </div>
+
+                        <HR>
+                        <h4>Reviews</h4>
+                        <div class="review" scrollbar-ripe-malinka>
+
+                            <div *ngFor="let review of reviews" id="reviews">
+                                <br>
+                                <h6>{{review.author_name}} {{review.relative_time_description}}</h6>
+                                {{review.text}}
+                            </div>
+                        </div>
+                        <HR>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
