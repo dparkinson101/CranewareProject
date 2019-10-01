@@ -73,11 +73,13 @@ export class TableComponent implements OnInit {
     const observable = this.dataService.currentSearch;
 
     observable.subscribe(() => {
-      if (this.dataService.distanceRange != null) {
-        this.distanceRange = this.dataService.distanceRange;
-        console.log(this.distanceRange);
+      if(this.dataService.code != undefined){
+        if (this.dataService.distanceRange != null) {
+          this.distanceRange = this.dataService.distanceRange;
+          console.log(this.distanceRange);
+        }
+        this.getData();
       }
-      this.getData();
     });
 
   }
