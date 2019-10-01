@@ -124,3 +124,7 @@
     .modal-tile {
         text-align: center;
     }
+    
+    .mat-sort-header {
+        color: #2ea3f2;
+    }
