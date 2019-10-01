@@ -103,6 +103,19 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div class="text-center">
+                            <div class="title">
+                                <h3>Rating</h3>
+                            </div>
+                            <div class="title" id="rating">
+                                <div id="rating">
+                                    <h3>{{rating}}</h3>
+                                </div>
+                            </div>
+                            <div class="title">
+                                <h2> <i *ngFor="let star of stars" [class]="iconClass[star]" id="stars"></i></h2>
+                            </div>
+                        </div>
 
                         <div class="container">
                             <mdb-carousel class="carousel slide carousel-fade" [animation]="'fade'">
@@ -119,24 +132,20 @@
                             </mdb-carousel>
                             <br>
                         </div>
-                        <div class="text-center">
-                            <div class="title">
-                                <h3>Rating</h3>
-                            </div>
-                            <div class="title" id="rating">
-                                <div id="rating">
-                                    <h3>{{rating}}</h3>
-                                </div>
-                            </div>
-                            <div class="title">
-                                <h2> <i *ngFor="let star of stars" [class]="iconClass[star]" id="stars"></i></h2>
-                            </div>
+                        <hr>
+                        <h4>Hospital Information</h4>
+                        <br>
+                        <div class="info">
+                            <b>Address:</b> {{moreInfoItem.providerStreetAddress | titlecase}} <br>
+                            <b>Distance:</b> {{moreInfoItem.providerDistance}} miles <br>
+                            <b>Cost:</b> ${{moreInfoItem.averageTotalPayments}}
+
+
                         </div>
 
                         <HR>
                         <h4>Reviews</h4>
                         <div class="review">
-
                             <div *ngFor="let review of reviews" id="reviews">
                                 <br>
                                 <h6><i>{{review.author_name}} {{review.relative_time_description}}</i></h6>
@@ -145,14 +154,7 @@
                         </div>
                         <HR>
 
-                        <h4>Hospital Information</h4>
-                        <div class="info">
-                            <b>Address</b> {{moreInfoItem.providerStreetAddress | titlecase}} <br>
-                            <b>Distance</b> {{moreInfoItem.providerDistance}} <br>
-                            <b>Cost</b> {{moreInfoItem.averageTotalPayments}}
 
-
-                        </div>
 
                     </div>
                     <div class="modal-footer">
