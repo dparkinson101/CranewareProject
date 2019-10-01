@@ -149,15 +149,29 @@ export class MapAPIService {
       var locationPos = new google.maps.LatLng(locationPosition.lat, locationPosition.lng);
       var rawDistance = google.maps.geometry.spherical.computeDistanceBetween(userPos, locationPos);
 
-      var betterDistance = ""+((rawDistance / 1000) / 1.609).toFixed(2)
+      var betterDistance = ""+((rawDistance / 1000) / 1.609).toFixed(2);
 
       resolve(betterDistance);
     });
   }
 
+  public async getPlaceDetails(placeID: string){
+    
+    return new Promise(resolve=>{
+      console.log(placeID);
+      var placeService = new google.maps.places.PlacesService(this.map);
+      var req = {
+        placeId: placeID,
+        fields: ['rating', 'reviews']
+      };
+
+      placeService.getDetails(req, placeDetails => {
+        resolve(placeDetails);
+      });
+    });
+  }
+
   public async getUserLocation() {
-
-
 
     return new Promise(resolve => {
       if(this.userPlace === undefined){
