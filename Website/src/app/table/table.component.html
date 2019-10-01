@@ -135,7 +135,7 @@
 
                         <HR>
                         <h4>Reviews</h4>
-                        <div class="review" scrollbar-ripe-malinka>
+                        <div class="review">
 
                             <div *ngFor="let review of reviews" id="reviews">
                                 <br>
@@ -144,6 +144,13 @@
                             </div>
                         </div>
                         <HR>
+
+                        <h4>Info</h4>
+                        <div class="info">
+                            Address {{moreInfoItem.providerAddress}} Distance {{moreInfoItem.providerDistance}} Cost {{moreInfoItem.averageTotalPayments}}
+
+
+                        </div>
 
                     </div>
                     <div class="modal-footer">
