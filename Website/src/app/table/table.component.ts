@@ -32,10 +32,15 @@ export class TableComponent implements OnInit {
   public showTable = false;
   public procedure: string;
   public distanceRange = 0;
-
   public moreInfoItem: any = 0;
   public moreInfoPlaceDetails:  any = 0;
-
+  public stars: number[] = [0, 0, 0, 0, 0];
+  public reviews: string[] = [];
+  public  iconClass = {
+    0: 'fa fa-star-o',
+    0.5: 'fa fa-star-half-o',
+    1: 'fa fa-star'
+  }
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -96,7 +101,9 @@ export class TableComponent implements OnInit {
     this.moreInfoItem = item;
     this.mapAPIService.getPlaceDetails(item.providerPlaceID).then(placeDetails => {
       this.moreInfoPlaceDetails = placeDetails;
-      console.log(this.moreInfoPlaceDetails);
+      console.log(this.moreInfoPlaceDetails.rating);
+      this.fillStars(Number(this.moreInfoPlaceDetails.rating));
+      this.addReviews(this.moreInfoPlaceDetails.reviews);
     });
   }
 
@@ -279,6 +286,7 @@ export class TableComponent implements OnInit {
 
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.sort.sort({ id: 'providerDistance', start: 'asc', disableClear: false });
 
 
       // get the first page of results - make sure it is 10
@@ -307,6 +315,7 @@ export class TableComponent implements OnInit {
 
     this.dataSource = new MatTableDataSource();
     this.dataSource.data = this.processedData;
+   
 
     await this.sleep(1);
 
@@ -350,6 +359,31 @@ export class TableComponent implements OnInit {
 
    numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+
+fillStars(rating: number){
+  this.stars = [0,0,0,0,0];
+  let starsToFill = Math.round(rating * 2)/2; //round to nearest 0.5
+  let i = 0;
+  while(starsToFill > 0.5){
+    this.stars[i] = 1;
+    i++;
+    starsToFill--;
+
+  }
+  if(starsToFill === 0.5){
+    this.stars[i] = 0.5;
+  }
+  this.stars.sort().reverse();
+}
+
+
+addReviews(reviews: any)
+{
+
+  this.reviews.push(reviews);
+
 }
 
 }
