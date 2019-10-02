@@ -39,7 +39,7 @@
 
                 <!-- name Column -->
                 <ng-container matColumnDef="providerName">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Name </mat-header-cell>
+                    <mat-header-cell id="sortbutton" *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Name </mat-header-cell>
                     <mat-cell *matCellDef="let item;">{{item.providerName}} </mat-cell>
                 </ng-container>
 
@@ -52,7 +52,7 @@
 
                 <!-- cost Column -->
                 <ng-container matColumnDef="averageTotalPayments">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Cost </mat-header-cell>
+                    <mat-header-cell id="sortbutton" *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Cost </mat-header-cell>
                     <mat-cell *matCellDef="let item">${{item.averageTotalPayments}} </mat-cell>
                 </ng-container>
 
@@ -65,7 +65,7 @@
 
                 <!-- Distance Column -->
                 <ng-container matColumnDef="providerDistance">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance
+                    <mat-header-cell id="sortbutton" *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance
                     </mat-header-cell>
                     <mat-cell *matCellDef="let item"> {{item.providerDistance}} miles</mat-cell>
                 </ng-container>
