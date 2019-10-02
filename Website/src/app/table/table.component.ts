@@ -5,7 +5,7 @@ import { DataService } from '../services/data.service';
 import { LocationService } from '../services/location.service';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
-import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable, MatSortable } from '@angular/material';
 import { TableData } from '../models/TableData';
 import { item } from '../models/item';
 import { element } from 'protractor';
@@ -49,8 +49,6 @@ export class TableComponent implements OnInit {
     0.5: 'fa fa-star-half-o ',
     1: 'fa fa-star '
   };
-
-  // marker
 
 
 
@@ -121,11 +119,6 @@ export class TableComponent implements OnInit {
       this.moreInfoHistoricData = data;
     });
 
-  }
-
-  loadDefaultSort() {
-    const ele = document.querySelectorAll('[aria-label=\'Change sorting for providerDistance\']')[0] as HTMLButtonElement;
-    ele.click();
   }
 
   async placeOnMap(item: any) {
@@ -281,6 +274,9 @@ export class TableComponent implements OnInit {
         const item = this.initialData[index];
         await this.createNewDataItem(item).then((data: TableData) => {
           if (this.distanceRange == 0 || Number(data.providerDistance) < this.distanceRange) {
+            if(this.dataService.isInsured){
+              data.averageTotalPayments = Number((data.averageTotalPayments - item.averageMedicarePayments).toFixed(2));
+            }
             this.processedData.push(data);
           }
         });
@@ -315,38 +311,7 @@ export class TableComponent implements OnInit {
         this.placeCurrentOnMap(page);
         console.log(page);
       }
-
-      await this.sleep(100);
-
-      this.loadDefaultSort();
-
     });
-
-  }
-
-  async updateDistances() {
-
-    this.isLoading = true;
-    this.dataSource = undefined;
-    this.dataSource.data = [];
-    this.processedData = [];
-
-    for (let index = 0; index < this.initialData.length; index++) {
-      const item = this.initialData[index];
-      await this.createNewDataItem(item).then((data: TableData) => {
-        this.processedData.push(data);
-      });
-    }
-
-    this.dataSource = new MatTableDataSource();
-    this.dataSource.data = this.processedData;
-
-
-    await this.sleep(1);
-
-    this.isLoading = false;
-
-    this.getProcedureName();
 
   }
 

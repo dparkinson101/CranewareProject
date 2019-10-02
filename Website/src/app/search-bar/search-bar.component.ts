@@ -38,7 +38,7 @@ export class SearchBarComponent implements OnInit {
   states = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
   sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
 
-  model = new item('', '', null, null, null, null, null);
+  model = new item('', '', null, null, null, null, null, false);
   code: string;
   userLocation: string;
   minPrice: number;
@@ -73,7 +73,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   reset() {
-    this.model = new item('', '', null, null, null, null, null);
+    this.model = new item('', '', null, null, null, null, null, false);
     //console.log(this.autocompleteProcedure);
     this.autocompleteProcedure.value = '';
 

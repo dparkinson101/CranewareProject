@@ -33,9 +33,9 @@
 
 
 
-        <div [ngClass]="['table-container mat-elevation-z8']" *ngIf="dataSource">
+        <div [ngClass]="['table-container mat-elevation-z8']" *ngIf="dataSource" >
 
-            <mat-table [dataSource]="dataSource" matSort>
+            <mat-table [dataSource]="dataSource" (matSortChange)="sortData($event)" matSortActive="providerDistance" matSortDirection="asc"  matSort>
 
                 <!-- name Column -->
                 <ng-container matColumnDef="providerName">
