@@ -42,6 +42,7 @@ import { LineChartComponent } from './line-chart/line-chart.component';
     MDBBootstrapModule.forRoot(),
     MatFormFieldModule,
     ChartsModule,
+    FontAwesomeModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
