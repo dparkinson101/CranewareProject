@@ -311,6 +311,35 @@ export class TableComponent implements OnInit {
         this.placeCurrentOnMap(page);
         console.log(page);
       }
+
+      await this.sleep(100);
+
+      if(this.mapAPIService.circle == undefined){
+        // Add circle overlay and bind to marker
+        this.mapAPIService.circle = new google.maps.Circle({
+          map: this.mapAPIService.map,
+          radius: (this.dataService.distanceRange * 1609.344),    // miles to metres
+          fillColor: '#61b8ff',
+          strokeWeight: 0.5,
+          strokeColor: '#61b8ff'
+        });
+        this.mapAPIService.circle.bindTo('center', this.mapAPIService.userMarker, 'position');
+      }
+      else{
+        this.mapAPIService.circle.setMap(null);
+        this.mapAPIService.circle = undefined;
+
+        // Add circle overlay and bind to marker
+        this.mapAPIService.circle = new google.maps.Circle({
+          map: this.mapAPIService.map,
+          radius: (this.dataService.distanceRange * 1609.344),    // miles to metres
+          fillColor: '#61b8ff',
+          strokeWeight: 0.5,
+          strokeColor: '#61b8ff'
+        });
+        this.mapAPIService.circle.bindTo('center', this.mapAPIService.userMarker, 'position');
+      }
+
     });
 
   }
