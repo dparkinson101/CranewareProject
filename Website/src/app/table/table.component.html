@@ -1,4 +1,4 @@
-<div class="tableContainer" *ngIf="showTable">
+<div class="right tableContainer" *ngIf="showTable">
 
     <!-- Name of current procedure -->
     <p><i>{{procedure | titlecase }}</i></p>
@@ -40,7 +40,7 @@
                 <!-- name Column -->
                 <ng-container matColumnDef="providerName">
                     <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Name </mat-header-cell>
-                    <mat-cell *matCellDef="let item"> {{item.providerName}} </mat-cell>
+                    <mat-cell *matCellDef="let item;">{{item.providerName}} </mat-cell>
                 </ng-container>
 
                 <!-- state Column -->
@@ -65,40 +65,18 @@
 
                 <!-- Distance Column -->
                 <ng-container matColumnDef="providerDistance">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance
+                    </mat-header-cell>
                     <mat-cell *matCellDef="let item"> {{item.providerDistance}} miles</mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="moreInfo">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header >      </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                     <mat-cell *matCellDef="let item">
-                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl"  >
-                  <i class="fa fa-info-circle" aria-hidden="true"></i>
-                      </button>
-
-
-                      <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                            <h1>   {{item.providerDistance}} miles </h1>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>
-
-                     </mat-cell>
+                        <button type="button" class="btn btn-primary btn-circle btn-circle-sm m-1" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
+                            <i class="fa fa-info"></i>
+                        </button>
+                    </mat-cell>
                 </ng-container>
 
 
@@ -107,8 +85,83 @@
                 </mat-row>
             </mat-table>
 
+
+
             <!-- Page through table -->
             <mat-paginator (click)="loadCurrent();" [pageSizeOptions]="[10]"></mat-paginator>
         </div>
+
+        <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h1 class="modal-title" id="exampleModalLabel">{{moreInfoItem.providerName}}</h1>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <div class="title">
+                                <h3>Rating</h3>
+                            </div>
+                            <div class="title" id="rating">
+                                <div id="rating">
+                                    <h3>{{rating}}</h3>
+                                </div>
+                            </div>
+                            <div class="title">
+                                <h2> <i *ngFor="let star of stars" [class]="iconClass[star]" id="stars"></i></h2>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <mdb-carousel class="carousel slide carousel-fade" [animation]="'fade'">
+                                <div *ngFor="let photo of photos">
+                                    <mdb-carousel-item>
+                                        <div class="view w-100">
+                                            <img class="d-block w-100" src="{{photo}}" alt="First slide">
+                                            <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div>
+                                        </div>
+                                    </mdb-carousel-item>
+
+                                </div>
+
+                            </mdb-carousel>
+                            <br>
+                        </div>
+                        <hr>
+                        <h4>Hospital Information</h4>
+                        <br>
+                        <div class="info">
+                            <b>Address:</b> {{moreInfoItem.providerStreetAddress | titlecase}} <br>
+                            <b>Distance:</b> {{moreInfoItem.providerDistance}} miles <br>
+                            <b>Cost:</b> ${{moreInfoItem.averageTotalPayments}}
+
+
+                        </div>
+
+                        <HR>
+                        <h4>Reviews</h4>
+                        <div class="review">
+                            <div *ngFor="let review of reviews" id="reviews">
+                                <br>
+                                <h6><i>{{review.author_name}} {{review.relative_time_description}}</i></h6>
+                                {{review.text}}
+                            </div>
+                        </div>
+                        <HR>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+</div>

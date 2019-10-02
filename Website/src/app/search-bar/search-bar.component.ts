@@ -84,8 +84,8 @@ export class SearchBarComponent implements OnInit {
 
   initAutocomplete(){
     //Address Auto Complete
-    if(document.getElementById("location")){
-      this.autocompleteLocation = new google.maps.places.Autocomplete(document.getElementById("location"), {types: ['geocode']});
+    if(document.getElementById('location')){
+      this.autocompleteLocation = new google.maps.places.Autocomplete(document.getElementById('location'), {types: ['geocode']});
       var self = this;
       this.autocompleteLocation.addListener('place_changed', function (mapAPI = self.mapAPIService){
         mapAPI.setUserPlace(this.getPlace());
@@ -93,17 +93,44 @@ export class SearchBarComponent implements OnInit {
     }
 
     //Procedure Auto Complete
-    this.autocompleteProcedure = document.getElementById("procedure");
+    this.autocompleteProcedure = document.getElementById('procedure');
+  }
+
+  onOver()
+  {
+    if(this.mapAPIService.userGeolocation === undefined){
+
+      document.getElementById('geoButton').style.background = '#66bf48';
+      document.getElementById('geoButton').style.borderColor = '#66bf48';
+    }else
+    {
+      document.getElementById('geoButton').style.background = 'red';
+      document.getElementById('geoButton').style.borderColor = 'red';
+    }
+  }
+
+  onOut()
+  {
+    if(this.mapAPIService.userGeolocation === undefined){
+
+      document.getElementById('geoButton').style.background = '#007bff';
+      document.getElementById('geoButton').style.borderColor = '#007bff';
+    }else
+    {
+      document.getElementById('geoButton').style.background = '#66bf48';
+      document.getElementById('geoButton').style.borderColor = '#66bf48';
+    }
+
   }
 
   onGeoSelect(){
     this.initAutocomplete();
     if(this.mapAPIService.userGeolocation === undefined){
 
-      document.getElementById("geoButton").style.background = '#66bf48';
-      document.getElementById("geoButton").style.borderColor = '#66bf48';
+      document.getElementById('geoButton').style.background = '#66bf48';
+      document.getElementById('geoButton').style.borderColor = '#66bf48';
       this.isGeolocating = true;
-      this.locationStatus= "stop using current location";
+      this.locationStatus= 'stop using current location';
 
       if(this.mapAPIService.userPlace !== undefined){ 
         this.mapAPIService.userPlace = undefined; 
@@ -120,12 +147,12 @@ export class SearchBarComponent implements OnInit {
 
         this.mapAPIService.map.setCenter({lat: 39.8283, lng: -95.7129});
 
-        //console.log("removed geolocation marker");
+        // console.log("removed geolocation marker");
       }
 
-      document.getElementById("geoButton").style.background = '#007bff';
-      document.getElementById("geoButton").style.borderColor = '#007bff';
-      this.locationStatus= "use current location";
+      document.getElementById('geoButton').style.background = '#66bf48';
+      document.getElementById('geoButton').style.borderColor = '#66bf48';
+      this.locationStatus= 'use current location';
     }
   }
 
@@ -159,7 +186,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   private _filter(value: any): Procedure[] {
-    var filterValue = "";
+    var filterValue = '';
     if (value.name === undefined){
       filterValue = value.toLowerCase();
 
@@ -175,7 +202,7 @@ export class SearchBarComponent implements OnInit {
         });
 
         if(!finds){
-          this.model.code = "INVALID_PROCEDURE";
+          this.model.code = 'INVALID_PROCEDURE';
         }
       }
       else{
