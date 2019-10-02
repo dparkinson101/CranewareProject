@@ -30,9 +30,10 @@ export class DataService {
   public zipcode: string;
   public state: string;
   public distanceRange: number;
+  public isInsured: boolean;
 
 
-  private searchSource = new BehaviorSubject(new item('', '', null, null, null, null, null));
+  private searchSource = new BehaviorSubject(new item('', '', null, null, null, null, null, false));
 
   // the current code that has been typed into the search bar
   currentSearch = this.searchSource.asObservable();
@@ -141,6 +142,7 @@ export class DataService {
     this.zipcode = search.zipcode;
     this.state = search.state;
     this.distanceRange = search.distanceRange;
+    this.isInsured = search.isInsured;
 
     console.log(search);
 
