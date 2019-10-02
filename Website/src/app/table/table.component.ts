@@ -1,11 +1,11 @@
+import { MapAPIService } from './../services/map-api.service';
 import { Observable } from 'rxjs';
 import { Location } from './../models/Location';
-import { MapAPIService } from '../services/map-api.service';
 import { DataService } from '../services/data.service';
 import { LocationService } from '../services/location.service';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
-import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable, MatSortable } from '@angular/material';
 import { TableData } from '../models/TableData';
 import { item } from '../models/item';
 import { element } from 'protractor';
@@ -25,29 +25,34 @@ export interface Element {
 })
 export class TableComponent implements OnInit {
 
+  // Table Data
   public initialData: any;
   public processedData: TableData[] = [];
   public dataSource: MatTableDataSource<TableData>;
+  public procedure: string;
+  public distanceRange = 0;
+  // Loading
   public isLoading = true;
   public showSpinner = true;
   public showTable = false;
 
-  public procedure: string;
-  public distanceRange = 0;
+  // Reviews & Historic Data
   public rating = 0;
   public photos = [];
   public moreInfoHistoricData: any = 0;
-
   public moreInfoItem: any = 0;
-  public moreInfoPlaceDetails:  any = 0;
+  public moreInfoPlaceDetails: any = 0;
   public stars: number[] = [0, 0, 0, 0, 0];
   public reviews = [];
-  public  iconClass = {
+  public iconClass = {
     0: 'fa fa-star-o ',
     0.5: 'fa fa-star-half-o ',
     1: 'fa fa-star '
-  }
+  };
 
+
+
+  // Paging and sorting for the table
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
@@ -58,7 +63,6 @@ export class TableComponent implements OnInit {
 
   }
 
-
   ngOnInit() {
 
     this.isLoading = true;
@@ -67,14 +71,14 @@ export class TableComponent implements OnInit {
     const observable = this.dataService.currentSearch;
 
     observable.subscribe(() => {
-      if(this.dataService.distanceRange != null){
-        this.distanceRange = this.dataService.distanceRange;
-        console.log(this.distanceRange);
+      if(this.dataService.code != undefined){
+        if (this.dataService.distanceRange != null) {
+          this.distanceRange = this.dataService.distanceRange;
+          console.log(this.distanceRange);
+        }
+        this.getData();
       }
-      this.getData();
     });
-
-
 
   }
 
@@ -103,35 +107,23 @@ export class TableComponent implements OnInit {
     });
   }
 
-  loadMoreInfo(item: any){
+  loadMoreInfo(item: any) {
     this.moreInfoItem = item;
-
     this.mapAPIService.getPlaceDetails(item.providerPlaceID).then(placeDetails => {
       this.moreInfoPlaceDetails = placeDetails;
-      console.log(this.moreInfoPlaceDetails);
-      this.fillStars(Number(this.moreInfoPlaceDetails.rating));
-      this.addReviews(this.moreInfoPlaceDetails);
-
+      this.addStarRating(Number(this.moreInfoPlaceDetails.rating));
+      this.addMoreDetails(this.moreInfoPlaceDetails);
     });
 
     this.dataService.getHistoricData(item.providerID).subscribe(data => {
-        this.moreInfoHistoricData = data;
-        console.log(data);
+      this.moreInfoHistoricData = data;
     });
 
-    console.log(this.moreInfoItem);
-  }
-
-  loadDefaultSort(){
-    var ele = document.querySelectorAll("[aria-label='Change sorting for providerDistance']")[0] as HTMLButtonElement;
-    ele.click();
-    console.log("Prints");
-    console.log(ele);
   }
 
   async placeOnMap(item: any) {
 
-    if( item.providerLongitude === undefined || item.providerLatitude === undefined ){
+    if (item.providerLongitude === undefined || item.providerLatitude === undefined) {
       const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
       this.mapAPIService.getAddressGeolocation(address).then((location: Location) => {
         this.mapAPIService.getUserLocation().then((userLocation: Location) => {
@@ -150,11 +142,11 @@ export class TableComponent implements OnInit {
         });
       });
     }
-    else{
+    else {
       var location = { lat: item.providerLatitude, lng: item.providerLongitude };
       const address = item.providerStreetAddress + ' ' + item.providerCity + ' ' + item.providerZipCode;
 
-      if(this.mapAPIService.userPlace === undefined){
+      if (this.mapAPIService.userPlace === undefined) {
 
         this.mapAPIService.getUserLocation().then((userLocation: Location) => {
           this.mapAPIService.getDistance(userLocation, location, address).then((distance: string) => {
@@ -171,7 +163,7 @@ export class TableComponent implements OnInit {
           });
         });
       }
-      else{
+      else {
         var userLocation = {
           lat: this.mapAPIService.userPlace.geometry.location.lat(),
           lng: this.mapAPIService.userPlace.geometry.location.lng()
@@ -187,10 +179,10 @@ export class TableComponent implements OnInit {
             this.mapAPIService.averageFocus();
             this.mapAPIService.labelMarkers();
 
-            var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+            var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
-            if(this.mapAPIService.userMarker){
-              if(this.mapAPIService.userMarker.location !== userLocation){
+            if (this.mapAPIService.userMarker) {
+              if (this.mapAPIService.userMarker.location !== userLocation) {
                 this.mapAPIService.userMarker.setMap(null);
                 this.mapAPIService.userMarker = undefined;
 
@@ -199,9 +191,10 @@ export class TableComponent implements OnInit {
                   map: this.mapAPIService.map,
                   icon: image
                 });
+
               }
             }
-            else{
+            else {
               this.mapAPIService.userMarker = new google.maps.Marker({
                 position: userLocation,
                 map: this.mapAPIService.map,
@@ -255,17 +248,17 @@ export class TableComponent implements OnInit {
       console.log(data);
 
 
-      //Handles table if search yields no results
-      if(this.initialData.length < 1){
+      // Handles table if search yields no results
+      if (this.initialData.length < 1) {
         this.isLoading = false;
         this.procedure = 'No Results';
-        if(this.dataSource !== undefined){
+        if (this.dataSource !== undefined) {
           this.dataSource.data = [];
           this.dataSource = undefined;
         }
         return;
       }
-      else{
+      else {
         console.log(this.initialData);
         this.procedure = 'Searching';
       }
@@ -280,7 +273,10 @@ export class TableComponent implements OnInit {
       for (let index = 0; index < this.initialData.length; index++) {
         const item = this.initialData[index];
         await this.createNewDataItem(item).then((data: TableData) => {
-          if(this.distanceRange == 0 || Number(data.providerDistance) < this.distanceRange){
+          if (this.distanceRange == 0 || Number(data.providerDistance) < this.distanceRange) {
+            if(this.dataService.isInsured){
+              data.averageTotalPayments = Number((data.averageTotalPayments - item.averageMedicarePayments).toFixed(2));
+            }
             this.processedData.push(data);
           }
         });
@@ -296,10 +292,10 @@ export class TableComponent implements OnInit {
       await this.sleep(1);
 
       this.dataSource.filterPredicate = (data: TableData, filter: string) => {
-        if(data.providerName.toLowerCase().includes(filter)){
+        if (data.providerName.toLowerCase().includes(filter)) {
           return true;
         }
-        else{
+        else {
           return false;
         }
       };
@@ -315,38 +311,7 @@ export class TableComponent implements OnInit {
         this.placeCurrentOnMap(page);
         console.log(page);
       }
-
-      await this.sleep(100);
-
-      this.loadDefaultSort();
-
     });
-
-  }
-
-  async updateDistances(){
-
-    this.isLoading = true;
-    this.dataSource = undefined;
-    this.dataSource.data = [];
-    this.processedData = [];
-
-    for (let index = 0; index < this.initialData.length; index++) {
-      const item = this.initialData[index];
-      await this.createNewDataItem(item).then((data: TableData) => {
-        this.processedData.push(data);
-      });
-    }
-
-    this.dataSource = new MatTableDataSource();
-    this.dataSource.data = this.processedData;
-
-
-    await this.sleep(1);
-
-    this.isLoading = false;
-
-    this.getProcedureName();
 
   }
 
@@ -363,7 +328,7 @@ export class TableComponent implements OnInit {
     return new Promise(resolve => {
       this.mapAPIService.getUserLocation().then((userPosition: Location) => {
         var pos = { lat: item.latitude, lng: item.longitude };
-        this.mapAPIService.getDistance(userPosition, pos, address ).then((distance: string) => {
+        this.mapAPIService.getDistance(userPosition, pos, address).then((distance: string) => {
           var data = {
             providerName: name,
             providerState: item.providerState,
@@ -383,46 +348,67 @@ export class TableComponent implements OnInit {
     });
   }
 
-   numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
 
 
-fillStars(rating: number){
-  this.stars = [0,0,0,0,0];
-  let starsToFill = Math.round(rating * 2)/2; //round to nearest 0.5
-  this.rating = Math.round(rating *2) /2;
-  let i = 0;
-  while(starsToFill > 0.5){
-    this.stars[i] = 1;
-    i++;
-    starsToFill--;
+/*-------------------------------------
+   Add details to the pop up modal
+---------------------------------------*/
+  addMoreDetails(details: any) {
 
+    // clear review and photo arrays
+    this.reviews = [];
+    this.photos = [];
+
+    // add new reviews and photos
+    this.addReviews(details.reviews);
+    details.photos.forEach(photo => {
+      this.photos.push(photo.getUrl());
+    });
+    //this.addPhotos(details.photos)
   }
-  if(starsToFill === 0.5){
-    this.stars[i] = 0.5;
+
+  addReviews(reviews: any) {
+    reviews.forEach(review => {
+      if (review.text !== "") {
+        this.reviews.push(review);
+      }
+    });
   }
-  this.stars.sort().reverse();
-}
+  addPhotos(photos: any) {
+    photos.forEach(photo => {
+      this.photos.push(photo.getUrl());
+    });
+  }
 
+  // fill the stars according to rating
+  addStarRating(rating: number) {
+    this.stars = [0, 0, 0, 0, 0];
+    let starsToFill = Math.round(rating * 2) / 2; // round to nearest 0.5
+    this.rating = Math.round(rating * 2) / 2;
+    let i = 0;
+    while (starsToFill > 0.5) {
+      this.stars[i] = 1;
+      i++;
+      starsToFill--;
 
-addReviews(details: any)
-{
-
-  this.reviews = [];
-  this.photos= [];
-
-  details.reviews.forEach(element => {
-    if(element.text !== ""){
-    this.reviews.push(element);
     }
-  });
-  details.photos.forEach(element => {
-    this.photos.push(element.getUrl());
-  });
-  console.log(this.photos);
+    if (starsToFill === 0.5) {
+      this.stars[i] = 0.5;
+    }
+    this.stars.sort().reverse();
+  }
 
 
-}
+  /*-------------------------------------
+         other functions
+  ---------------------------------------*/
+
+
+  numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+
+
 
 }
