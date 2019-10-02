@@ -118,6 +118,7 @@ export class TableComponent implements OnInit {
     });
 
     this.dataService.getHistoricData(item.providerID).subscribe(data => {
+      console.log(data);
       this.moreInfoHistoricData = data;
     });
 

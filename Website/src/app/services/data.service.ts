@@ -81,28 +81,8 @@ export class DataService {
             } 
             else {
               results = this.http.get<any>(this.apiURL + '/historicdata?code=' + this.code + '&providerId=' + id);
-              var records = [];
-              results.subscribe(res => {
-
-                console.log(res);
-
-                for (let y = 2017; y >= 2011; y--) {
-                  records.push({
-                    year: y,
-                    providerTotal: res[0]["Total"+y],
-                    coveredTotal: res[0]["Medicare"+y],
-                  });
-                }
-
-                console.log(records);
-
-                this.addToCache(key, records);
-              });
-              var r = new Observable(observer => {
-                observer.next(records);
-                observer.complete();
-              });
-              return r;
+              this.addToCache(key, results);
+              return results;
             }
           } 
           catch (err) {
