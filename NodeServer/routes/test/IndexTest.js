@@ -131,18 +131,17 @@ describe('Testing IndexForTest.js methods', function() {
 			}
 			
 			assert(one == true && two == true && three == true && four == true);
-		});
+		}).timeout(5000);
 	});
 	
 	//Test 3: select all with price ascending
 	//We will run a select all with price ascending query and check the start, end, size and a result in the middle, all being correct should return true, as these result are impossible to spoof
 	describe('Select all price asc query', function() {
 		it('sortpriceasc should return all records', async function() {
-			var x = await query.sortpriceasc(039)
-			
+			var x = await query.sortpriceasc(039)	
 			
 			var one = false;
-			if(x[0].providerId == 050380 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[0].providerId == '050380' && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				one = true;
 			}
@@ -168,7 +167,7 @@ describe('Testing IndexForTest.js methods', function() {
 			}
 			
 			assert(one == true && two == true && three == true && four == true);
-		});
+		}).timeout(5000);
 	});
 	
 	//Test 4: select zipcode query
@@ -191,7 +190,7 @@ describe('Testing IndexForTest.js methods', function() {
 			}
 			
 			assert(one == true && four == true);
-		});
+		}).timeout(5000);
 	});
 	
 	//Test 5: select state query
@@ -227,7 +226,7 @@ describe('Testing IndexForTest.js methods', function() {
 			}
 			
 			assert(one == true && two == true && three == true && four == true);
-		});
+		}).timeout(5000);
 	});
 	
 	//Test 6: select providerinfo query
@@ -265,7 +264,7 @@ describe('Testing IndexForTest.js methods', function() {
 			}
 			
 			assert(one == true && two == true && three == true && four == true);
-		});
+		}).timeout(5000);
 	});
 	
 	//Test 7: select by price range query
@@ -301,7 +300,7 @@ describe('Testing IndexForTest.js methods', function() {
 			}
 			
 			assert(one == true && two == true && three == true && four == true);
-		});
+		}).timeout(5000);
 	});
 });
 

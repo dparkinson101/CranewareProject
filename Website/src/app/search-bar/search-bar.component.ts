@@ -38,7 +38,7 @@ export class SearchBarComponent implements OnInit {
   states = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
   sortOptions = ['Price: Low to High', 'Price: High to Low', 'Best match'];
 
-  model = new item('', '', null, null, null, null, null);
+  model = new item('', '', null, null, null, null, null, false);
   code: string;
   userLocation: string;
   minPrice: number;
@@ -73,7 +73,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   reset() {
-    this.model = new item('', '', null, null, null, null, null);
+    this.model = new item('', '', null, null, null, null, null, false);
     //console.log(this.autocompleteProcedure);
     this.autocompleteProcedure.value = '';
 
@@ -94,6 +94,33 @@ export class SearchBarComponent implements OnInit {
 
     //Procedure Auto Complete
     this.autocompleteProcedure = document.getElementById('procedure');
+  }
+
+  onOver()
+  {
+    if(this.mapAPIService.userGeolocation === undefined){
+
+      document.getElementById('geoButton').style.background = '#66bf48';
+      document.getElementById('geoButton').style.borderColor = '#66bf48';
+    }else
+    {
+      document.getElementById('geoButton').style.background = 'red';
+      document.getElementById('geoButton').style.borderColor = 'red';
+    }
+  }
+
+  onOut()
+  {
+    if(this.mapAPIService.userGeolocation === undefined){
+
+      document.getElementById('geoButton').style.background = '#007bff';
+      document.getElementById('geoButton').style.borderColor = '#007bff';
+    }else
+    {
+      document.getElementById('geoButton').style.background = '#66bf48';
+      document.getElementById('geoButton').style.borderColor = '#66bf48';
+    }
+
   }
 
   onGeoSelect(){
@@ -123,8 +150,8 @@ export class SearchBarComponent implements OnInit {
         // console.log("removed geolocation marker");
       }
 
-      document.getElementById('geoButton').style.background = '#007bff';
-      document.getElementById('geoButton').style.borderColor = '#007bff';
+      document.getElementById('geoButton').style.background = '#66bf48';
+      document.getElementById('geoButton').style.borderColor = '#66bf48';
       this.locationStatus= 'use current location';
     }
   }
