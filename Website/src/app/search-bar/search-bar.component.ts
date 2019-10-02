@@ -100,11 +100,11 @@ export class SearchBarComponent implements OnInit {
   {
     if(this.mapAPIService.userGeolocation === undefined){
 
-      document.getElementById('geoButton').style.background = '#66bf48';
-      document.getElementById('geoButton').style.borderColor = '#66bf48';
+      document.getElementById('geoButton').style.background = 'blue'; //(button colour when geo location off)
+      document.getElementById('geoButton').style.borderColor = 'blue';
     }else
     {
-      document.getElementById('geoButton').style.background = 'red';
+      document.getElementById('geoButton').style.background = 'red'; //(button colour on hover after geo location on)
       document.getElementById('geoButton').style.borderColor = 'red';
     }
   }
@@ -113,12 +113,12 @@ export class SearchBarComponent implements OnInit {
   {
     if(this.mapAPIService.userGeolocation === undefined){
 
-      document.getElementById('geoButton').style.background = '#007bff';
-      document.getElementById('geoButton').style.borderColor = '#007bff';
+      // document.getElementById('geoButton').style.background = 'black'; //#007bff
+      // document.getElementById('geoButton').style.borderColor = 'green'; //#007bff
     }else
     {
-      document.getElementById('geoButton').style.background = '#66bf48';
-      document.getElementById('geoButton').style.borderColor = '#66bf48';
+      document.getElementById('geoButton').style.background = 'green'; //(button colour after hover when geo location on)
+      document.getElementById('geoButton').style.borderColor = 'green'; //#66bf48
     }
 
   }
@@ -127,13 +127,13 @@ export class SearchBarComponent implements OnInit {
     this.initAutocomplete();
     if(this.mapAPIService.userGeolocation === undefined){
 
-      document.getElementById('geoButton').style.background = '#66bf48';
-      document.getElementById('geoButton').style.borderColor = '#66bf48';
+      document.getElementById('geoButton').style.background = 'green'; //(button colour when when geo location on)
+      document.getElementById('geoButton').style.borderColor = 'green'; //#66bf48
       this.isGeolocating = true;
       this.locationStatus= 'stop using current location';
 
-      if(this.mapAPIService.userPlace !== undefined){ 
-        this.mapAPIService.userPlace = undefined; 
+      if(this.mapAPIService.userPlace !== undefined){
+        this.mapAPIService.userPlace = undefined;
       }
       this.mapAPIService.getUserLocation();
     }
@@ -150,8 +150,8 @@ export class SearchBarComponent implements OnInit {
         // console.log("removed geolocation marker");
       }
 
-      document.getElementById('geoButton').style.background = '#66bf48';
-      document.getElementById('geoButton').style.borderColor = '#66bf48';
+      document.getElementById('geoButton').style.background = 'blue'; //(button colour when geo location off)
+      document.getElementById('geoButton').style.borderColor = 'blue'; //#66bf48
       this.locationStatus= 'use current location';
     }
   }
@@ -212,7 +212,7 @@ export class SearchBarComponent implements OnInit {
     else{
       filterValue = value.name;
     }
-    
+
 
     var filteredList = this.procedureList.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
     if (filteredList.length === 0){
@@ -232,13 +232,13 @@ export class SearchBarComponent implements OnInit {
       return val ? val.name : val;
 
   }
-  
+
 
   async sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  
+
 }
 
 interface Procedure {
