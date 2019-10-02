@@ -3,12 +3,14 @@ import { Observable } from 'rxjs';
 import { Location } from './../models/Location';
 import { DataService } from '../services/data.service';
 import { LocationService } from '../services/location.service';
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
 import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable, MatSortable } from '@angular/material';
 import { TableData } from '../models/TableData';
 import { item } from '../models/item';
 import { element } from 'protractor';
+import * as d3 from 'd3';
+
 
 declare var google: any;
 
@@ -21,6 +23,7 @@ export interface Element {
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
+ 
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
@@ -50,13 +53,12 @@ export class TableComponent implements OnInit {
     1: 'fa fa-star '
   };
 
-  
 
 
   // Paging and sorting for the table
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-
+ 
 
   public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance', 'moreInfo'];
   constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
@@ -437,6 +439,8 @@ export class TableComponent implements OnInit {
   numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
+
+  
 
 
 
