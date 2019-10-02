@@ -6,14 +6,15 @@ body,
     font-family: 'Gibson', 'canada-type-gibson', sans-serif;
 }
 
-h2 {
+h1 {
     text-align: center;
     font-weight: 400;
-    color: #2ea3f2;
+    color: #084d7b;
+    /*color: #2ea3f2;*/
     padding: 10px;
 }
 
-h4 {
+h2 {
     font-weight: 300;
 }
 
@@ -22,8 +23,10 @@ p {
 }
 
 button {
+    
     background-color: #66bf48;
     border-color: #66bf48;
+    
 }
 
 .wrapper {

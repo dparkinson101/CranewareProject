@@ -20,7 +20,17 @@ li {
     text-decoration: none;
 }
 
+h1{
+    font-size:30px
+}
+
 #geobutton {}
+
+button{
+    background-color: #084d7b;
+    border-color: #084d7b;
+
+}
 
 .btn-circle {
     width: 45px;
@@ -29,11 +39,13 @@ li {
     text-align: center;
     padding: 0;
     border-radius: 50%;
+    
 }
 
 .btn-circle i {
     position: relative;
     top: -1px;
+    
 }
 
 .btn-circle-sm {
@@ -41,6 +53,7 @@ li {
     height: 35px;
     line-height: 35px;
     font-size: 0.9rem;
+    
 }
 
 .btn-circle-lg {
@@ -48,6 +61,7 @@ li {
     height: 55px;
     line-height: 55px;
     font-size: 1.1rem;
+   
 }
 
 .btn-circle-xl {
@@ -55,4 +69,5 @@ li {
     height: 70px;
     line-height: 70px;
     font-size: 1.3rem;
+    
 }
