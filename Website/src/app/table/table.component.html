@@ -33,9 +33,9 @@
 
 
 
-        <div [ngClass]="['table-container mat-elevation-z8']" *ngIf="dataSource" >
+        <div [ngClass]="['table-container mat-elevation-z8']" *ngIf="dataSource">
 
-            <mat-table [dataSource]="dataSource" (matSortChange)="sortData($event)" matSortActive="providerDistance" matSortDirection="asc"  matSort>
+            <mat-table [dataSource]="dataSource" (matSortChange)="sortData($event)" matSortActive="providerDistance" matSortDirection="asc" matSort>
 
                 <!-- name Column -->
                 <ng-container matColumnDef="providerName">
@@ -76,7 +76,7 @@
                         <button type="button" class="btn btn-primary btn-circle btn-circle-sm m-1" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
                             <i class="fa fa-info"></i>
                         </button>
-                        <button type="button" class="btn btn-primary btn-circle btn-circle-sm m-1" (click)="markerZoom(i)">
+                        <button type="button" class="btn btn-danger btn-circle btn-circle-sm m-1" (click)="markerZoom(i)">
                                 <i class="fa fa-crosshairs"></i>
                         </button>
                     </mat-cell>
@@ -156,10 +156,10 @@
                             </div>
                         </div>
                         <HR>
-                        
-                        
 
-
+                        <div id="chart-container" *ngIf="chartReady">
+                            <canvas #myCanvas id="canvas" baseChart [chartType]="chartType" [datasets]="chartData" [labels]="chartLabels" [colors]="chartColors" [options]="chartOptions"></canvas>
+                        </div>
 
                     </div>
                     <div class="modal-footer">

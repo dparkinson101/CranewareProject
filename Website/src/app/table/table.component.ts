@@ -3,12 +3,17 @@ import { Observable } from 'rxjs';
 import { Location } from './../models/Location';
 import { DataService } from '../services/data.service';
 import { LocationService } from '../services/location.service';
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
 import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable, MatSortable } from '@angular/material';
 import { TableData } from '../models/TableData';
 import { item } from '../models/item';
 import { element } from 'protractor';
+import * as d3 from 'd3';
+
+import 'chartjs-plugin-annotation';
+
+
 
 declare var google: any;
 
@@ -21,6 +26,7 @@ export interface Element {
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
+
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
@@ -52,7 +58,17 @@ export class TableComponent implements OnInit {
   public focused: boolean = false;
   public focusedNumber: number = 99;
 
-  
+
+  //graphs
+
+  @ViewChild('myCanvas', { static: false })
+  public canvas: ElementRef;
+  public context: CanvasRenderingContext2D;
+  public chartType: string = 'line';
+  public chartData: any[];
+  public chartLabels: any[];
+  public chartColors: any[];
+  public chartOptions: any;
 
 
   // Paging and sorting for the table
@@ -61,8 +77,9 @@ export class TableComponent implements OnInit {
 
 
   public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance', 'moreInfo'];
+  chartReady: boolean = false;
   constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
-              private titleCasePipe: TitleCasePipe) {
+    private titleCasePipe: TitleCasePipe) {
 
   }
 
@@ -74,7 +91,7 @@ export class TableComponent implements OnInit {
     const observable = this.dataService.currentSearch;
 
     observable.subscribe(() => {
-      if(this.dataService.code != undefined){
+      if (this.dataService.code != undefined) {
         if (this.dataService.distanceRange != null) {
           this.distanceRange = this.dataService.distanceRange;
           console.log(this.distanceRange);
@@ -121,6 +138,7 @@ export class TableComponent implements OnInit {
     this.dataService.getHistoricData(item.providerID).subscribe(data => {
       console.log(data);
       this.moreInfoHistoricData = data;
+      this.drawChart(this.moreInfoHistoricData);
     });
 
   }
@@ -301,7 +319,7 @@ export class TableComponent implements OnInit {
         const item = this.initialData[index];
         await this.createNewDataItem(item).then((data: TableData) => {
           if (this.distanceRange == 0 || Number(data.providerDistance) < this.distanceRange) {
-            if(this.dataService.isInsured){
+            if (this.dataService.isInsured) {
               data.averageTotalPayments = Number((data.averageTotalPayments - item.averageMedicarePayments).toFixed(2));
             }
             this.processedData.push(data);
@@ -341,7 +359,7 @@ export class TableComponent implements OnInit {
 
       await this.sleep(100);
 
-      if(this.mapAPIService.circle == undefined){
+      if (this.mapAPIService.circle == undefined) {
         // Add circle overlay and bind to marker
         this.mapAPIService.circle = new google.maps.Circle({
           map: this.mapAPIService.map,
@@ -352,7 +370,7 @@ export class TableComponent implements OnInit {
         });
         this.mapAPIService.circle.bindTo('center', this.mapAPIService.userMarker, 'position');
       }
-      else{
+      else {
         this.mapAPIService.circle.setMap(null);
         this.mapAPIService.circle = undefined;
 
@@ -406,9 +424,9 @@ export class TableComponent implements OnInit {
 
 
 
-/*-------------------------------------
-   Add details to the pop up modal
----------------------------------------*/
+  /*-------------------------------------
+     Add details to the pop up modal
+  ---------------------------------------*/
   addMoreDetails(details: any) {
 
     // clear review and photo arrays
@@ -465,6 +483,69 @@ export class TableComponent implements OnInit {
   }
 
 
+
+  drawChart(data: any) {
+    console.log(data);
+    const dataSetOne = []; //medicare
+    const dataSetTwo = [];
+    const labels = [];
+    // data.forEach(element => {
+    //   let cost = element.averageTotalPayments - element.averageTotalPayments;
+    //   dataSetOne.push(cost);
+    //   dataSetTwo.push(element.averageTotalPayments);
+    //   labels.push(element.years);
+    //   console.log(dataSetOne);
+    //   console.log(dataSetTwo);
+    //   console.log(labels);
+
+    // });
+
+    for (let index = 0; index < data.length; index++) {
+      const element = data[index];
+
+      let cost = element.averageTotalPayments - element.averageMedicarePayments;
+      dataSetOne.push(cost);
+      dataSetTwo.push(element.averageTotalPayments);
+      labels.push(element.years);
+      console.log(dataSetOne);
+      console.log(dataSetTwo);
+      console.log(labels);
+    }
+
+    this.chartData = [{
+      data: dataSetOne.reverse(),
+      label: 'With Medicare',
+      fill: false
+
+    },
+    {
+      data: dataSetTwo.reverse(),
+      label: 'Without Medicare',
+      fill: false
+    }
+
+    ];
+    this.chartLabels = labels.reverse();
+    this.chartColors = [{
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      borderColor: 'rgba(0, 0, 0, 1)'
+    }];
+    this.chartOptions = {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            stepSize: (Number(Math.round(dataSetOne[0] / 1000) * 1000) * 10)
+          }
+        }]
+      },
+
+    };
+
+    //console.log((Number(Math.round(dataSetOne[0] / 1000) * 1000) * 10));
+
+    this.chartReady = true;
+  }
 
 
 }
