@@ -1,4 +1,4 @@
-import { WavesModule, CarouselModule } from 'angular-bootstrap-md';
+import { WavesModule, CarouselModule, ChartsModule } from 'angular-bootstrap-md';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataService } from './services/data.service';
 import { BrowserModule, Title } from '@angular/platform-browser';
@@ -39,7 +39,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     ReactiveFormsModule,
     MDBBootstrapModule.forRoot(),
     MatFormFieldModule,
-    
+    ChartsModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,

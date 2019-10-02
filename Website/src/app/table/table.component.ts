@@ -50,6 +50,7 @@ export class TableComponent implements OnInit {
     1: 'fa fa-star '
   };
 
+  
 
 
   // Paging and sorting for the table
