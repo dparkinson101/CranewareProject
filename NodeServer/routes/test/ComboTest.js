@@ -32,7 +32,7 @@ describe('Testing ComboQuery.js methods', function() {
 		it('Possiblitly 1: no sorting ', async function() {
 			var x = await query.comboQuery("039",null,null,null,null)
 			var one = false;
-			//console.log(x[807].providerId);
+			
 			if(x[0].providerId == 100007 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				one = true;
@@ -47,13 +47,13 @@ describe('Testing ComboQuery.js methods', function() {
 			
 			//End
 			var three = false;
-			if(x[807].providerId == 80004 && x[807].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[838].providerId == 520037 && x[838].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}
 			//Length
 			var four = false;
-			if(x.length = 808)
+			if(x.length = 839)
 			{
 				four = 	true;
 			}
@@ -68,7 +68,6 @@ describe('Testing ComboQuery.js methods', function() {
 	describe('Code query should return correct results', function() {
 		it('Possiblitly 2: just min max sorting', async function() {
 			var x = await query.comboQuery("039",0,10000,null,null)
-			
 			var one = false;
 			if(x[0].providerId == 100007 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
@@ -84,13 +83,13 @@ describe('Testing ComboQuery.js methods', function() {
 			
 			//End
 			var three = false;
-			if(x[716].providerId == 60064 && x[716].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[744].providerId == 520037 && x[744].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}
 			//Length
 			var four = false;
-			if(x.length = 717)
+			if(x.length = 745)
 			{
 				four = 	true;
 			}
@@ -284,8 +283,9 @@ describe('Testing ComboQuery.js methods', function() {
 //Possiblitly 8: orignal query with "null" strings
 	describe('Code query should return correct results', function() {
 		it('Given just code with null strings', async function() {
-			var x = await query.comboQuery("039","null","null","null","null")
-			console.log(x[0].providerId);
+			var x = await query.comboQuery("039","null","null","null","null")	;	
+			//console.log(x[838].providerId);
+			//console.log(x.length);
 			var one = false;
 			if(x[0].providerId == 100007 && x[0].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
@@ -301,13 +301,13 @@ describe('Testing ComboQuery.js methods', function() {
 			
 			//End
 			var three = false;
-			if(x[807].providerId == 80004 && x[807].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
+			if(x[838].providerId == 520037 && x[838].dRGDefinition === '039 - EXTRACRANIAL PROCEDURES W/O CC/MCC')
 			{
 				three = true;
 			}
 			//Length
 			var four = false;
-			if(x.length = 808)
+			if(x.length = 839)
 			{
 				four = 	true;
 			}
@@ -316,5 +316,101 @@ describe('Testing ComboQuery.js methods', function() {
 			
 		});	
 	});
+	
+//Test 10: We needed a new query to fill for auto completion of typed procedures, this is the testing of that following the same format as before
+	describe('Only codes query should return correct results', function() {
+		it('Return all distinct codes only', async function() {
+			var x = await query.procedurelist()	;	
+			
+			var one = false;
+			if(x[0].dRGDefinition === '001 - HEART TRANSPLANT OR IMPLANT OF HEART ASSIST SYSTEM W MCC')
+			{
+				one = true;
+			}
+			
+			//Middle
+			var two = false;
+			if(x[87].dRGDefinition === '116 - INTRAOCULAR PROCEDURES W CC/MCC')
+			{
+				two = true;
+			}
+			
+			//End
+			var three = false;
+			if(x[651].dRGDefinition === '989 - NON-EXTENSIVE O.R. PROC UNRELATED TO PRINCIPAL DIAGNOSIS W/O CC/MCC')
+			{
+				three = true;
+			}
+			//Length
+			var four = false;
+			if(x.length = 652)
+			{
+				four = 	true;
+			}
+			
+			assert(one == true && two == true && three == true && four == true);
+			
+		});	
+	});
+	
+	//Test 11: To build reasonbale graphs we needed to get all years of data for specific hospital of a certain procedure to predict the next year and draw a price trend
+	//We shall use a know example and test based on that with by checking every record the query should return
+	describe('Only codes query should return correct results', function() {
+		it('Return single field of all cost of the years', async function() {
+			var x = await query.historicdata('039', 10001);		
+			//console.log(x[0].financial2017.averageMedicarePayemnts);
+			
+			var one = false;
+			if(x[0].Covered2017 == '41130.56098')
+			{
+				one = true;
+			}
+			
+			var two = false;
+			if(x[0].Covered2016 == '38026.17')
+			{
+				two = true;
+			}
+			
+			var three = false;
+			if(x[0].Covered2015 == '37027.24')
+			{
+				three = true;
+			}
+			
+			var four = false;
+			if(x[0].Covered2014 == '36003.63441')
+			{
+				four = true;
+			}
+			var five = false;
+			if(x[0].Covered2013 == '37988.97959')
+			{
+				five = true;
+			}
+			
+			var six = false;
+			if(x[0].Covered2012 == '37467.95789')
+			{
+				six = true;
+			}
+			
+			var seven = false;
+			if(x[0].Covered2011 == '32963.07692')
+			{
+				seven = true;
+			}
+			
+			var eight = false;
+			if(x.length == 1)
+			{
+				eight = true;
+			}
+			
+			assert(one == true && two == true && three == true && four == true && five == true && six == true && seven == true && eight == true);
+			
+		}).timeout(30000);	
+	});
+	
 });
 

@@ -31,7 +31,7 @@ export class TableComponent implements OnInit {
   public dataSource: MatTableDataSource<TableData>;
   public procedure: string;
   public distanceRange = 0;
-  // Loading 
+  // Loading
   public isLoading = true;
   public showSpinner = true;
   public showTable = false;
@@ -191,7 +191,7 @@ export class TableComponent implements OnInit {
                   map: this.mapAPIService.map,
                   icon: image
                 });
-                
+
               }
             }
             else {
@@ -438,6 +438,6 @@ export class TableComponent implements OnInit {
   }
 
 
- 
+
 
 }
