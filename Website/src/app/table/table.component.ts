@@ -50,6 +50,7 @@ export class TableComponent implements OnInit {
     1: 'fa fa-star '
   };
   public focused: boolean = false;
+  public focusedNumber: number = 99;
 
   
 
@@ -125,17 +126,31 @@ export class TableComponent implements OnInit {
   }
 
   markerZoom(i: number){
+    i = i % 10;
     if(!this.focused){
-      i = i % 10;
       this.mapAPIService.markers[i].infoWindow.open(this.mapAPIService.map, this.mapAPIService.markers[i].marker);
       this.mapAPIService.map.setCenter(this.mapAPIService.markers[i].marker.position);
       this.mapAPIService.map.setZoom(15);
       this.focused = true;
+      this.focusedNumber = i;
     }
     else{
-      this.mapAPIService.markers[i].infoWindow.close(this.mapAPIService.map, this.mapAPIService.markers[i]);
-      this.mapAPIService.averageFocus();
-      this.focused = false;
+      if(this.focusedNumber == i){
+        this.mapAPIService.markers[i].infoWindow.close(this.mapAPIService.map, this.mapAPIService.markers[i]);
+        this.mapAPIService.averageFocus();
+        this.focused = false;
+      }
+      else{
+        this.mapAPIService.markers[this.focusedNumber].infoWindow.close(this.mapAPIService.map, this.mapAPIService.markers[this.focusedNumber].marker);
+        this.mapAPIService.averageFocus();
+        this.focused = false;
+
+        this.mapAPIService.markers[i].infoWindow.open(this.mapAPIService.map, this.mapAPIService.markers[i].marker);
+        this.mapAPIService.map.setCenter(this.mapAPIService.markers[i].marker.position);
+        this.mapAPIService.map.setZoom(15);
+        this.focused = true;
+        this.focusedNumber = i;
+      }
     }
   }
 
@@ -281,12 +296,6 @@ export class TableComponent implements OnInit {
         this.procedure = 'Searching';
       }
 
-
-      // this.initialData.forEach((item) => {
-      //   this.createNewDataItem(item).then((data: TableData) => {
-      //     this.processedData.push(data);
-      //   });
-      // });
 
       for (let index = 0; index < this.initialData.length; index++) {
         const item = this.initialData[index];
