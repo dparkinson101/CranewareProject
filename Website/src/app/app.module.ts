@@ -40,6 +40,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MDBBootstrapModule.forRoot(),
     MatFormFieldModule,
     ChartsModule,
+    FontAwesomeModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,

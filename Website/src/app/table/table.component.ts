@@ -49,6 +49,7 @@ export class TableComponent implements OnInit {
     0.5: 'fa fa-star-half-o ',
     1: 'fa fa-star '
   };
+  public focused: boolean = false;
 
   
 
@@ -120,6 +121,21 @@ export class TableComponent implements OnInit {
       this.moreInfoHistoricData = data;
     });
 
+  }
+
+  markerZoom(i: number){
+    if(!this.focused){
+      i = i % 10;
+      this.mapAPIService.markers[i].infoWindow.open(this.mapAPIService.map, this.mapAPIService.markers[i].marker);
+      this.mapAPIService.map.setCenter(this.mapAPIService.markers[i].marker.position);
+      this.mapAPIService.map.setZoom(15);
+      this.focused = true;
+    }
+    else{
+      this.mapAPIService.markers[i].infoWindow.close(this.mapAPIService.map, this.mapAPIService.markers[i]);
+      this.mapAPIService.averageFocus();
+      this.focused = false;
+    }
   }
 
   async placeOnMap(item: any) {

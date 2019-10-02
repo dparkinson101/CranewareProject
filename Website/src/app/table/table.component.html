@@ -72,9 +72,12 @@
 
                 <ng-container matColumnDef="moreInfo">
                     <mat-header-cell *matHeaderCellDef> </mat-header-cell>
-                    <mat-cell *matCellDef="let item">
+                    <mat-cell *matCellDef="let item; let i = index;">
                         <button type="button" class="btn btn-primary btn-circle btn-circle-sm m-1" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
                             <i class="fa fa-info"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-circle btn-circle-sm m-1" (click)="markerZoom(i)">
+                                <i class="fa fa-crosshairs"></i>
                         </button>
                     </mat-cell>
                 </ng-container>
