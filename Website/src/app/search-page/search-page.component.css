@@ -29,7 +29,7 @@
 .wrapper {
     background: linear-gradient(to right, white, white);
     padding-top: 20px;
-    height: 200vh;
+    height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,7 +37,7 @@
 
 .main {
     padding-top: 20px;
-    height: 200vh;
+    height: auto;
     background: #fff;
     width: 90%;
     margin: 0 auto;
