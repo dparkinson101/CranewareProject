@@ -170,7 +170,7 @@ export class MapAPIService {
       var req = {
         placeId: placeID,
         //fields: ['rating', 'reviews','photos']
-        fields: ['rating', 'reviews']
+        fields: ['rating']
       };
 
       placeService.getDetails(req, placeDetails => {
