@@ -156,6 +156,12 @@
                             </div>
                         </div>
                         <HR>
+                        <h4>Price Trends</h4>
+
+                        <mat-card *ngIf="chartReady == false" style="display: flex; justify-content: center; align-items: center">
+                            <mat-progress-spinner color="primary" mode="indeterminate">
+                            </mat-progress-spinner>
+                        </mat-card>
 
                         <div id="chart-container" *ngIf="chartReady">
                             <canvas #myCanvas id="canvas" baseChart [chartType]="chartType" [datasets]="chartData" [labels]="chartLabels" [colors]="chartColors" [options]="chartOptions"></canvas>
