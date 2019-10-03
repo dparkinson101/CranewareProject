@@ -101,6 +101,9 @@ export class TableComponent implements OnInit {
           this.distanceRange = this.dataService.distanceRange;
           console.log(this.distanceRange);
         }
+        else{
+          this.distanceRange = 0;
+        }
         this.getData();
       }
     });
@@ -205,7 +208,7 @@ export class TableComponent implements OnInit {
             }
             ).then(() => {
               this.mapAPIService.averageFocus();
-              this.mapAPIService.labelMarkers();
+              //this.mapAPIService.labelMarkers();
             });
           });
         });
@@ -227,7 +230,7 @@ export class TableComponent implements OnInit {
             }
             ).then(() => {
               this.mapAPIService.averageFocus();
-              this.mapAPIService.labelMarkers();
+              //this.mapAPIService.labelMarkers();
             });
           });
         });
@@ -246,7 +249,7 @@ export class TableComponent implements OnInit {
           }
           ).then(() => {
             this.mapAPIService.averageFocus();
-            this.mapAPIService.labelMarkers();
+            //this.mapAPIService.labelMarkers();
 
             var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
