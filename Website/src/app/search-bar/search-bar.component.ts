@@ -100,8 +100,8 @@ export class SearchBarComponent implements OnInit {
   {
     if(this.mapAPIService.userGeolocation === undefined){
 
-      document.getElementById('geoButton').style.background = 'blue'; //(button colour when geo location off)
-      document.getElementById('geoButton').style.borderColor = 'blue';
+      document.getElementById('geoButton').style.background = '#084d7b'; //(button colour when geo location off)
+      document.getElementById('geoButton').style.borderColor = '#084d7b';
     }else
     {
       document.getElementById('geoButton').style.background = 'red'; //(button colour on hover after geo location on)
@@ -150,8 +150,8 @@ export class SearchBarComponent implements OnInit {
         // console.log("removed geolocation marker");
       }
 
-      document.getElementById('geoButton').style.background = 'blue'; //(button colour when geo location off)
-      document.getElementById('geoButton').style.borderColor = 'blue'; //#66bf48
+      document.getElementById('geoButton').style.background = '#084d7b'; //(button colour when geo location off)
+      document.getElementById('geoButton').style.borderColor = '#084d7b'; //#66bf48
       this.locationStatus= 'use current location';
     }
   }
