@@ -1,7 +1,8 @@
+<!DOCTYPE html>
 <div class="searchBar">
 
-    <p>Type in the procedure name or code to get started, add your location to search for nearby providers
-    </p>
+    <h1>Type in the procedure name or code to get started, add your location to search for nearby providers
+    </h1>
 
     <!-- Search Bar -->
     <form #searchBar="ngForm" (ngSubmit)="onSubmit(f)" (click)="initAutocomplete();" novalidate>
@@ -37,7 +38,7 @@
 
                 <mat-form-field>
 
-                    <mat-select placeholder="Distance" value="" [(ngModel)]="model.distanceRange" name="distanceRange">
+                    <mat-select placeholder="Distance" value="" [(ngModel)]="model.distanceRange" name="distanceRange" aria-owns="Distance">
                         <mat-option *ngFor="let distance of distances" [value]="distance">
                             {{distance}} miles
                         </mat-option>
@@ -46,7 +47,7 @@
             </li>
             <li>
                 <mat-form-field style="width:60px; ">
-                    <mat-select placeholder=" State" name="state" [(ngModel)]="model.state">
+                    <mat-select placeholder=" State" name="state" [(ngModel)]="model.state" aria-owns="State">
                         <mat-option *ngFor=" let state of states; " [value]="state">
                             {{state}}
                         </mat-option>
@@ -80,12 +81,13 @@
 
         </ul>
 
+        <ul style="list-style-type: none;">
         <li>
             <div class="form-group " id="SubmitBox ">
                 <button type="submit " class="btn btn-primary btn-lg " (click)="newSearch(); " id="submit ">Search</button>
             </div>
         </li>
-
+    </ul>
 
     </form>
 
