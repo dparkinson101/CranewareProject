@@ -1,7 +1,7 @@
 <div class="right tableContainer" *ngIf="showTable">
 
     <!-- Name of current procedure -->
-    <p><i>{{procedure | titlecase }}</i></p>
+    <p style="text-align: center"><i>{{procedure}}</i></p>
 
 
     <!-- Loading Circle -->
@@ -145,16 +145,6 @@
 
 
                         </div>
-
-                        <HR>
-                        <h4>Reviews</h4>
-                        <div class="review">
-                            <div *ngFor="let review of reviews" id="reviews">
-                                <br>
-                                <h6><i>{{review.author_name}} {{review.relative_time_description}}</i></h6>
-                                {{review.text}}
-                            </div>
-                        </div>
                         <HR>
                         <h4>Price Trends</h4>
 
@@ -167,6 +157,15 @@
                             <canvas #myCanvas id="canvas" baseChart [chartType]="chartType" [datasets]="chartData" [labels]="chartLabels" [colors]="chartColors" [options]="chartOptions"></canvas>
                         </div>
 
+                        <HR>
+                        <h4>Reviews</h4>
+                        <div class="review">
+                            <div *ngFor="let review of reviews" id="reviews">
+                                <br>
+                                <h6><i>{{review.author_name}} {{review.relative_time_description}}</i></h6>
+                                {{review.text}}
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

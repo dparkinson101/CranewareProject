@@ -151,8 +151,8 @@ export class TableComponent implements OnInit {
       for (let index = 0; index < data.length; index++) {
         const element = data[index];
         const cost = element.averageTotalPayments - element.averageMedicarePayments;
-        this.dataSetOne.push(cost);
-        this.dataSetTwo.push(element.averageTotalPayments);
+        this.dataSetOne.push(cost.toFixed(2));
+        this.dataSetTwo.push(element.averageTotalPayments.toFixed(2));
         this.labels.push(element.years);
 
       }
@@ -410,7 +410,7 @@ export class TableComponent implements OnInit {
   getProcedureName() {
 
     // choose first item from list to get name - without number at start
-    this.procedure = 'Displaying results for: <br>' + (this.initialData[0].dRGDefinition).substring(5);
+    this.procedure = 'Displaying Results For: ' + this.titleCasePipe.transform(this.initialData[0].dRGDefinition).substring(5);
   }
 
   async createNewDataItem(item: any) {
@@ -503,15 +503,10 @@ export class TableComponent implements OnInit {
 
 
   drawChart() {
-
-
-
-
     this.chartData = [{
       data: this.dataSetOne.reverse(),
       label: 'With Medicare($)',
       fill: false
-
     },
     {
       data: this.dataSetTwo.reverse(),
@@ -530,7 +525,7 @@ export class TableComponent implements OnInit {
         yAxes: [{
           ticks: {
             beginAtZero: false,
-            stepSize: (Number(Math.round(dataSetTwo[0] / 1000) * 1000) / 10)
+            stepSize: (Number(Math.round(this.dataSetTwo[0] / 1000) * 1000) / 10)
           },
           scaleLabel: {
             display: true,
@@ -540,8 +535,6 @@ export class TableComponent implements OnInit {
       },
 
     };
-
-
 
     this.chartReady = true;
   }
