@@ -59,7 +59,7 @@ export class TableComponent implements OnInit {
   public focusedNumber: number = 99;
 
 
-  //graphs
+  // graph
 
   @ViewChild('myCanvas', { static: false })
   public canvas: ElementRef;
@@ -69,6 +69,11 @@ export class TableComponent implements OnInit {
   public chartLabels: any[];
   public chartColors: any[];
   public chartOptions: any;
+  public dataSetOne = [];
+  public dataSetTwo = [];
+  public labels = [];
+
+
 
 
   // Paging and sorting for the table
@@ -128,6 +133,8 @@ export class TableComponent implements OnInit {
   }
 
   loadMoreInfo(item: any) {
+    this.clearChart();
+    this.chartReady = false;
     this.moreInfoItem = item;
     this.mapAPIService.getPlaceDetails(item.providerPlaceID).then(placeDetails => {
       this.moreInfoPlaceDetails = placeDetails;
@@ -136,16 +143,27 @@ export class TableComponent implements OnInit {
     });
 
     this.dataService.getHistoricData(item.providerID).subscribe(data => {
-      console.log(data);
+
+
       this.moreInfoHistoricData = data;
-      this.drawChart(this.moreInfoHistoricData);
+
+      this.clearChart();
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        const cost = element.averageTotalPayments - element.averageMedicarePayments;
+        this.dataSetOne.push(cost);
+        this.dataSetTwo.push(element.averageTotalPayments);
+        this.labels.push(element.years);
+
+      }
+      this.drawChart();
     });
 
   }
 
   markerZoom(i: number){
     i = i % 10;
-    if(!this.focused){
+    if (!this.focused){
       this.mapAPIService.markers[i].infoWindow.open(this.mapAPIService.map, this.mapAPIService.markers[i].marker);
       this.mapAPIService.map.setCenter(this.mapAPIService.markers[i].marker.position);
       this.mapAPIService.map.setZoom(15);
@@ -153,7 +171,7 @@ export class TableComponent implements OnInit {
       this.focusedNumber = i;
     }
     else{
-      if(this.focusedNumber == i){
+      if (this.focusedNumber == i){
         this.mapAPIService.markers[i].infoWindow.close(this.mapAPIService.map, this.mapAPIService.markers[i]);
         this.mapAPIService.averageFocus();
         this.focused = false;
@@ -484,35 +502,25 @@ export class TableComponent implements OnInit {
 
 
 
-  drawChart(data: any) {
-    //console.log(data);
-    const dataSetOne = []; //medicare
-    const dataSetTwo = [];
-    const labels = [];
+  drawChart() {
 
-    for (let index = 0; index < data.length; index++) {
-      const element = data[index];
 
-      let cost = element.averageTotalPayments - element.averageMedicarePayments;
-      dataSetOne.push(cost);
-      dataSetTwo.push(element.averageTotalPayments);
-      labels.push(element.years);
-    }
+
 
     this.chartData = [{
-      data: dataSetOne.reverse(),
-      label: 'With Medicare',
+      data: this.dataSetOne.reverse(),
+      label: 'With Medicare($)',
       fill: false
 
     },
     {
-      data: dataSetTwo.reverse(),
-      label: 'Without Medicare',
+      data: this.dataSetTwo.reverse(),
+      label: 'Without Medicare($)',
       fill: false
     }
 
     ];
-    this.chartLabels = labels.reverse();
+    this.chartLabels = this.labels.reverse();
     this.chartColors = [{
       backgroundColor: 'rgba(0, 0, 0, 0.2)',
       borderColor: 'rgba(0, 0, 0, 1)'
@@ -533,9 +541,16 @@ export class TableComponent implements OnInit {
 
     };
 
-    //console.log((Number(Math.round(dataSetOne[0] / 1000) * 1000) * 10));
+
 
     this.chartReady = true;
+  }
+
+  clearChart()
+  {
+    this.dataSetOne = [];
+    this.dataSetTwo = [];
+    this.labels = [];
   }
 
 
