@@ -81,7 +81,9 @@ export class DataService {
             } 
             else {
               results = this.http.get<any>(this.apiURL + '/historicdata?code=' + this.code + '&providerId=' + id);
-              this.addToCache(key, results);
+              results.subscribe(res => {
+                this.addToCache(key, res);
+              });
               return results;
             }
           } 

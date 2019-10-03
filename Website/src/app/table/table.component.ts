@@ -434,10 +434,10 @@ export class TableComponent implements OnInit {
     this.photos = [];
 
     // add new reviews and photos
-    this.addReviews(details.reviews);
-    details.photos.forEach(photo => {
-      this.photos.push(photo.getUrl());
-    });
+    // this.addReviews(details.reviews);
+    // details.photos.forEach(photo => {
+    //   this.photos.push(photo.getUrl());
+    // });
     //this.addPhotos(details.photos)
   }
 
@@ -489,16 +489,6 @@ export class TableComponent implements OnInit {
     const dataSetOne = []; //medicare
     const dataSetTwo = [];
     const labels = [];
-    // data.forEach(element => {
-    //   let cost = element.averageTotalPayments - element.averageTotalPayments;
-    //   dataSetOne.push(cost);
-    //   dataSetTwo.push(element.averageTotalPayments);
-    //   labels.push(element.years);
-    //   console.log(dataSetOne);
-    //   console.log(dataSetTwo);
-    //   console.log(labels);
-
-    // });
 
     for (let index = 0; index < data.length; index++) {
       const element = data[index];
@@ -507,9 +497,6 @@ export class TableComponent implements OnInit {
       dataSetOne.push(cost);
       dataSetTwo.push(element.averageTotalPayments);
       labels.push(element.years);
-      console.log(dataSetOne);
-      console.log(dataSetTwo);
-      console.log(labels);
     }
 
     this.chartData = [{
@@ -535,7 +522,7 @@ export class TableComponent implements OnInit {
         yAxes: [{
           ticks: {
             beginAtZero: true,
-            stepSize: (Number(Math.round(dataSetOne[0] / 1000) * 1000) * 10)
+            stepSize: (Number(Math.round(dataSetTwo[0] / 1000) * 1000) / 10)
           }
         }]
       },
