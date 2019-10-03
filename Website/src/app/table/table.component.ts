@@ -392,7 +392,7 @@ export class TableComponent implements OnInit {
   getProcedureName() {
 
     // choose first item from list to get name - without number at start
-    this.procedure = 'Displaying results for:' + (this.initialData[0].dRGDefinition).substring(5);
+    this.procedure = 'Displaying results for: <br>' + (this.initialData[0].dRGDefinition).substring(5);
   }
 
   async createNewDataItem(item: any) {
@@ -485,7 +485,7 @@ export class TableComponent implements OnInit {
 
 
   drawChart(data: any) {
-    console.log(data);
+    //console.log(data);
     const dataSetOne = []; //medicare
     const dataSetTwo = [];
     const labels = [];
@@ -521,8 +521,12 @@ export class TableComponent implements OnInit {
       scales: {
         yAxes: [{
           ticks: {
-            beginAtZero: true,
+            beginAtZero: false,
             stepSize: (Number(Math.round(dataSetTwo[0] / 1000) * 1000) / 10)
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Cost ($)'
           }
         }]
       },
