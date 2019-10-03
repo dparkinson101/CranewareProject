@@ -169,7 +169,8 @@ export class MapAPIService {
       var placeService = new google.maps.places.PlacesService(this.map);
       var req = {
         placeId: placeID,
-        fields: ['rating', 'reviews','photos']
+        //fields: ['rating', 'reviews','photos']
+        fields: ['rating', 'reviews']
       };
 
       placeService.getDetails(req, placeDetails => {

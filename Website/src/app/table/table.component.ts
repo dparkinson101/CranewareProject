@@ -452,10 +452,10 @@ export class TableComponent implements OnInit {
     this.photos = [];
 
     // add new reviews and photos
-    this.addReviews(details.reviews);
-    details.photos.forEach(photo => {
-      this.photos.push(photo.getUrl());
-    });
+    // this.addReviews(details.reviews);
+    // details.photos.forEach(photo => {
+    //   this.photos.push(photo.getUrl());
+    // });
     //this.addPhotos(details.photos)
   }
 
