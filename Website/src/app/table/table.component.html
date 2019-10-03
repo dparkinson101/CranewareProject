@@ -106,7 +106,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="text-center">
+                        <div *ngIf="(rating > 0) == true" class="text-center">
                             <div class="title">
                                 <h3>Rating</h3>
                             </div>
@@ -120,7 +120,7 @@
                             </div>
                         </div>
 
-                        <div class="container">
+                        <div *ngIf="(photos.length > 0) == true" class="container">
                             <mdb-carousel class="carousel slide carousel-fade" [animation]="'fade'">
                                 <div *ngFor="let photo of photos">
                                     <mdb-carousel-item>
@@ -158,12 +158,14 @@
                         </div>
 
                         <HR>
-                        <h4>Reviews</h4>
-                        <div class="review">
-                            <div *ngFor="let review of reviews" id="reviews">
-                                <br>
-                                <h6><i>{{review.author_name}} {{review.relative_time_description}}</i></h6>
-                                {{review.text}}
+                        <div *ngIf="(reviews.length > 0) == true">
+                            <h4>Reviews</h4>
+                            <div class="review">
+                                <div *ngFor="let review of reviews" id="reviews">
+                                    <br>
+                                    <h6><i>{{review.author_name}} {{review.relative_time_description}}</i></h6>
+                                    {{review.text}}
+                                </div>
                             </div>
                         </div>
                     </div>

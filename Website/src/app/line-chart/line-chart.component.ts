@@ -38,7 +38,7 @@ export class LineChartComponent implements OnInit {
     this.chartLabels = ['2011', '2012', '2013', '2014', '2015','2016', '2017'];
     this.chartColors = [{
       backgroundColor: 'rgba(0, 0, 0, 0.2)',
-         borderColor: 'rgba(0, 0, 0, 1)'
+      borderColor: 'rgba(0, 0, 0, 1)'
     }];
     this.chartOptions = {
       scales: {
