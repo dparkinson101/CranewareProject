@@ -1,7 +1,7 @@
 <div class="right tableContainer" *ngIf="showTable">
 
     <!-- Name of current procedure -->
-    <p><i>{{procedure | titlecase }}</i></p>
+    <p style="text-align: center"><i>{{procedure}}</i></p>
 
 
     <!-- Loading Circle -->
@@ -33,13 +33,13 @@
 
 
 
-        <div [ngClass]="['table-container mat-elevation-z8']" *ngIf="dataSource" >
+        <div [ngClass]="['table-container mat-elevation-z8']" *ngIf="dataSource">
 
-            <mat-table [dataSource]="dataSource" (matSortChange)="sortData($event)" matSortActive="providerDistance" matSortDirection="asc"  matSort>
+            <mat-table [dataSource]="dataSource" (matSortChange)="sortData($event)" matSortActive="providerDistance" matSortDirection="asc" matSort>
 
                 <!-- name Column -->
                 <ng-container matColumnDef="providerName">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Name </mat-header-cell>
+                    <mat-header-cell id="sortbutton" *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Name </mat-header-cell>
                     <mat-cell *matCellDef="let item;">{{item.providerName}} </mat-cell>
                 </ng-container>
 
@@ -52,7 +52,7 @@
 
                 <!-- cost Column -->
                 <ng-container matColumnDef="averageTotalPayments">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Cost </mat-header-cell>
+                    <mat-header-cell id="sortbutton" *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Cost </mat-header-cell>
                     <mat-cell *matCellDef="let item">${{item.averageTotalPayments}} </mat-cell>
                 </ng-container>
 
@@ -65,16 +65,19 @@
 
                 <!-- Distance Column -->
                 <ng-container matColumnDef="providerDistance">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance
+                    <mat-header-cell id="sortbutton" *matHeaderCellDef mat-sort-header (click)="loadCurrent();"> Distance
                     </mat-header-cell>
                     <mat-cell *matCellDef="let item"> {{item.providerDistance}} miles</mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="moreInfo">
                     <mat-header-cell *matHeaderCellDef> </mat-header-cell>
-                    <mat-cell *matCellDef="let item">
-                        <button type="button" name="Information button" aria-label="info button" class="btn btn-primary btn-circle btn-circle-sm m-1" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
+                    <mat-cell *matCellDef="let item; let i = index;">
+                        <button type="button" class="btn btn-primary btn-circle btn-circle-sm m-1" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
                             <i class="fa fa-info"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-circle btn-circle-sm m-1" (click)="markerZoom(i)">
+                                <i class="fa fa-crosshairs"></i>
                         </button>
                     </mat-cell>
                 </ng-container>
@@ -142,6 +145,17 @@
 
 
                         </div>
+                        <HR>
+                        <h4>Price Trends</h4>
+
+                        <mat-card *ngIf="chartReady == false" style="display: flex; justify-content: center; align-items: center">
+                            <mat-progress-spinner color="primary" mode="indeterminate">
+                            </mat-progress-spinner>
+                        </mat-card>
+
+                        <div id="chart-container" *ngIf="chartReady">
+                            <canvas #myCanvas id="canvas" baseChart [chartType]="chartType" [datasets]="chartData" [labels]="chartLabels" [colors]="chartColors" [options]="chartOptions"></canvas>
+                        </div>
 
                         <HR>
                         <h4>Reviews</h4>
@@ -152,10 +166,6 @@
                                 {{review.text}}
                             </div>
                         </div>
-                        <HR>
-
-
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

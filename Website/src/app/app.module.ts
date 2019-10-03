@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataService } from './services/data.service';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { ChartsModule } from 'ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
@@ -19,6 +19,7 @@ import { AboutComponent } from './about/about.component';
 import { SearchPageComponent } from './search-page/search-page.component';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LineChartComponent } from './line-chart/line-chart.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     HomeComponent,
     NavComponent,
     AboutComponent,
-    SearchPageComponent
+    SearchPageComponent,
+    LineChartComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +41,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     ReactiveFormsModule,
     MDBBootstrapModule.forRoot(),
     MatFormFieldModule,
-    
+    ChartsModule,
+    FontAwesomeModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,

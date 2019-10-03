@@ -71,3 +71,19 @@ button{
     font-size: 1.3rem;
     
 }
+
+.wrapper {
+    background: white;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    height: auto;
+    /* background: linear-gradient(to right, rgb(239, 239, 245), rgb(245, 245, 245)); */
+    /* box-shadow: 0px 13px 40px -13px rgba(0, 0, 0, 0.75); */
+    width: 100%;
+    margin: 0 auto;
+}

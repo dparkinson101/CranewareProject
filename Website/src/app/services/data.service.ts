@@ -77,14 +77,15 @@ export class DataService {
                 observer.complete();
               });
               console.log(`results for code ${this.code} are in the cache`);
+              return results;
             } 
             else {
               results = this.http.get<any>(this.apiURL + '/historicdata?code=' + this.code + '&providerId=' + id);
               results.subscribe(res => {
                 this.addToCache(key, res);
               });
+              return results;
             }
-            return results;
           } 
           catch (err) {
             console.log(err);
