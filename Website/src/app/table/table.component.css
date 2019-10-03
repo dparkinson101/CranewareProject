@@ -4,127 +4,139 @@
         float: left;
         border-radius: 10px;
     }
-    
+
     p {
         padding: 10px;
         margin: auto;
         text-align: center;
     }
-    
+
     .btn-toolbar {
         padding: 10px;
         margin: auto;
     }
-    
+
     .example-container {
         display: flex;
         flex-direction: column;
         min-width: 300px;
     }
-    
+
     .example-header {
         min-height: 64px;
         padding: 8px 24px 0;
         display: block;
     }
-    
+
     .filter {
         position: relative;
         display: inline-block;
         width: 250px;
         padding: 10px;
     }
-    
+
     .mat-form-field {
         font-size: 14px;
         width: 100%;
     }
-    
+
+
     .mat-table {
         /* overflow: auto; */
         max-height: auto;
     }
-    
+
     .mat-slider {
         padding: 10px;
     }
-    
+
     .button {
         width: 50px;
     }
-    
+
+    .mat-header-cell{
+      font-size: 25px;
+      color: grey;
+    }
+
+
+#sortbutton:hover{
+  color: #007bff;
+}
+
     th.mat-header-cell .mat-sort-header-container.mat-sort-header-sorted .mat-sort-header-arrow {
         opacity: 1 !important;
         transform: translateY(0) !important;
+
     }
-    
+
     #stars {
         color: #ffae42;
     }
-    
+
     #reviews p {
         text-align: left !important;
     }
-    
+
     .rating {
         color: #ffae42;
     }
-    
+
     .title {
         display: inline-block;
         margin: 10px;
         text-align: center;
     }
-    
+
     #rating {
         color: #ffae42;
     }
-    
+
     .review {
         overflow-y: scroll;
         height: 300px;
     }
-    
+
     .carousel {
         height: 70vh;
         padding-bottom: 20px;
     }
-    
+
     .carousel .carousel-inner {
         height: 70vh;
     }
-    
+
     .carousel .carousel-inner .carousel-item,
     .carousel .carousel-inner .active {
         height: 80vh;
     }
-    
+
     .text-center {
         padding: 10px;
         padding-bottom: 20px;
     }
-    
+
     .text-container {
         padding-left: 100px;
         padding-right: 100px;
         padding-bottom: 0px;
     }
-    
+
     .container {
         width: 100%;
     }
-    
+
     html,
     body,
     .view {
         height: 80vh;
         width: 100%;
     }
-    
+
     .modal-tile {
         text-align: center;
     }
-    
+
     .mat-sort-header {
         color: #2ea3f2;
     }
@@ -137,30 +149,29 @@
         padding: 0;
         border-radius: 50%;
     }
-    
+
     .btn-circle i {
         position: relative;
         top: -1px;
     }
-    
+
     .btn-circle-sm {
         width: 35px;
         height: 35px;
         line-height: 35px;
         font-size: 0.9rem;
     }
-    
+
     .btn-circle-lg {
         width: 55px;
         height: 55px;
         line-height: 55px;
         font-size: 1.1rem;
     }
-    
+
     .btn-circle-xl {
         width: 70px;
         height: 70px;
         line-height: 70px;
         font-size: 1.3rem;
     }
-    

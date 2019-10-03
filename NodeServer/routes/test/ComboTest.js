@@ -361,48 +361,48 @@ describe('Testing ComboQuery.js methods', function() {
 			//console.log(x[0].financial2017.averageMedicarePayemnts);
 			
 			var one = false;
-			if(x[0].Covered2017 == '41130.56098')
+			if(x[0].averageCoveredCharges == '41130.56098')
 			{
 				one = true;
 			}
 			
 			var two = false;
-			if(x[0].Covered2016 == '38026.17')
+			if(x[1].averageCoveredCharges == '38026.17')
 			{
 				two = true;
 			}
 			
 			var three = false;
-			if(x[0].Covered2015 == '37027.24')
+			if(x[2].averageCoveredCharges == '37027.24')
 			{
 				three = true;
 			}
 			
 			var four = false;
-			if(x[0].Covered2014 == '36003.63441')
+			if(x[3].averageCoveredCharges == '36003.63441')
 			{
 				four = true;
 			}
 			var five = false;
-			if(x[0].Covered2013 == '37988.97959')
+			if(x[4].averageCoveredCharges == '37988.97959')
 			{
 				five = true;
 			}
 			
 			var six = false;
-			if(x[0].Covered2012 == '37467.95789')
+			if(x[5].averageCoveredCharges == '37467.95789')
 			{
 				six = true;
 			}
 			
 			var seven = false;
-			if(x[0].Covered2011 == '32963.07692')
+			if(x[6].averageCoveredCharges == '32963.07692')
 			{
 				seven = true;
 			}
 			
 			var eight = false;
-			if(x.length == 1)
+			if(x.length == 7)
 			{
 				eight = true;
 			}

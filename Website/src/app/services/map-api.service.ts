@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { resolve } from 'url';
+import { DataService } from './data.service';
 
 declare var google: any;
 
@@ -16,8 +17,9 @@ export class MapAPIService {
   userPlace: any;
   userGeolocation: any;
   userMarker: any;
+  circle: any;
 
-  constructor() { }
+  constructor(private dataService: DataService) { }
 
   public createMap(latitude: number, longitude: number, zoomIn: number) {
     try {
@@ -168,6 +170,7 @@ export class MapAPIService {
       var req = {
         placeId: placeID,
         fields: ['rating', 'reviews','photos']
+        //fields: ['rating']
       };
 
       placeService.getDetails(req, placeDetails => {
@@ -182,7 +185,6 @@ export class MapAPIService {
       if(this.userPlace === undefined){
 
         //HTML 5 Geolocation
-
         let _this = this;
 
         var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
@@ -200,7 +202,7 @@ export class MapAPIService {
             if(_this.userMarker){
               _this.userMarker.setMap(null);
               _this.userMarker = undefined;
-              //console.log("Removed geolocation marker");
+              
 
               _this.userMarker = new google.maps.Marker({
                 position: pos,
@@ -220,8 +222,6 @@ export class MapAPIService {
               });
 
               this.map.setCenter(pos);
-
-              //console.log("Added geolocation marker");
             }
 
 

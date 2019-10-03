@@ -3,12 +3,17 @@ import { Observable } from 'rxjs';
 import { Location } from './../models/Location';
 import { DataService } from '../services/data.service';
 import { LocationService } from '../services/location.service';
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
 import { MatPaginator, MatSort, MatTableDataSource, MatTableModule, MatSliderModule, PageEvent, MatTable, MatSortable } from '@angular/material';
 import { TableData } from '../models/TableData';
 import { item } from '../models/item';
 import { element } from 'protractor';
+import * as d3 from 'd3';
+
+import 'chartjs-plugin-annotation';
+
+
 
 declare var google: any;
 
@@ -21,6 +26,7 @@ export interface Element {
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
+
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
@@ -49,6 +55,24 @@ export class TableComponent implements OnInit {
     0.5: 'fa fa-star-half-o ',
     1: 'fa fa-star '
   };
+  public focused: boolean = false;
+  public focusedNumber: number = 99;
+
+
+  // graph
+
+  @ViewChild('myCanvas', { static: false })
+  public canvas: ElementRef;
+  public context: CanvasRenderingContext2D;
+  public chartType: string = 'line';
+  public chartData: any[];
+  public chartLabels: any[];
+  public chartColors: any[];
+  public chartOptions: any;
+  public dataSetOne = [];
+  public dataSetTwo = [];
+  public labels = [];
+
 
 
 
@@ -58,8 +82,9 @@ export class TableComponent implements OnInit {
 
 
   public displayedColumns = ['providerName', 'averageTotalPayments', 'providerDistance', 'moreInfo'];
+  chartReady: boolean = false;
   constructor(private dataService: DataService, private mapAPIService: MapAPIService, private locationService: LocationService,
-              private titleCasePipe: TitleCasePipe) {
+    private titleCasePipe: TitleCasePipe) {
 
   }
 
@@ -71,7 +96,7 @@ export class TableComponent implements OnInit {
     const observable = this.dataService.currentSearch;
 
     observable.subscribe(() => {
-      if(this.dataService.code != undefined){
+      if (this.dataService.code != undefined) {
         if (this.dataService.distanceRange != null) {
           this.distanceRange = this.dataService.distanceRange;
           console.log(this.distanceRange);
@@ -108,6 +133,8 @@ export class TableComponent implements OnInit {
   }
 
   loadMoreInfo(item: any) {
+    this.clearChart();
+    this.chartReady = false;
     this.moreInfoItem = item;
     this.mapAPIService.getPlaceDetails(item.providerPlaceID).then(placeDetails => {
       this.moreInfoPlaceDetails = placeDetails;
@@ -116,9 +143,51 @@ export class TableComponent implements OnInit {
     });
 
     this.dataService.getHistoricData(item.providerID).subscribe(data => {
+
+
       this.moreInfoHistoricData = data;
+
+      this.clearChart();
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        const cost = element.averageTotalPayments - element.averageMedicarePayments;
+        this.dataSetOne.push(cost.toFixed(2));
+        this.dataSetTwo.push(element.averageTotalPayments.toFixed(2));
+        this.labels.push(element.years);
+
+      }
+      this.drawChart();
     });
 
+  }
+
+  markerZoom(i: number){
+    i = i % 10;
+    if (!this.focused){
+      this.mapAPIService.markers[i].infoWindow.open(this.mapAPIService.map, this.mapAPIService.markers[i].marker);
+      this.mapAPIService.map.setCenter(this.mapAPIService.markers[i].marker.position);
+      this.mapAPIService.map.setZoom(15);
+      this.focused = true;
+      this.focusedNumber = i;
+    }
+    else{
+      if (this.focusedNumber == i){
+        this.mapAPIService.markers[i].infoWindow.close(this.mapAPIService.map, this.mapAPIService.markers[i]);
+        this.mapAPIService.averageFocus();
+        this.focused = false;
+      }
+      else{
+        this.mapAPIService.markers[this.focusedNumber].infoWindow.close(this.mapAPIService.map, this.mapAPIService.markers[this.focusedNumber].marker);
+        this.mapAPIService.averageFocus();
+        this.focused = false;
+
+        this.mapAPIService.markers[i].infoWindow.open(this.mapAPIService.map, this.mapAPIService.markers[i].marker);
+        this.mapAPIService.map.setCenter(this.mapAPIService.markers[i].marker.position);
+        this.mapAPIService.map.setZoom(15);
+        this.focused = true;
+        this.focusedNumber = i;
+      }
+    }
   }
 
   async placeOnMap(item: any) {
@@ -264,17 +333,11 @@ export class TableComponent implements OnInit {
       }
 
 
-      // this.initialData.forEach((item) => {
-      //   this.createNewDataItem(item).then((data: TableData) => {
-      //     this.processedData.push(data);
-      //   });
-      // });
-
       for (let index = 0; index < this.initialData.length; index++) {
         const item = this.initialData[index];
         await this.createNewDataItem(item).then((data: TableData) => {
           if (this.distanceRange == 0 || Number(data.providerDistance) < this.distanceRange) {
-            if(this.dataService.isInsured){
+            if (this.dataService.isInsured) {
               data.averageTotalPayments = Number((data.averageTotalPayments - item.averageMedicarePayments).toFixed(2));
             }
             this.processedData.push(data);
@@ -311,6 +374,35 @@ export class TableComponent implements OnInit {
         this.placeCurrentOnMap(page);
         console.log(page);
       }
+
+      await this.sleep(100);
+
+      if (this.mapAPIService.circle == undefined) {
+        // Add circle overlay and bind to marker
+        this.mapAPIService.circle = new google.maps.Circle({
+          map: this.mapAPIService.map,
+          radius: (this.dataService.distanceRange * 1609.344),    // miles to metres
+          fillColor: '#61b8ff',
+          strokeWeight: 0.5,
+          strokeColor: '#61b8ff'
+        });
+        this.mapAPIService.circle.bindTo('center', this.mapAPIService.userMarker, 'position');
+      }
+      else {
+        this.mapAPIService.circle.setMap(null);
+        this.mapAPIService.circle = undefined;
+
+        // Add circle overlay and bind to marker
+        this.mapAPIService.circle = new google.maps.Circle({
+          map: this.mapAPIService.map,
+          radius: (this.dataService.distanceRange * 1609.344),    // miles to metres
+          fillColor: '#61b8ff',
+          strokeWeight: 0.5,
+          strokeColor: '#61b8ff'
+        });
+        this.mapAPIService.circle.bindTo('center', this.mapAPIService.userMarker, 'position');
+      }
+
     });
 
   }
@@ -318,7 +410,7 @@ export class TableComponent implements OnInit {
   getProcedureName() {
 
     // choose first item from list to get name - without number at start
-    this.procedure = 'Displaying results for:' + (this.initialData[0].dRGDefinition).substring(5);
+    this.procedure = 'Displaying Results For: ' + this.titleCasePipe.transform(this.initialData[0].dRGDefinition).substring(5);
   }
 
   async createNewDataItem(item: any) {
@@ -350,9 +442,9 @@ export class TableComponent implements OnInit {
 
 
 
-/*-------------------------------------
-   Add details to the pop up modal
----------------------------------------*/
+  /*-------------------------------------
+     Add details to the pop up modal
+  ---------------------------------------*/
   addMoreDetails(details: any) {
 
     // clear review and photo arrays
@@ -409,6 +501,50 @@ export class TableComponent implements OnInit {
   }
 
 
+
+  drawChart() {
+    this.chartData = [{
+      data: this.dataSetOne.reverse(),
+      label: 'With Medicare($)',
+      fill: false
+    },
+    {
+      data: this.dataSetTwo.reverse(),
+      label: 'Without Medicare($)',
+      fill: false
+    }
+
+    ];
+    this.chartLabels = this.labels.reverse();
+    this.chartColors = [{
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      borderColor: 'rgba(0, 0, 0, 1)'
+    }];
+    this.chartOptions = {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: false,
+            stepSize: (Number(Math.round(this.dataSetTwo[0] / 1000) * 1000) / 10)
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Cost ($)'
+          }
+        }]
+      },
+
+    };
+
+    this.chartReady = true;
+  }
+
+  clearChart()
+  {
+    this.dataSetOne = [];
+    this.dataSetTwo = [];
+    this.labels = [];
+  }
 
 
 }
