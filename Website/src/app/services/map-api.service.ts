@@ -169,8 +169,8 @@ export class MapAPIService {
       var placeService = new google.maps.places.PlacesService(this.map);
       var req = {
         placeId: placeID,
-        //fields: ['rating', 'reviews','photos']
-        fields: ['rating']
+        fields: ['rating', 'reviews','photos']
+        //fields: ['rating']
       };
 
       placeService.getDetails(req, placeDetails => {
@@ -185,7 +185,6 @@ export class MapAPIService {
       if(this.userPlace === undefined){
 
         //HTML 5 Geolocation
-
         let _this = this;
 
         var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
