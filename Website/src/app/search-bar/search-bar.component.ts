@@ -76,7 +76,6 @@ export class SearchBarComponent implements OnInit {
     this.model = new item('', '', null, null, null, null, null, false);
     //console.log(this.autocompleteProcedure);
     this.autocompleteProcedure.value = '';
-
   }
   onSubmit() {
     this.submitted = true;
@@ -125,7 +124,7 @@ export class SearchBarComponent implements OnInit {
 
   onGeoSelect(){
     this.initAutocomplete();
-    if(this.mapAPIService.userGeolocation === undefined){
+    if(this.mapAPIService.userGeolocation === undefined && this.isGeolocating == false){
 
       document.getElementById('geoButton').style.background = 'green'; //(button colour when when geo location on)
       document.getElementById('geoButton').style.borderColor = 'green'; //#66bf48
@@ -152,7 +151,7 @@ export class SearchBarComponent implements OnInit {
 
       document.getElementById('geoButton').style.background = 'blue'; //(button colour when geo location off)
       document.getElementById('geoButton').style.borderColor = 'blue'; //#66bf48
-      this.locationStatus= 'use current location';
+      this.locationStatus = 'use current location';
     }
   }
 

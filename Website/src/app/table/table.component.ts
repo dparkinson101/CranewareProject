@@ -90,24 +90,28 @@ export class TableComponent implements OnInit {
 
   ngOnInit() {
 
-    this.isLoading = true;
-
     // update when the search happens
     const observable = this.dataService.currentSearch;
 
     observable.subscribe(() => {
-      if (this.dataService.code != undefined) {
-        if (this.dataService.distanceRange != null) {
-          this.distanceRange = this.dataService.distanceRange;
-          console.log(this.distanceRange);
-        }
-        else{
-          this.distanceRange = 0;
-        }
-        this.getData();
-      }
-    });
+      
 
+        if (this.dataService.code != undefined) {
+          if(this.mapAPIService.userPlace == undefined && this.mapAPIService.userGeolocation == undefined){
+            this.dataService.searchError = true;
+            this.dataService.errorText = "Search Error - No Location Entered";
+          }
+          else{
+            if (this.dataService.distanceRange != null) {
+              this.distanceRange = this.dataService.distanceRange;
+            }
+            else{
+              this.distanceRange = 0;
+            }
+            this.getData();
+          }
+        }
+    });
   }
 
   // --------------------------------------------------------------------------
@@ -302,6 +306,7 @@ export class TableComponent implements OnInit {
 
   async getData() {
 
+    this.dataService.searchError = false;
     this.isLoading = true;
     this.procedure = 'Searching';
 
@@ -406,6 +411,9 @@ export class TableComponent implements OnInit {
         this.mapAPIService.circle.bindTo('center', this.mapAPIService.userMarker, 'position');
       }
 
+      this.mapAPIService.userPlace = undefined;
+
+
     });
 
   }
@@ -453,26 +461,26 @@ export class TableComponent implements OnInit {
     // clear review and photo arrays
     this.reviews = [];
     this.photos = [];
-
-    // add new reviews and photos
+    //Add Each Type
     this.addReviews(details.reviews);
-    details.photos.forEach(photo => {
-      this.photos.push(photo.getUrl());
-    });
-    //this.addPhotos(details.photos)
+    this.addPhotos(details.photos);
   }
 
   addReviews(reviews: any) {
-    reviews.forEach(review => {
-      if (review.text !== "") {
-        this.reviews.push(review);
-      }
-    });
+    if(reviews != undefined){
+      reviews.forEach(review => {
+        if (review.text !== "") {
+          this.reviews.push(review);
+        }
+      });
+    }
   }
   addPhotos(photos: any) {
-    photos.forEach(photo => {
-      this.photos.push(photo.getUrl());
-    });
+    if(photos != undefined){
+      photos.forEach(photo => {
+        this.photos.push(photo.getUrl());
+      });
+    }
   }
 
   // fill the stars according to rating
@@ -507,13 +515,13 @@ export class TableComponent implements OnInit {
 
   drawChart() {
     this.chartData = [{
-      data: this.dataSetOne.reverse(),
-      label: 'With Medicare($)',
+      data: this.dataSetTwo.reverse(),
+      label: 'Without Medicare($)',
       fill: false
     },
     {
-      data: this.dataSetTwo.reverse(),
-      label: 'Without Medicare($)',
+      data: this.dataSetOne.reverse(),
+      label: 'With Medicare($)',
       fill: false
     }
 

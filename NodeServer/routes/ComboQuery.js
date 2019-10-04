@@ -94,7 +94,7 @@ router.get('/comboQuery', function(req, res, next) {
 });
 
 router.get('/procedurelist', function(req, res, next){
-    var query = 'SELECT DISTINCT codes.dRGDefinition from codes';
+    var query = 'SELECT DISTINCT financial2017.dRGDefinition from financial2017';
     connection.query(query, function(err, results){
         if(err){
             console.log(err);

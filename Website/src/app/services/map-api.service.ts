@@ -189,8 +189,6 @@ export class MapAPIService {
 
         var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
-
-
         if (navigator.geolocation && _this.userGeolocation === undefined)
         {
           navigator.geolocation.getCurrentPosition(position => {
