@@ -21,8 +21,8 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-const key = fs.readFileSync('key.pem');
-const cert = fs.readFileSync('cert.cert');
+const key = fs.readFileSync('selfsigned.pem');
+const cert = fs.readFileSync('selfsigned.cert');
 const options = {
   key: key,
   cert: cert
