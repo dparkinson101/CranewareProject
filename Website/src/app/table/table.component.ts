@@ -94,23 +94,23 @@ export class TableComponent implements OnInit {
     const observable = this.dataService.currentSearch;
 
     observable.subscribe(() => {
-      
 
-        if (this.dataService.code != undefined) {
-          if(this.mapAPIService.userPlace == undefined && this.mapAPIService.userGeolocation == undefined){
-            this.dataService.searchError = true;
-            this.dataService.errorText = "Search Error - No Location Entered";
+      if (this.dataService.code != undefined) {
+        if(this.mapAPIService.userPlace == undefined && this.mapAPIService.userGeolocation == undefined){
+          this.dataService.searchError = true;
+          this.dataService.errorText = "Search Error - No Location Entered";
+        }
+        else{
+          if (this.dataService.distanceRange != null) {
+            this.distanceRange = this.dataService.distanceRange;
           }
           else{
-            if (this.dataService.distanceRange != null) {
-              this.distanceRange = this.dataService.distanceRange;
-            }
-            else{
-              this.distanceRange = 0;
-            }
-            this.getData();
+            this.distanceRange = 0;
           }
+          this.showTable = true;
+          this.getData();
         }
+      }
     });
   }
 
@@ -308,7 +308,10 @@ export class TableComponent implements OnInit {
 
     this.dataService.searchError = false;
     this.isLoading = true;
+    this.showTable = true;
     this.procedure = 'Searching';
+
+    await this.sleep(1);
 
     const observable = this.dataService.getDataWithCode();
 
@@ -317,6 +320,7 @@ export class TableComponent implements OnInit {
     }
 
     observable.toPromise().then(async (data) => {
+
       this.processedData = [];
       this.initialData = [];
       this.initialData = data;
@@ -357,7 +361,7 @@ export class TableComponent implements OnInit {
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = this.processedData;
 
-
+      this.isLoading = false;
 
       await this.sleep(1);
 
@@ -370,7 +374,6 @@ export class TableComponent implements OnInit {
         }
       };
 
-      this.isLoading = false;
       this.getProcedureName();
 
       this.dataSource.paginator = this.paginator;
