@@ -354,7 +354,6 @@ export class TableComponent implements OnInit {
       }
 
       console.log('Table data is fetched');
-      this.isLoading = false;
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = this.processedData;
 
@@ -371,6 +370,7 @@ export class TableComponent implements OnInit {
         }
       };
 
+      this.isLoading = false;
       this.getProcedureName();
 
       this.dataSource.paginator = this.paginator;
