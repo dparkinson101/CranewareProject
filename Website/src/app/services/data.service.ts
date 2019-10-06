@@ -32,6 +32,8 @@ export class DataService {
   public distanceRange: number;
   public isInsured: boolean;
 
+  searchError: boolean = false;
+  errorText = "Search Errored";
 
   private searchSource = new BehaviorSubject(new item('', '', null, null, null, null, null, false));
 

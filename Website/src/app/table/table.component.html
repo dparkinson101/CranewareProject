@@ -35,7 +35,7 @@
 
         <div [ngClass]="['table-container mat-elevation-z8']" *ngIf="dataSource">
 
-            <mat-table [dataSource]="dataSource" (matSortChange)="sortData($event)" matSortActive="providerDistance" matSortDirection="asc" matSort>
+            <mat-table [dataSource]="dataSource" matSortActive="providerDistance" matSortDirection="asc" matSort>
 
                 <!-- name Column -->
                 <ng-container matColumnDef="providerName">
@@ -73,11 +73,11 @@
                 <ng-container matColumnDef="moreInfo">
                     <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                     <mat-cell *matCellDef="let item; let i = index;">
-                        <button type="button" class="btn btn-primary btn-circle btn-circle-sm m-1" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
+                        <button type="button" matTooltip="View More Information" class="btn btn-primary btn-circle btn-circle-sm m-1" data-toggle="modal" data-target=".bd-example-modal-xl" (click)="loadMoreInfo(item)">
                             <i class="fa fa-info"></i>
                         </button>
-                        <button type="button" class="btn btn-danger btn-circle btn-circle-sm m-1" (click)="markerZoom(i)">
-                                <i class="fa fa-crosshairs"></i>
+                        <button type="button" matTooltip="View On Map" class="btn btn-danger btn-circle btn-circle-sm m-1" (click)="markerZoom(i)">
+                                <i class="fa fa-map-marker"></i>
                         </button>
                     </mat-cell>
                 </ng-container>
@@ -106,7 +106,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="text-center">
+                        <div *ngIf="(rating > 0) == true" class="text-center">
                             <div class="title">
                                 <h3>Rating</h3>
                             </div>
@@ -120,7 +120,7 @@
                             </div>
                         </div>
 
-                        <div class="container">
+                        <div *ngIf="(photos.length > 0) == true" class="container">
                             <mdb-carousel class="carousel slide carousel-fade" [animation]="'fade'">
                                 <div *ngFor="let photo of photos">
                                     <mdb-carousel-item>
@@ -158,12 +158,14 @@
                         </div>
 
                         <HR>
-                        <h4>Reviews</h4>
-                        <div class="review">
-                            <div *ngFor="let review of reviews" id="reviews">
-                                <br>
-                                <h6><i>{{review.author_name}} {{review.relative_time_description}}</i></h6>
-                                {{review.text}}
+                        <div *ngIf="(reviews.length > 0) == true">
+                            <h4>Reviews</h4>
+                            <div class="review">
+                                <div *ngFor="let review of reviews" id="reviews">
+                                    <br>
+                                    <h6><i>{{review.author_name}} {{review.relative_time_description}}</i></h6>
+                                    {{review.text}}
+                                </div>
                             </div>
                         </div>
                     </div>

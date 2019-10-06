@@ -8,8 +8,14 @@
                 Type in the procedure name or code to get started, add your location to search for nearby providers
             </h1>
 
+            <div *ngIf="dataService.searchError" style="color: red">
+                <h5>
+                {{dataService.errorText}}
+                </h5>
+            </div>
+
             <!-- Search Bar -->
-            <form #searchBar="ngForm" (ngSubmit)="onSubmit(f)" (click)="initAutocomplete();" novalidate>
+            <form #searchBar="ngForm" (ngSubmit)="onSubmit()" (click)="initAutocomplete();" novalidate>
                 <div class="container" *ngIf="isGeolocating">
                     <b>Now Using Your Geolocation</b>
                 </div>
