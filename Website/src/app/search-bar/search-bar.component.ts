@@ -222,7 +222,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   assignCode(procedure: Procedure){
-    console.log(procedure);
+    //console.log(procedure);
     this.model.code = procedure.code;
   }
 

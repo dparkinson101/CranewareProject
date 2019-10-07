@@ -326,7 +326,7 @@ export class TableComponent implements OnInit {
       this.initialData = data;
       this.showTable = true;
 
-      console.log(data);
+      //console.log(data);
 
 
       // Handles table if search yields no results
@@ -340,7 +340,7 @@ export class TableComponent implements OnInit {
         return;
       }
       else {
-        console.log(this.initialData);
+        //console.log(this.initialData);
         this.procedure = 'Searching';
       }
 
@@ -357,7 +357,7 @@ export class TableComponent implements OnInit {
         });
       }
 
-      console.log('Table data is fetched');
+      //console.log('Table data is fetched');
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = this.processedData;
 
@@ -383,7 +383,7 @@ export class TableComponent implements OnInit {
       const page = this.getCurrent();
       if (page.length < 11) {
         this.placeCurrentOnMap(page);
-        console.log(page);
+        //console.log(page);
       }
 
       await this.sleep(100);

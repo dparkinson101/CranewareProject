@@ -56,18 +56,18 @@ export class DataService {
 
 
   addToCache(code: any, results: any) {
-    console.log(results);
+    //console.log(results);
 
     if(Object.keys(results).length > 0){
       var key = this.code + this.userLocation + this.minPrice + this.maxPrice + this.zipcode + this.state;
       this.cache.set(key, results);
-      console.log(`adding results to cache for ${code}`);
+      //console.log(`adding results to cache for ${code}`);
     }
   }
 
   getHistoricData(id: string){
       let results;
-      console.log(this.code);
+      //console.log(this.code);
 
       if(this.code != undefined && id != undefined){
           try {
@@ -78,7 +78,7 @@ export class DataService {
                 observer.next(this.cache.get(key));
                 observer.complete();
               });
-              console.log(`results for code ${this.code} are in the cache`);
+              //console.log(`results for code ${this.code} are in the cache`);
               return results;
             } 
             else {
@@ -90,7 +90,7 @@ export class DataService {
             }
           } 
           catch (err) {
-            console.log(err);
+            //console.log(err);
             return null;
           }
       }
@@ -119,7 +119,7 @@ export class DataService {
           observer.next(this.cache.get(key));
           observer.complete();
         });
-        console.log(`results for code ${this.code} are in the cache`);
+        //console.log(`results for code ${this.code} are in the cache`);
       } 
       else {
         results = this.http.get<any>(this.apiURL + '/comboQuery?code=' + this.code + '&max=' + this.maxPrice + '&min=' + this.minPrice + '&zipcode=' + this.zipcode + '&state=' + this.state);
@@ -130,7 +130,7 @@ export class DataService {
       return results;
     } 
     catch (err) {
-      console.log(err);
+      //console.log(err);
       return null;
     }
 
@@ -147,7 +147,7 @@ export class DataService {
     this.distanceRange = search.distanceRange;
     this.isInsured = search.isInsured;
 
-    console.log(search);
+    //console.log(search);
 
     this.searchSource.next(search);
   }
@@ -174,7 +174,7 @@ export class DataService {
       return results;
     }
     catch(err){
-      console.log(err);
+      //console.log(err);
       return null;
     }
   }
