@@ -26,7 +26,7 @@
         "@fortawesome/free-solid-svg-icons": "^5.11.1",
         "angular-bootstrap-md": "^8.3.0",
         "bootstrap": "^4.3.1",
-        "chart.js": "^2.8.0",
+        "chart.js": "^2.9.4",
         "chartjs-plugin-annotation": "^0.5.7",
         "d3": "^5.12.0",
         "font-awesome": "^4.7.0",
